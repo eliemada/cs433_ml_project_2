@@ -1,0 +1,79 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.egg
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Data directories (large files, generated data)
+data/
+openalex_data/
+*.parquet
+*.csv
+*.json.gz
+
+# PDF files
+*.pdf
+
+# Model weights and caches
+models/
+.cache/
+*.ckpt
+*.pth
+*.bin
+*.safetensors
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# UV
+.uv/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Archive (old code - optional, remove this line if you want to track archive)
+archive/
