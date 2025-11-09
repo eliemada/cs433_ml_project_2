@@ -8,12 +8,16 @@ Creates necessary IAM roles and security groups.
 import boto3
 import json
 from botocore.exceptions import ClientError
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def create_iam_role():
     """Create IAM role for EC2 instances to access S3."""
     iam = boto3.client('iam')
-    role_name = 'EC2-S3-PDF-Processing'
+    role_name = 'pdf-processing-user'
 
     # Trust policy for EC2
     trust_policy = {

@@ -9,6 +9,10 @@ import time
 import os
 import boto3
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def count_s3_folders(bucket: str, prefix: str) -> int:
@@ -25,7 +29,7 @@ def count_s3_folders(bucket: str, prefix: str) -> int:
     return len(folders)
 
 
-def get_running_workers(region: str = 'us-east-1') -> list:
+def get_running_workers(region: str = 'eu-north-1') -> list:
     """Get list of running worker instances."""
     ec2 = boto3.client('ec2', region_name=region)
 

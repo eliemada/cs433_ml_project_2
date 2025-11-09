@@ -11,9 +11,14 @@ import base64
 import os
 import sys
 import time
+from pathlib import Path
 from typing import List, Dict
 import boto3
 from botocore.exceptions import ClientError
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class EC2WorkerLauncher:
@@ -23,8 +28,8 @@ class EC2WorkerLauncher:
         self,
         num_workers: int = 5,
         instance_type: str = "g4dn.xlarge",
-        max_spot_price: str = "0.30",
-        region: str = "us-east-1",
+        max_spot_price: str = "0.60",
+        region: str = "eu-north-1",
         docker_image: str = "ravinala/pdf-parser:v2-distributed",
     ):
         """
@@ -68,7 +73,7 @@ class EC2WorkerLauncher:
 
         # Check IAM role exists
         iam = boto3.client('iam')
-        role_name = 'EC2-S3-PDF-Processing'
+        role_name = 'pdf-processing-user'
         try:
             iam.get_role(RoleName=role_name)
             print(f"✓ IAM role '{role_name}' exists")
@@ -200,7 +205,7 @@ shutdown -h now
                         'InstanceType': self.instance_type,
                         'KeyName': os.getenv('AWS_KEY_PAIR'),  # Optional
                         'IamInstanceProfile': {
-                            'Name': 'EC2-S3-PDF-Processing'
+                            'Name': 'pdf-processing-user'
                         },
                         'SecurityGroups': ['default'],
                         'UserData': user_data_b64,
@@ -285,8 +290,8 @@ def main():
     )
     parser.add_argument(
         '--region',
-        default='us-east-1',
-        help='AWS region (default: us-east-1)'
+        default='eu-north-1',
+        help='AWS region (default: eu-north-1)'
     )
     parser.add_argument(
         '--dry-run',
