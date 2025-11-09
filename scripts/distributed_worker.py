@@ -121,8 +121,11 @@ class DistributedWorker:
                 pipeline = self.get_pipeline()
                 result = pipeline.parse_document(local_pdf)
 
-                # Get markdown output
-                markdown_path = self.config.output.get_markdown_path(local_pdf)
+                # Get markdown output - construct path manually
+                markdown_dir = self.config.output.get_markdown_dir()
+                markdown_filename = local_pdf.stem + ".md"
+                markdown_path = markdown_dir / markdown_filename
+
                 if not markdown_path.exists():
                     raise FileNotFoundError(f"Markdown not generated: {markdown_path}")
 
