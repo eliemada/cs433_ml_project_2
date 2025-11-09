@@ -59,8 +59,9 @@ class DistributedWorker:
         self.s3 = boto3.client('s3')
 
         # Initialize PDF parsing config with temp output directory
-        from rag_pipeline.pdf_parsing.config import OutputConfig
+        from rag_pipeline.pdf_parsing.config import OutputConfig, DolphinModelConfig
         self.config = PDFParsingConfig(
+            model=DolphinModelConfig(model_path=Path('/app/models/dolphin')),
             output=OutputConfig(output_dir=Path('/tmp/pdf_output'))
         )
         self.pipeline = None  # Lazy load to avoid loading model unless needed
