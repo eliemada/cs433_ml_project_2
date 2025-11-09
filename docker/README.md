@@ -41,7 +41,7 @@ docker run --gpus all --rm \
   -e S3_OUTPUT_PREFIX=processed/ \
   -e AWS_ACCESS_KEY_ID=your_key \
   -e AWS_SECRET_ACCESS_KEY=your_secret \
-  -e AWS_DEFAULT_REGION=us-east-1 \
+  -e AWS_DEFAULT_REGION=eu-north-1 \
   ravinala/pdf-parser:v2-distributed
 ```
 
@@ -150,7 +150,7 @@ docker push ravinala/pdf-parser:latest
 | `TOTAL_WORKERS` | `1` | Total number of workers |
 | `S3_INPUT_PREFIX` | `raw_pdfs/` | Input folder prefix |
 | `S3_OUTPUT_PREFIX` | `processed/` | Output folder prefix |
-| `AWS_DEFAULT_REGION` | - | AWS region (e.g., `us-east-1`) |
+| `AWS_DEFAULT_REGION` | - | AWS region (e.g., `eu-north-1`) |
 | `MAX_RETRIES` | `2` | Retry failed PDFs N times |
 
 ## Troubleshooting
@@ -245,7 +245,7 @@ docker run --gpus all --rm \
   -e S3_OUTPUT_PREFIX=processed/ \
   -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
   -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-  -e AWS_DEFAULT_REGION=us-east-1 \
+  -e AWS_DEFAULT_REGION=eu-north-1 \
   ravinala/pdf-parser:v2-distributed
 
 # Auto-terminate when done

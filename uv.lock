@@ -1842,6 +1842,15 @@ wheels = [
 ]
 
 [[package]]
+name = "loadotenv"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/29/8f/0f613996f80c194cce530a9143b97a160afb5b996914cb8f16d7235fb43b/loadotenv-1.0.1.tar.gz", hash = "sha256:9f5117f991d6eb5ff96e062d73f61b6e19664f9f38809d18497872aee79c3c70", size = 2816, upload-time = "2023-12-09T06:13:28.451Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/69/b5/fbc29b3e92b729fae5c27a0f616cb16d5cbc7fb35000aaff9c779317a988/loadotenv-1.0.1-py3-none-any.whl", hash = "sha256:0978a2895771e32915ab03b15b5478f2c56cad8ff079bb4cf974cc8ec06c9305", size = 2865, upload-time = "2023-12-09T06:13:27.033Z" },
+]
+
+[[package]]
 name = "loguru"
 version = "0.7.3"
 source = { registry = "https://pypi.org/simple" }
@@ -3585,6 +3594,7 @@ dependencies = [
     { name = "boto3" },
     { name = "botocore" },
     { name = "bs4" },
+    { name = "loadotenv" },
     { name = "loguru" },
     { name = "markdown" },
     { name = "nltk" },
@@ -3657,6 +3667,7 @@ requires-dist = [
     { name = "botocore", specifier = ">=1.34.0" },
     { name = "bs4", specifier = ">=0.0.2" },
     { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.104.1" },
+    { name = "loadotenv", specifier = ">=1.0.1" },
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "markdown", specifier = ">=3.5.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.7.1" },

@@ -78,7 +78,7 @@ Design for a distributed batch processing system to convert 4000 PDFs to markdow
 
 **AMI**: AWS Deep Learning AMI (Ubuntu 22.04)
 - Pre-installed: NVIDIA drivers, CUDA 11.8+, Docker with GPU support
-- AMI ID: `ami-0c7217cdde317cfec` (us-east-1, verify current version)
+- AMI ID: `ami-0c7217cdde317cfec` (eu-north-1, verify current version)
 
 **Budget Calculation** (with 5 Spot instances):
 ```
@@ -143,7 +143,7 @@ S3_INPUT_BUCKET=cs433-rag-project2    # Input PDFs bucket
 S3_INPUT_PREFIX=raw_pdfs/             # Prefix for PDFs
 S3_OUTPUT_BUCKET=cs433-rag-project2   # Output markdown bucket
 S3_OUTPUT_PREFIX=processed/           # Prefix for outputs
-AWS_DEFAULT_REGION=us-east-1          # AWS region
+AWS_DEFAULT_REGION=eu-north-1          # AWS region
 MAX_RETRIES=2                         # Retry failed PDFs this many times
 ```
 
@@ -255,7 +255,7 @@ docker run --gpus all \
   -e S3_OUTPUT_PREFIX=processed/ \
   -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
   -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-  -e AWS_DEFAULT_REGION=us-east-1 \
+  -e AWS_DEFAULT_REGION=eu-north-1 \
   ravinala/pdf-parser:latest
 
 # Auto-terminate when processing completes
@@ -379,7 +379,7 @@ Safety margin: $100 budget - $32 expected = $68 buffer ✓
 - [ ] Test container locally with environment variables
 
 ### Phase 3: AWS Infrastructure Setup (30 min)
-- [ ] Create IAM role: `EC2-S3-PDF-Processing` with S3 read/write permissions
+- [ ] Create IAM role: `pdf-processing-user` with S3 read/write permissions
 - [ ] Create security group (minimal: SSH only from your IP)
 - [ ] Set up CloudWatch log group: `/aws/ec2/pdf-workers/`
 - [ ] Configure AWS Budget alert ($50 and $90 thresholds)

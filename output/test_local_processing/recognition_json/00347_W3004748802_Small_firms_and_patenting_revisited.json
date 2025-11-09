@@ -1,0 +1,3065 @@
+{
+  "source_file": "data/openalex/pdfs/00347_W3004748802_Small_firms_and_patenting_revisited.pdf",
+  "total_pages": 18,
+  "pages": [
+    {
+      "page_number": 1,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            38,
+            235,
+            67
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small Bus Econ (2021) 57:513–530\nhttps://doi.org/10.1007/s11187-020-00323-1"
+        },
+        {
+          "bbox": [
+            539,
+            79,
+            611,
+            150
+          ],
+          "label": "fig",
+          "reading_order": 1,
+          "text": "![Figure](figures/figure_001.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_001.png"
+        },
+        {
+          "bbox": [
+            55,
+            115,
+            346,
+            139
+          ],
+          "label": "sec_0",
+          "reading_order": 2,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            55,
+            157,
+            326,
+            173
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "Suma S. Athreye • Claudio Fassio • Stephen Roper"
+        },
+        {
+          "bbox": [
+            55,
+            271,
+            310,
+            297
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "Accepted: 20 January 2020 / Published online: 6 February 2020\n\nc The Author(s) 2020"
+        },
+        {
+          "bbox": [
+            54,
+            315,
+            323,
+            619
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "Abstract In order to observe a patent application at the\nfirm level, two conditions need to be met: new products\nneed to be of patentable quality, which depends both on\nthe degree of novelty of innovations and on the total\nnumber (portfolio) of innovations; and the benefits of\npatents need to be higher than the costs of owning them.\nAnalyzing the patent propensity of small and large UK\nfirms using a novel innovation-level survey (the SIPU\nsurvey) linked to Community Innovation Survey data,\nwe find that when we consider the whole innovation\nportfolio, smaller firms do patent less than larger firms.\nHowever, using data on individual innovations, we find\nthat smaller firms are no less likely to patent any specific\ninnovation than larger firms. We argue that size differ-\nences in the probability to patent relate primarily to the\n“ portfolio effect, ” i.e., larger firms generate more inno-\nvations than smaller firms, and therefore are more likely\nto create one or more which are patentable. As for the\ndecision to patent a patentable innovation, we find that\ncost barriers, more than issues of innovation quality or"
+        },
+        {
+          "bbox": [
+            343,
+            315,
+            611,
+            407
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "enforceability, deter small firms from patenting specific\ninnovations. Measures to address the costs of patenting\nfor smaller—perhaps by considering patents as eligible\ncosts for R&D tax credits—and/or subsidizing SMEs'\nparticipation in IP litigation schemes may both encour-\nage patent use by smaller firms."
+        },
+        {
+          "bbox": [
+            344,
+            428,
+            567,
+            445
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "Keywords Patenting · SME · Small firms · UK"
+        },
+        {
+          "bbox": [
+            344,
+            467,
+            551,
+            482
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "JEL classifications 032·034·038·L26"
+        },
+        {
+          "bbox": [
+            344,
+            520,
+            422,
+            535
+          ],
+          "label": "sec_1",
+          "reading_order": 9,
+          "text": "1 Introduction"
+        },
+        {
+          "bbox": [
+            343,
+            550,
+            611,
+            809
+          ],
+          "label": "para",
+          "reading_order": 10,
+          "text": "Innovation — the market introduction of new products,\nservices or processes — can add value for producers and\nconsumers and drive economic growth (Baumol, 2002 ) .\nInnovating firms may gain a first mover advantage, earn\nhigher returns, and establish a position of market lead-\nership (Ulhoi, 2012 ) . Among innovators, small firms\nhave an almost mythical role as the source of new and\nradical ideas and the motors of creative destruction\n(Schumpeter, 1912 ) . However, it is widely recognized\nthat firms of all sizes find it difficult to appropriate the\nreturns to innovation leading to under-investment in\nR & D and innovation. One element of the policy re-\nsponse to this problem has been the development of\nlegal forms of intellectual property (IP) protection such\nas patents and trademarks. In each case, the main objec-\ntive is to limit imitation and help innovating firms ap-\npropriate the returns to their investment."
+        },
+        {
+          "bbox": [
+            55,
+            647,
+            310,
+            697
+          ],
+          "label": "foot",
+          "reading_order": 11,
+          "text": "S. S. Athreye ( )\nEssex Business School, University of Essex, Southend on Sea,\nEssex SS1 1LW, UK\ne-mail: suma.athreye@essex.ac.uk"
+        },
+        {
+          "bbox": [
+            55,
+            708,
+            317,
+            758
+          ],
+          "label": "foot",
+          "reading_order": 12,
+          "text": "C. Fassio\nDepartment of Business Administration, Centre for Innovation\nResearch and Competence in the Learning Economy (CIRCLE),\nLund University, Lund, Sweden"
+        },
+        {
+          "bbox": [
+            55,
+            769,
+            308,
+            807
+          ],
+          "label": "foot",
+          "reading_order": 13,
+          "text": "S. Roper\nEnterprise Research Centre (ERC), Warwick Business School,\nUniversity of Warwick, Coventry, England, UK"
+        },
+        {
+          "bbox": [
+            560,
+            825,
+            611,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 14,
+          "text": "![Figure](figures/figure_014.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_014.png"
+        }
+      ]
+    },
+    {
+      "page_number": 2,
+      "elements": [
+        {
+          "bbox": [
+            54,
+            39,
+            74,
+            52
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "514"
+        },
+        {
+          "bbox": [
+            535,
+            39,
+            610,
+            53
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            54,
+            65,
+            322,
+            414
+          ],
+          "label": "para",
+          "reading_order": 2,
+          "text": "An enduring debate in discussions of IP policy, how-\never, has been the questionable value of patenting for\nsmall firms (Fernandez-Ribas, 2010 ; Veer & Jell, 2012 ;\nMarzi, Dabic, Daim, & Garces, 2017 ) . There are several\nseparate strands of argument that contribute to this be-\nlief. The work of Cohen, Nelson, and Walsh ( 2000 )\nsuggested that small firms are a distinct group and prefer\nto protect their intellectual property using non-patent\nmethods. Why should this be the case? Two types of\nexplanations dominate the literature. The first argues\nthat small firms may simply be less familiar with formal\nIP mechanisms. As Hall, Helmers, Rogers, and Sena\n( 2013 ) note in their analysis of UK firms “ Because firms\nthat use one IP mechanism are more likely to use anoth-\ner, another possibility is that firms have a “ propensity ”\nto use or not use IP, and that the problem is lack of\nfamiliarity with the system and sub-optimal behavior on\nthe part of some firms ” . The second explanation in the\nresearch literature and public policy documents is that\ndue to resource constraints and/or registration and de-\nfense costs, patenting is of little value, as an intellectual\nproperty (IP) protection mechanism for small firms\n(Hughes & Mina, 2010 ; Athreye & Fassio, 2018 ) ."
+        },
+        {
+          "bbox": [
+            55,
+            414,
+            322,
+            626
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "Ensuring that IP policy “ works ” for both larger and\nsmaller firms is important to maximize the social value\nof innovation. Here, we revisit the reasons for small\nfirms' low patenting rates and make three contributions\nto our understanding. First, we develop a conceptual\nframework which looks more carefully at why small\nfirm may or may not use patents. In particular, we\ndistinguish between the probability of having a patent-\nable innovation and the decision to apply for it based on\na cost-benefit analysis. Further, we distinguish between\ntwo factors that may cause a firm to have smaller or\nlarger numbers of patentable innovations, viz. firms'\npropensity to patent any specific innovation and the\nbreadth of firms' portfolio of patentable innovations."
+        },
+        {
+          "bbox": [
+            55,
+            626,
+            322,
+            808
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "Second, we show that there are no theoretical argu-\nments which unequivocally suggest that small firms\nshould have a lower propensity to patent any specific\ninnovation, although resource constraints suggest that\nsmaller firms are likely to have a smaller portfolio of\npatentable innovations. Further, we argue that having a\nportfolio which includes patentable innovations is only\na necessary condition for whether or not a firm will\nactually make a patent application. This decision also\ndepends on the perceived benefit-cost ratio of patenting\nbeing positive — the sufficient condition for patenting by\nsmall firms."
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            611,
+            248
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "Third, we test our hypotheses using a novel database\nthat combines innovation-level information that can be\nlinked to the UK Community Innovation Survey 2015.\nBy linking the two databases, we obtain information on\nthe extent to which firms use patents and, where appli-\ncable, their reasons for not patenting. These data help us\nto see that most existing analyses of patenting by small\nfirms confound the portfolio and propensity to patent\neffects. Looking more closely at the reasons for not\npatenting, we conclude that small firms are deterred by\nthe costs of patenting rather than any other concerns,\nincluding lack of awareness."
+        },
+        {
+          "bbox": [
+            343,
+            248,
+            611,
+            521
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "Our results have important implications for patent\npolicy, especially in the UK, from where our data\nare drawn. IPO ( 2017 ) notes that the UK was the\nsixth largest national jurisdiction in terms of number\nof patent applications filed, in a world ranking led\nby China and the USA, in 2014. Adjusting these\nfigures for GDP and population puts the UK fourth\nand second in the world respectively. However, the\nvast majority of UK patent applications are filed by\nforeign applicants. In 2012, only 7 % of patent ap-\nplications covering the UK (including patents valid\nin the EPO) were filed by domestic applicants, com-\npared to 34 % in Germany, 48 % in the USA, and\n76 % in South Korea. 1 The reason for this is believed\nto be the increasing dominance of service industries\neven in hitherto manufacturing sectors, and the dom-\ninance of Knowledge Intensive Business Services\n(less protected by patents) in innovative activities."
+        },
+        {
+          "bbox": [
+            343,
+            521,
+            611,
+            687
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "In an overall climate of low patenting, where\neven large UK firms accounted for only small shares\nof patenting, the statistics on patenting from SME\nfirms in the UK is even more worrying. IPO ( 2017 :\np.37) notes that based on different definitions of size\n(assets, turnover, and employment) between 0.6 and\n1.5 % of SMEs and less than 1 % of micro enterprises\nhad patents published in 2014. This compared to\nabout 4 % of large firms that patented in 2014. As\npatenting has been shown to have large follow-on\neffects for innovation in small firms (Galasso &"
+        },
+        {
+          "bbox": [
+            343,
+            702,
+            610,
+            808
+          ],
+          "label": "fnote",
+          "reading_order": 8,
+          "text": "1 Using an alternative measure more tied to innovation activity viz.\nmeasuring patents per million Euros of R & D solely within the\nmanufacturing sector does control to some extent for differences in\nsector and levels of R & D investment. Even by this measure, UK\ncompanies still have lower patents, with 0.5 patents per million Euros\nof R & D compared to one patent per million Euros of R & D in Germa-\nny, France, the USA, and China, 3.7 in Japan and 6.1 in Korea. As this\nis a sample of large R & D investing companies, and differences in the\nUK economy as a whole could be even larger. (IPO 2017 : p.50)"
+        },
+        {
+          "bbox": [
+            55,
+            825,
+            105,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 9,
+          "text": "![Figure](figures/figure_009.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_009.png"
+        }
+      ]
+    },
+    {
+      "page_number": 3,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            196,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            591,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "515"
+        },
+        {
+          "bbox": [
+            55,
+            65,
+            321,
+            112
+          ],
+          "label": "half_para",
+          "reading_order": 2,
+          "text": "Schankerman, 2015 ) , finding ways to reduce the\nbarriers for small firms may have a large impact on\nthe growth of innovative small firms."
+        },
+        {
+          "bbox": [
+            55,
+            112,
+            322,
+            264
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "IP offices have hitherto operated outreach programs\nto raise awareness of IP instruments among smaller\nfirms based on the implicit belief that small firms have\na lower propensity to patent their innovations. $^2$ The\narguments in this paper about the salience of cost bar-\nriers suggest that IP policy may also need to develop\nmeasures which can reduce patenting costs for small\nfirms. These could take several forms but the most\nimportant is likely to be helping with the legal costs of\npatent enforcement."
+        },
+        {
+          "bbox": [
+            55,
+            264,
+            321,
+            400
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "The remainder of the paper is organized as follows.\nIn Section 2 , we outline our conceptual framework\nwhich differentiates between firms' ability to develop\npatentable innovations, a necessary condition for\npatenting, and the cost-benefit of actually patenting,\nthe sufficient condition. Section 3 profiles our data and\nempirical approach and Section 4 describes the main\nresults. Section 5 summarizes the key points and draws\nout the implications."
+        },
+        {
+          "bbox": [
+            55,
+            444,
+            186,
+            461
+          ],
+          "label": "sec_1",
+          "reading_order": 5,
+          "text": "2 Conceptual framework"
+        },
+        {
+          "bbox": [
+            55,
+            475,
+            322,
+            732
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "Previous studies have suggested that the conditions\nfor patenting may work differently in larger and\nsmaller firms. In terms of the ability to generate\npatentable innovations, the flexibility and respon-\nsiveness of small firms may offset their limited\nresource compared to larger firms (Vossen, 1998 ) .\nHowever, we might generally anticipate that larger\nfirms have more significant portfolios of innova-\ntions. In terms of the benefit-cost ratio which may\ninfluence the propensity to patent any specific\ninnovation, this is generally argued to favor larger\ncompanies (Hughes & Mina, 2010 ) . Patents may\nbe expensive to implement, disproportionately so\nperhaps for small firms, and may be overly costly\nfor small firms to defend effectively (Perez-Cano\n& Villen-Altamirano, 2013 ) . We discuss each in\nturn."
+        },
+        {
+          "bbox": [
+            344,
+            65,
+            531,
+            82
+          ],
+          "label": "sec_2",
+          "reading_order": 7,
+          "text": "2.1 Developing patentable innovations"
+        },
+        {
+          "bbox": [
+            344,
+            97,
+            611,
+            414
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "Firms' decisions about whether to invest in innovation,\nand which innovation projects to undertake, will reflect\ncognitive, behavioral, and organizational resource fac-\ntors. Among the cognitive influences, having a smaller\nsenior management team within small firms will inevi-\ntably limit their cultural and experiential diversity, with\npotentially negative impacts on creativity and market\nunderstanding (Galia & Zenou, 2012; Talke, Salomo, &\nRost, 2010) . This may reduce small firms' ability both to\nperceive market opportunities and develop innovative\nresponses. Small firms more limited management teams\nmay also mean they have weaker search capabilities,\nabsorptive capacity, and specialist understanding than\nthat available in larger businesses. This may limit small\nfirms' ability to take advantage of external knowledge or\nform (or effectively exploit) external innovation partner-\nships (Valentim, Lisboa, & Franco, 2016; Vahter, Love,\n& Roper, 2014) . Both the limited diversity and cognitive\ncapabilities of the managerial teams of small firms seem\nlikely to limit both the extent and degree of novelty of\nsmall firms' innovation portfolios. $^3$"
+        },
+        {
+          "bbox": [
+            344,
+            414,
+            611,
+            747
+          ],
+          "label": "para",
+          "reading_order": 9,
+          "text": "Behavioral factors linked to firms' performance ob-\njectives; managerial practices or routines may also be\nimportant in shaping firms' innovation portfolios.\nWhere firms have ambitious performance targets, this\nmay lead to innovation portfolios which are larger and\nmore radical (Gundry, Kickul, Welsch, & Posig, 2003 )\nwith the potential for first-mover advantage (Kopel &\nLoffler, 2008 ). Firms with more modest performance\ngoals may instead place more emphasis on incremental\ninnovation (Kok & Lightart, 2014 ). Management prac-\ntices may also have an impact on innovation, with\ntransformational leadership practices more strongly as-\nsociated with radical innovation (Rosing, Frese, &\nBausch, 2011 ). Firms' engagement with design leader-\nship (Design Council, 2015 ), advanced management\ntechniques (Bourke & Roper, 2016 ), and quality im-\nprovement (Bourke & Roper, 2017 ) may also positively\ninfluence innovation outcomes. It is not clear a priori\nwhether these behavioral effects on the probability of\ndeveloping patentable innovations will be more felici-\ntous in smaller or larger firms: smaller — and particularly\nyounger firms — may have more ambitious performance"
+        },
+        {
+          "bbox": [
+            55,
+            759,
+            321,
+            807
+          ],
+          "label": "fnote",
+          "reading_order": 10,
+          "text": "2 IPO initiatives such as IP Equip, the IP Health Check and the IP\nfinance toolkit help companies, particularly SMEs, towards a better\nunderstanding of how patenting their innovations can enhance their\nbusiness."
+        },
+        {
+          "bbox": [
+            344,
+            771,
+            610,
+            807
+          ],
+          "label": "fnote",
+          "reading_order": 11,
+          "text": "3 One exception to this may be where smaller firms are focussed on\nsuper-niche market strategies or specific technologies such as in the\nGerman Mittelstand (Venohr & Mayer, 2007; Simon, 1996)."
+        },
+        {
+          "bbox": [
+            560,
+            825,
+            610,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 12,
+          "text": "![Figure](figures/figure_012.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_012.png"
+        }
+      ]
+    },
+    {
+      "page_number": 4,
+      "elements": [
+        {
+          "bbox": [
+            54,
+            39,
+            74,
+            51
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "516"
+        },
+        {
+          "bbox": [
+            535,
+            38,
+            610,
+            53
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "5.5. Athreye et al."
+        },
+        {
+          "bbox": [
+            54,
+            65,
+            321,
+            127
+          ],
+          "label": "half_para",
+          "reading_order": 2,
+          "text": "goals and more dynamic leadership, while more\nestablished firms may have advantages in terms of en-\ngagement with design and leading-edge management\npractices."
+        },
+        {
+          "bbox": [
+            54,
+            127,
+            322,
+            400
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "In organizational terms, small firms' advantages in\nterms of flexibility have been contrasted with resource\nlimitations which may reduce their ability to develop\ninnovations of sufficient novelty to be patentable\n(Vossen 154998 ) . R & D activity in smaller firms, for\nexample, may be informal and ad hoc, reducing both\nknowledge creation and absorption capacity (Griffith,\nRedding, & Van Reenan, 2003 ) . Smaller firms' knowl-\nedge search and boundary spanning capabilities may\nalso be more limited (Mina, Bascavusoglu-Moreau, &\nHughes, 2014 ) . However, hierarchic and functional\nstructures within larger firms may inhibit knowledge\nflows and diffusion across the organization reducing\nlevels of innovation (Leonard-Barton, 1992 ) . A priori,\nas with the behavioral influences considered earlier,\norganizational factors may therefore have an uncertain\neffect on the probability that small and larger firms will\nsuccessfully generate patentable innovations."
+        },
+        {
+          "bbox": [
+            55,
+            413,
+            239,
+            430
+          ],
+          "label": "sec_2",
+          "reading_order": 4,
+          "text": "2.2 The benefit-cost ratio of patenting"
+        },
+        {
+          "bbox": [
+            54,
+            444,
+            321,
+            611
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "The costs of establishing a patent are significant and\nimpact disproportionately on small firms ( Kingston ,\n2001 ) . Beyond the financial implications, there may also\nbe strategic costs or risks associated with patenting and\ndisclosure—patents are public documents which pro-\nvide detailed information on an invention. “It is often\nthe case that imitation is still possible without infringing\nan incumbent innovator’s rights: the nature of the tech-\nnology might make it possible to ‘invent around’ a\nparticular design or technical specification” ( Hughes &\nMina , 2010 , p. 9) ."
+        },
+        {
+          "bbox": [
+            54,
+            611,
+            322,
+            809
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "The central benefit provided by a patent is temporary\nmonopoly, but the economic value of this depends on\nfirms' ability to appropriate the benefits of that monop-\noly. Both commercial and legal aspects are important in\ndetermining the firms' ability to appropriate the value of\na patent. Small firms may be in a weaker position than\nlarger firms to directly appropriate the benefits of pat-\nents, however, Hughes and Mina ( 2010 , p. 9) summa-\nrize evidence from Giuri et al. ( 2007 ) and Gambardella,\nGiuri, and Luzzi ( 2007 ) which suggests that across\nEurope: “ small firms exploit internally 55.8 % of their\npatents. ... Smaller firms also have a relatively high\npercentage of patents that are licensed out (15.0 % ) ..."
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            610,
+            203
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "smaller firms report very low figures for unused patents.\nTaken together, these results are consistent with smaller\nfirms licensing out more in pursuit of the complemen-\ntary assets necessary to develop and appropriate value.\nThey are also consistent with an inability or reluctance\nto maintain sleeping or dormant patents because of the\nrelatively high fixed costs which many small firms may\nbe unwilling or unable to bear. They thus may patent\nmore viable intellectual property\"."
+        },
+        {
+          "bbox": [
+            343,
+            203,
+            611,
+            429
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "Whether firms directly exploit or license patented\ntechnology, they may also need to enforce patents if\ninfringed. Hughes and Mina ( 2010 , p. 2) suggest that\n“ even where SMEs are able to recognize the importance\nof patenting and to put in place appropriate patents, they\nmay be at a substantial disadvantage in enforcing their\nIP rights. This is particularly likely to be the case with\nrespect to larger firms who not only may have a suffi-\nciently deep pocket to protect their own IP or challenge\nthe IP of SMEs, but may have greater competence at\nboth designing and defending their own patent position\nagainst emergent rival patents\". Qualitative interviews\nreported in IPO (2017) suggest that small firms also\nperceive the high costs of potential litigation as part of\nthe overall cost of patenting."
+        },
+        {
+          "bbox": [
+            343,
+            430,
+            611,
+            612
+          ],
+          "label": "para",
+          "reading_order": 9,
+          "text": "Patents may also generate value for a business through\nsignaling to “ partners and external finance, in producing\nan increase in the company's market value, in helping\ncapture new market share or protect the existing one, and\nin serving as an asset base capable of reinforcing the\ncompany's competitive advantage by way of access to\nexternal technologies. ” (Perez-Cano & Villen-\nAltamirano 2013 , p. 27) . Signaling advantages depend\nstrongly on sector with US studies highlighting a strong\nconcentration of patents in a few industries, namely phar-\nmaceutical, biotechnology, medical equipment,\nchemicals, computers, and special purpose machinery."
+        },
+        {
+          "bbox": [
+            343,
+            637,
+            487,
+            655
+          ],
+          "label": "sec_2",
+          "reading_order": 10,
+          "text": "2.3 Hypothesis development $^{4}$"
+        },
+        {
+          "bbox": [
+            343,
+            668,
+            611,
+            776
+          ],
+          "label": "para",
+          "reading_order": 11,
+          "text": "These management and resource differences between\nsmall and larger firms result in quite different profiles\nof innovation activity and patenting behavior. For\nexample, it is widely accepted in the empirical\nliterature on patents that large firms have a higher\npropensity to patent than small firms. Small firms are\nusually expected to prefer other informal IP protection"
+        },
+        {
+          "bbox": [
+            344,
+            793,
+            576,
+            807
+          ],
+          "label": "fnote",
+          "reading_order": 12,
+          "text": "$^{4} ~A$ formalization of our arguments is developed in Annex 1."
+        },
+        {
+          "bbox": [
+            55,
+            824,
+            106,
+            842
+          ],
+          "label": "fig",
+          "reading_order": 13,
+          "text": "![Figure](figures/figure_013.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_013.png"
+        }
+      ]
+    },
+    {
+      "page_number": 5,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            38,
+            197,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            591,
+            38,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "517"
+        },
+        {
+          "bbox": [
+            55,
+            65,
+            322,
+            415
+          ],
+          "label": "half_para",
+          "reading_order": 2,
+          "text": "mechanisms, such as secrecy, rather than the more\nformal, costly, and bureaucratic patents. Using survey\ndata for several European countries, Arundel ( 2001 )\nfinds that the propensity to use secrecy rather than\nformal patent protection is higher among small firms\nthan among large firms. Pajak ( 2016 ) also finds that\neven among small firms with less than 30 employees\nsize is negatively associated with patent applications.\nHall et al. ( 2013 ) using a sample drawn from the Com-\nmunity Innovation Survey (CIS), focused on UK firms,\nfind again that firm size, as proxied by number of\nemployees, is negatively related to the preference for\nprotection by patents versus secrecy. Many of the prior\nstudies that have analyzed the patenting probability of\nfirms also point to the role of R & D and other resources\nthat may be associated with firm size in explaining\npatenting behavior (Levin et al. 1987 ; Arundel &\nKabla, 1998 ; Arora et al. 2008 ) . Thus, the overall re-\nsource advantage enjoyed by larger firms in conducting\nR & D also suggests that they will have a larger portfolio\nof innovations which will be patented. The combination\nof resource and portfolio effects suggests our first\nhypothesis:"
+        },
+        {
+          "bbox": [
+            55,
+            429,
+            302,
+            446
+          ],
+          "label": "sec_3",
+          "reading_order": 3,
+          "text": "2.3.1 Hypothesis 1: Firm-level propensity to patent"
+        },
+        {
+          "bbox": [
+            55,
+            459,
+            322,
+            490
+          ],
+          "label": "sec_4",
+          "reading_order": 4,
+          "text": "Large firms have a higher overall propensity to patent\nwhen compared to small firms"
+        },
+        {
+          "bbox": [
+            55,
+            490,
+            322,
+            703
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "The typical distribution of the value of innovations,\neven within a single firm's portfolio, is usually strongly\nasymmetric, with few innovations often accounting for a\nvery large share of all sales (Scherer & Harhoff, 2000) .\nThis may suggest that firms implement very different\nstrategies for different innovations, according to their\nspecific value or perceived value. Moreover, as stressed\nby Arora, Athreye, and Huang ( 2013 ) , the propensity to\npatent of small firms may reflect the small number of\npatentable innovations created by smaller firms. In other\nwords, given a similar propensity to patent between firm\nA (large firm) and firm B (a small firm), the likelihood\nof patenting will be lower for firm B simply because it\nintroduces fewer patentable innovations, than firm A."
+        },
+        {
+          "bbox": [
+            55,
+            703,
+            322,
+            809
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "Generally, it is not easy to identify the separate effects\nof the propensity to patent and firms' innovation port-\nfolio as most survey datasets on innovation measure\noutcomes at the firm level rather than for any given\ninnovation. A sensible empirical strategy needs to get\nrid of the effect of the portfolio effect from the number\nof inventions, so that patenting behavior can be"
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            610,
+            97
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "observed as a function of patentability alone. Thus, our\nsecond conjecture is as follows:"
+        },
+        {
+          "bbox": [
+            343,
+            111,
+            574,
+            143
+          ],
+          "label": "sec_3",
+          "reading_order": 8,
+          "text": "2.3.2 Hypothesis 2: Innovation-level propensity\nto patent"
+        },
+        {
+          "bbox": [
+            343,
+            156,
+            611,
+            203
+          ],
+          "label": "sec_4",
+          "reading_order": 9,
+          "text": "Comparing like for like, for any innovation of value, the\npropensity to patent between large and small firms is not\ndifferent."
+        },
+        {
+          "bbox": [
+            343,
+            203,
+            611,
+            355
+          ],
+          "label": "para",
+          "reading_order": 10,
+          "text": "Lastly, and following the discussion in Section 2.2 ,\npatentability is only a necessary condition for patenting.\nIf an invention is patentable, firms will decide on\npatenting based on the perceived costs and benefits\nwhich may include the nature of competition faced by\nthe firm and the costs of patenting. Put differently, while\npatentability gives us the necessary condition for\npatenting, the sufficient condition for patenting is a\nfunction of perceived costs and benefits. This suggests\nour third hypothesis:"
+        },
+        {
+          "bbox": [
+            343,
+            368,
+            573,
+            401
+          ],
+          "label": "sec_3",
+          "reading_order": 11,
+          "text": "2.3.3 Hypothesis 3: Size differences in the costs\nand benefits of patenting"
+        },
+        {
+          "bbox": [
+            343,
+            413,
+            611,
+            462
+          ],
+          "label": "para",
+          "reading_order": 12,
+          "text": "Small firms face greater barriers to innovation on ac-\ncount of the costs of creating and defending patents than\nlarger firms."
+        },
+        {
+          "bbox": [
+            343,
+            489,
+            501,
+            506
+          ],
+          "label": "sec_1",
+          "reading_order": 13,
+          "text": "3 Data and empirical methods"
+        },
+        {
+          "bbox": [
+            343,
+            520,
+            427,
+            536
+          ],
+          "label": "sec_2",
+          "reading_order": 14,
+          "text": "3.1 Data sources"
+        },
+        {
+          "bbox": [
+            343,
+            550,
+            611,
+            687
+          ],
+          "label": "para",
+          "reading_order": 15,
+          "text": "The UK Intellectual Property Office (IPO) commis-\nsioned the Survey of Innovation and Patent Use\n(SIPU) to identify the main barriers to the use of intel-\nlectual property protection in the UK. SIPU 2015 fo-\ncussed on understanding the characteristics of firms'\n“ most valuable innovation. ” It asked whether these in-\nnovations were protected by patents and trademarks\nand, if they were not the reasons why firms had not\napplied for patent or trademark protection."
+        },
+        {
+          "bbox": [
+            343,
+            687,
+            611,
+            809
+          ],
+          "label": "para",
+          "reading_order": 16,
+          "text": "SIPU 2015 sampled all firms who had agreed to\nrespond to questions about their most valuable innova-\ntion from the 15,091 firms that were surveyed by UK\nInnovation Survey (UKIS) 2015. This provided a total\neligible sample of 886 businesses. Four hundred\nseventy-seven (54 % ) of these businesses had specifical-\nly indicated on the UKIS 2015 that they had engaged in\ninnovation in product, process, or business strategy in"
+        },
+        {
+          "bbox": [
+            560,
+            825,
+            611,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 17,
+          "text": "![Figure](figures/figure_017.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_017.png"
+        }
+      ]
+    },
+    {
+      "page_number": 6,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            74,
+            52
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "518"
+        },
+        {
+          "bbox": [
+            536,
+            39,
+            610,
+            53
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            55,
+            64,
+            297,
+            78
+          ],
+          "label": "cap",
+          "reading_order": 2,
+          "text": "Table 1 Comparison of SIPU and UKIS 2015 respondents"
+        },
+        {
+          "bbox": [
+            56,
+            80,
+            320,
+            393
+          ],
+          "label": "tab",
+          "reading_order": 3,
+          "text": "<table><tr><td></td><td>UKIS N = 15,091</td><td>SIPU N = 634</td></tr><tr><td colspan=\"3\">A. By firm sizeband</td></tr><tr><td>Small (10–49 employees)</td><td>44</td><td>55</td></tr><tr><td>Medium (50–249 employees)</td><td>36</td><td>30</td></tr><tr><td>Large (250 plus employees)</td><td>20</td><td>15</td></tr><tr><td>Total</td><td>100</td><td>100</td></tr><tr><td colspan=\"3\">B. By innovation type</td></tr><tr><td>Product or service</td><td>14</td><td>27</td></tr><tr><td>Process</td><td>16</td><td>8</td></tr><tr><td>Product/service and/or process</td><td>24</td><td>35</td></tr><tr><td colspan=\"3\">C. By sector (SIC 2007)</td></tr><tr><td>Primary (SIC 2007 05–09)</td><td>0.9</td><td>0.5</td></tr><tr><td>Manufacturing (SIC 2007 10–33)</td><td>16.3</td><td>18.3</td></tr><tr><td>Utilities (SIC 2007 35–39)</td><td>1.5</td><td>1.3</td></tr><tr><td>Construction (SIC 2007 41–43)</td><td>4.9</td><td>3.6</td></tr><tr><td>Wholesale and retail services (45–47)</td><td>31.0</td><td>27.8</td></tr><tr><td>Other services (49–83)</td><td>45.4</td><td>48.6</td></tr><tr><td>Total</td><td>100</td><td>100</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            395,
+            321,
+            420
+          ],
+          "label": "anno",
+          "reading_order": 4,
+          "text": "Sources: Authors' computations on SIPU 2015 merged with UKIS\n2015"
+        },
+        {
+          "bbox": [
+            53,
+            444,
+            322,
+            566
+          ],
+          "label": "half_para",
+          "reading_order": 5,
+          "text": "the period 1 January 2012 to 31 December 2014. The\nsurvey was administered by the telephone survey team\nfrom the Office of National Statistics soon after the\nconclusion of the UK Innovation Survey 2015. The\nSIPU survey achieved a response rate of 72 % with\nresponses from 277 innovators and 291 non-innovators.\nWe were also able to look up the CIS responses for each\nSIPU respondent."
+        },
+        {
+          "bbox": [
+            55,
+            566,
+            322,
+            612
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "To illustrate the representativeness of the SIPU respon-\ndents, we compare it to the UKIS 2015 in three dimen-\nsions (Table 1 ). First, we examine business size. SIPU"
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            611,
+            233
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "over-sampled small firms but under-sampled medium and\nlarge firms in comparison to the UKIS. This is likely to\nreduce the proportion of innovating firms in SIPU relative\nto the UKIS. Second, SIPU over-sampled innovative\nfirms overall, but also over-sampled product innovators\nvis-à-vis the UKIS (Table 1 , part B). Finally, when we\ncompare the industry composition of SIPU with UKIS\n2015, and see a broadly similar industrial composition\n(Table 1 , part C). The biases in the SIPU sample make\ndirect comparisons with the aggregates in the UKIS prob-\nlematic and we account for this in our empirical analysis."
+        },
+        {
+          "bbox": [
+            343,
+            233,
+            611,
+            582
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "Innovation itself is recorded differently in the two\nsurveys. In a 3-year period, a firm may generate several\ninnovations some of which are more valuable than\nothers. The UKIS asks firms to record their strategy\nover the totality of innovations introduced from 2012\nto 2014. SIPU focuses only on firms' most valuable\ninnovation. As we noted in Section 2 , not being able\nto observe how many innovations a firm produces\nmakes it difficult to disentangle the portfolio and pro-\npensity to patent effects. To address this, we define our\ndependent variable in two ways. First, the survey instru-\nment used in SIPU looks at the probability of applying\nfor a patent for firms' most commercially valuable in-\nnovation. The reasoning here is that an innovation\nwhich makes the most money for the company is also\nthe innovation that it is most likely to be worth\nprotecting through formal IP. Second, while the number\nof innovations of a firm is not observable, many respon-\ndents can say with some degree of certainty what per-\ncentage of their innovations is protected by patents and\nother formal IP strategies. This is an effective way of de-\nscaling patenting. The survey instrument in UKIS 2015\nasks exactly this kind of a question."
+        },
+        {
+          "bbox": [
+            344,
+            582,
+            611,
+            612
+          ],
+          "label": "para",
+          "reading_order": 9,
+          "text": "Table 2 reports the simple average for the share of\nrevenues due to innovation reported in UKIS and SIPU."
+        },
+        {
+          "bbox": [
+            55,
+            641,
+            334,
+            655
+          ],
+          "label": "cap",
+          "reading_order": 10,
+          "text": "Table 2 Share of innovative sales in CIS and SIPU, all figures in %"
+        },
+        {
+          "bbox": [
+            56,
+            658,
+            609,
+            792
+          ],
+          "label": "tab",
+          "reading_order": 11,
+          "text": "<table><tr><td></td><td>N</td><td>Contribution of innovation to turnover in 2014 (UKIS)</td><td>N</td><td>Contribution of the most valuable innovation to turnover in 2014 (SIPU)</td><td>Contribution of most valuable innovation to overall innovative sales in 2014 (SIPU/UKIS)</td></tr><tr><td>All firms</td><td>269</td><td>37.2</td><td>246</td><td>21.7</td><td>58.3</td></tr><tr><td>Small firms</td><td>142</td><td>41.4</td><td>133</td><td>28</td><td>67.6</td></tr><tr><td>Medium firms</td><td>89</td><td>33.1</td><td>80</td><td>16.7</td><td>50.5</td></tr><tr><td>Large firms</td><td>38</td><td>31.2</td><td>33</td><td>8.4</td><td>26.9</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            794,
+            349,
+            808
+          ],
+          "label": "anno",
+          "reading_order": 12,
+          "text": "Sources: Authors' computations on SIPU 2015 merged with UKIS 2015"
+        },
+        {
+          "bbox": [
+            55,
+            825,
+            106,
+            842
+          ],
+          "label": "fig",
+          "reading_order": 13,
+          "text": "![Figure](figures/figure_013.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_013.png"
+        }
+      ]
+    },
+    {
+      "page_number": 7,
+      "elements": [
+        {
+          "bbox": [
+            54,
+            38,
+            197,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            590,
+            38,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "519"
+        },
+        {
+          "bbox": [
+            54,
+            65,
+            322,
+            309
+          ],
+          "label": "para",
+          "reading_order": 2,
+          "text": "Although the sets of figures are not directly comparable,\nfirms' most valuable innovation accounts for more than\nhalf of all innovative sales on average and especially for\nsmall and medium firms. $^5$ Thus, we expect that these are\ninnovations which firms will try to protect using formal\nintellectual property instruments. In Table 3 , we can also\nsee that firms that reported using patents to protect their\ninnovations in the UKIS also tended to report using\npatent protection to protect their most valuable innova-\ntion and vice versa: about 85 % of the firms lie on the\nleading diagonal. This suggest that firms that use patents\nto protect technology and markets for their most valu-\nable innovation are also likely to do so more generally.\nUnderstanding the barriers to patenting firms' most\nvaluable innovation should therefore provide a good\nguide to more general barriers to patenting."
+        },
+        {
+          "bbox": [
+            55,
+            332,
+            169,
+            349
+          ],
+          "label": "sec_2",
+          "reading_order": 3,
+          "text": "3.2 Empirical approach"
+        },
+        {
+          "bbox": [
+            55,
+            362,
+            321,
+            454
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "Our empirical strategy uses information on different\ndimensions of firms' patenting activity to explore the\nimpact of the propensity to patent and portfolio effects.\nFirst, to test Hypothesis 1, we estimate a model where\nthe dependent variable PAT is a dummy variable equal\nto 1 if firm $i$ patented any innovation and zero otherwise:"
+        },
+        {
+          "bbox": [
+            55,
+            461,
+            319,
+            479
+          ],
+          "label": "equ",
+          "reading_order": 5,
+          "text": "$$PAT_{i}=\\alpha_{0}+\\alpha_{1}SIZE_{1}+\\alpha_{2}x_{i}+\\varepsilon_{i}\\quad(1)$$"
+        },
+        {
+          "bbox": [
+            54,
+            486,
+            322,
+            651
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "where SIZE is a set of dummy variables relating to\nthe size of company $i$ , and $x$ is a set of other firm-level\ncontrols such as whether a firm was product innovator\nand process innovator, undertook R & D activity, and\nintroduced new to market innovations. $\\varepsilon$ is an idiosyn-\ncratic error term. $^6$ The coefficient $\\alpha_1$ will reflect the\ncombined propensity to patent and portfolio effect. We\nalso include a set of industry dummy variables in each\nmodel (see Annex 3 ). The equation is estimated at the\nfirm level using UKIS data and samples constructed\nfrom all UKIS and comparable SIPU firms."
+        },
+        {
+          "bbox": [
+            55,
+            651,
+            321,
+            684
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "To test Hypothesis 2, we estimate a broadly similar\nmodel in which the dependent variable is defined to"
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            610,
+            113
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "represent the propensity to patent (independent of any\nportfolio effect). Let PROPPAT $_f$ represent firms' pro-\npensity to patent:"
+        },
+        {
+          "bbox": [
+            343,
+            120,
+            609,
+            138
+          ],
+          "label": "equ",
+          "reading_order": 9,
+          "text": "$$PROPPAT_{i}=\\beta_{0}+\\beta_{1}SIZE_{1}+\\beta_{2}x_{i}+\\varepsilon_{i}\\quad(2)$$"
+        },
+        {
+          "bbox": [
+            343,
+            146,
+            610,
+            314
+          ],
+          "label": "para",
+          "reading_order": 10,
+          "text": "We estimate two versions of this model to examine\nthe relationship between propensity to patent and firm\nsize. First, we use a binary dependent variable indicating\nwhether firms patented their single most valuable inno-\nvation using innovation level controls (e.g., whether the\ninnovation was product or process, new to market and\nfinanced externally). Second, we use a dependent vari-\nable measuring the proportion of firms' innovation port-\nfolio which is protected by patents. In each case, coef-\nficient $\\beta_1$ will capture the relationship between firm size\nand the propensity to patent."
+        },
+        {
+          "bbox": [
+            343,
+            314,
+            609,
+            345
+          ],
+          "label": "para",
+          "reading_order": 11,
+          "text": "Our third set of regressions aims to explain the bar-\nriers to patent usage in the following way:"
+        },
+        {
+          "bbox": [
+            343,
+            353,
+            609,
+            373
+          ],
+          "label": "equ",
+          "reading_order": 12,
+          "text": "$$BARRIER_{i}^{k}=b_{0}+b_{1}SIZE_{i}+\\delta x_{i}+\\varepsilon_{i}\\quad(3)$$"
+        },
+        {
+          "bbox": [
+            343,
+            379,
+            610,
+            455
+          ],
+          "label": "para",
+          "reading_order": 13,
+          "text": "where BARRIER stands for a set of $k$ dummy variables\n(0/1) that denote the different types of barriers that firms\nhave indicated as relevant for the decision not to patent\ntheir most valuable innovation. Models also include\nindustry dummies (see Annex 3 )."
+        },
+        {
+          "bbox": [
+            343,
+            456,
+            610,
+            548
+          ],
+          "label": "para",
+          "reading_order": 14,
+          "text": "A range of different reasons for not patenting the\nmost valuable innovation were specified in SIPU, and\nfirms were allowed to tick more than one reason. 7 In\norder to obtain a more parsimonious specification, we\ngrouped the reasons for not patenting into three\ncategories:"
+        },
+        {
+          "bbox": [
+            343,
+            561,
+            611,
+            685
+          ],
+          "label": "list",
+          "reading_order": 15,
+          "text": "– Non-patentable innovation: which includes the fol-\nlowing motivations: (a) innovation was not eligible\nfor patenting, (b) patenting was not considered im-\nportant by the firm, (c) innovation was not new to\nthe market.\n– Non-enforceable patent: which includes (a) the pat-\nent would have been difficult to enforce, (b) in-\nfringement of the patent would have been hard to"
+        },
+        {
+          "bbox": [
+            54,
+            701,
+            321,
+            748
+          ],
+          "label": "fnote",
+          "reading_order": 16,
+          "text": "5 The two sets of figures are not strictly comparable as the data from\nUKIS relates to innovations introduced in the 3-year period from 2012\nto 2014; however, 29 % of the firms in SIPU (79 of 277 firms) reported\nthat their most valuable innovation occurred before 2012."
+        },
+        {
+          "bbox": [
+            54,
+            748,
+            322,
+            808
+          ],
+          "label": "fnote",
+          "reading_order": 17,
+          "text": "6 The UK Innovation Survey (and SIPU) data sets provide a range of\nuseful controls but have no indicators of ownership or firm age. Both\nmay be important in shaping innovation outputs. Note however that the\nUK Innovation Survey is restricted to firms with 10 or more employees\nand so excludes smaller (and potentially young) start-up firms."
+        },
+        {
+          "bbox": [
+            343,
+            702,
+            611,
+            808
+          ],
+          "label": "fnote",
+          "reading_order": 18,
+          "text": "7 The reasons for not patenting that respondents could choose included\ntheir innovation was not new to the market; the innovation was not\neligible for patent protection; the cost of patent application was too\nhigh; a patent would have disclosed too much; infringement of the\npatent would be difficult to detect; and the patent would have been\ndifficult to enforce. In addition, there was a free form field where firms\ncould enter other reasons not included on the list. We parsed the\nreasons given into existing categories and added a new category that\npatenting was not considered relevant."
+        },
+        {
+          "bbox": [
+            559,
+            824,
+            610,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 19,
+          "text": "![Figure](figures/figure_019.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_019.png"
+        }
+      ]
+    },
+    {
+      "page_number": 8,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            74,
+            52
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "520"
+        },
+        {
+          "bbox": [
+            536,
+            39,
+            610,
+            53
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            55,
+            64,
+            224,
+            78
+          ],
+          "label": "cap",
+          "reading_order": 2,
+          "text": "Table 3 Use of patents in CIS and SIPU"
+        },
+        {
+          "bbox": [
+            55,
+            80,
+            320,
+            212
+          ],
+          "label": "tab",
+          "reading_order": 3,
+          "text": "<table><tr><td rowspan=\"2\">Used patents at all (UKIS)</td><td colspan=\"2\">Patented the most valuable innovation (SIPU)</td><td rowspan=\"2\">All firms</td></tr><tr><td>No</td><td>Yes</td></tr><tr><td>No</td><td>144</td><td>7</td><td>151</td></tr><tr><td>Yes</td><td>29</td><td>64</td><td>93</td></tr><tr><td>All firms</td><td>173</td><td>71</td><td>244</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            214,
+            321,
+            239
+          ],
+          "label": "anno",
+          "reading_order": 4,
+          "text": "Sources: Authors' computations on SIPU 2015 merged with UKIS\n2015"
+        },
+        {
+          "bbox": [
+            53,
+            260,
+            322,
+            323
+          ],
+          "label": "list",
+          "reading_order": 5,
+          "text": "detect, and (c) patent would have disclosed too\nmuch\n\n– High cost of patenting: for firms that reported that\nthe cost of patent was too high."
+        },
+        {
+          "bbox": [
+            55,
+            336,
+            323,
+            565
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "Out of a total number of 206 firms that did not patent\ntheir most valuable innovation, 198 (82 % ) indicated one\nof the three motivations above as a reason for their\ndecision. $^8$ Figure 1 shows that the most common reason\nfor not patenting is that the innovation is not patentable\n(approximately 73 % ; for 58 % this was the only reason),\nfollowed by problems related to the fact that the patent\nwas not enforceable or disclosed too much information\n(33 % ). Cost-related reasons are instead a relatively low-\ner concern for SIPU firms, with only 13 % of firms\nindicating among the possible reasons and only 3 % of\nthe firms indicating it as the only reason. $^9$ For each of\nthe three barriers, we estimate a specific regression\nmodel (2) where the dependent variable is equal to 1 if\nthat specific barrier was picked by the firm."
+        },
+        {
+          "bbox": [
+            55,
+            565,
+            322,
+            701
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "By looking at all three sets of regressions, we get a\nmore holistic picture of the barriers to the use of formal\nIP. This marks a departure from past studies which have\ntended to infer the barriers to patent use from the first set\nof regressions alone (on patent propensity). We use the\nregression analysis mainly to produce conditional\nmeans that control for a wide range of characteristics/\nattributes of the firm and the innovation. Annex 2 details\nthe main variables we used in the analysis for each set of"
+        },
+        {
+          "bbox": [
+            344,
+            65,
+            610,
+            96
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "regressions, as well as the data source from which they\nare drawn."
+        },
+        {
+          "bbox": [
+            344,
+            142,
+            394,
+            157
+          ],
+          "label": "sec_1",
+          "reading_order": 9,
+          "text": "4 Results"
+        },
+        {
+          "bbox": [
+            344,
+            171,
+            585,
+            188
+          ],
+          "label": "sec_2",
+          "reading_order": 10,
+          "text": "4.1 Patent propensity at firm and innovation level"
+        },
+        {
+          "bbox": [
+            343,
+            202,
+            611,
+            581
+          ],
+          "label": "para",
+          "reading_order": 11,
+          "text": "Comparing the use of patents for all innovations by\nfirms in UKIS 2015 and the probability of patenting\ntheir most valuable innovation from SIPU suggests\nsome significant differences (Table 4 ). The existing\nevidence, suggesting that on average small firms have\na lower patent propensity with respect to medium and\nlarge firms, is indeed confirmed by the statistics from\nUKIS firms. Table 4 , column (2) shows that the share of\nsmall-firm innovators who applied for at least one patent\nin the UKIS is less than 20 % , significantly different in\nstatistical terms from the share of innovators who patent\namong medium firms (26.5 % ) and large firms (33 % ).\nThese differences reflect both the propensity to patent\nindividual innovations and the breadth of firms' portfo-\nlio of innovations. When, however, we focus only on the\nmost significant innovation, removing any portfolio ef-\nfect (Table 5a , column 4), we find that there are no large\ndifferences among firms of different size, i.e., among the\nSIPU innovators, we find no evidence of size effects in\nthe propensity to patent their most valuable invention. A\nfirst explanation of these results could be that, consider-\ning that patenting is a costly strategic decision taken by\nfirms, financially constrained small firms will only ap-\nply for a patent when the value of their innovation is\nsufficiently high to motivate their investment."
+        },
+        {
+          "bbox": [
+            344,
+            581,
+            611,
+            809
+          ],
+          "label": "para",
+          "reading_order": 12,
+          "text": "The lack of any difference in patenting propensity\nbetween larger and smaller firms is not, however, com-\nbined to their most valuable innovation. An alternative\napproach to looking at patenting propensity separate\nfrom the portfolio effect is to examine the proportion\nof all innovations protected by patents. Again, this pro-\nvides a way of de-scaling the data and adjusting for the\nfact that due to resource limitations, small firms may\nproduce fewer innovations than large firms (Table 5 ). As\nnoted earlier, Table 5 shows that a larger proportion of\nsmall firms do not use patents to protect their innova-\ntions. However, the proportion of small firms that de-\npend on patents to protect more than 50 % of their\ninnovations does not seem significantly different to the\naverage or to that in medium and large firms."
+        },
+        {
+          "bbox": [
+            55,
+            723,
+            321,
+            760
+          ],
+          "label": "fnote",
+          "reading_order": 13,
+          "text": "8 The remaining 8 firms either reported that the innovation was still not\nfully developed (and the patent application procedure had not been\nstarted yet), or did not report a specific reason."
+        },
+        {
+          "bbox": [
+            55,
+            760,
+            321,
+            807
+          ],
+          "label": "fnote",
+          "reading_order": 14,
+          "text": "9 The graph also shows that a non-negligible number of firms (20 % )\nindicated a combination of the three (or two) reasons rather than a\nsingle one, suggesting that in some cases, different factors matter at the\nsame time."
+        },
+        {
+          "bbox": [
+            55,
+            825,
+            106,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 15,
+          "text": "![Figure](figures/figure_015.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_015.png"
+        }
+      ]
+    },
+    {
+      "page_number": 9,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            197,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            592,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "521"
+        },
+        {
+          "bbox": [
+            61,
+            62,
+            588,
+            326
+          ],
+          "label": "fig",
+          "reading_order": 2,
+          "text": "![Figure](figures/figure_002.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_002.png"
+        },
+        {
+          "bbox": [
+            55,
+            328,
+            611,
+            356
+          ],
+          "label": "cap",
+          "reading_order": 3,
+          "text": "Fig. 1 Summary of firms' reasons for not patenting. $N=206(100 \\%)$; in 8 cases, $(4 \\%)$ none of the three reasons was specified as important\n(other reasons were specified as important). Source SIPU"
+        },
+        {
+          "bbox": [
+            55,
+            383,
+            322,
+            428
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "To examine these differences in a multivariate con-\ntext, controlling for factors such as the industry affilia-\ntion of the firm, R&D activities, access to external"
+        },
+        {
+          "bbox": [
+            343,
+            383,
+            611,
+            428
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "finance, and type of innovation introduced, we use\nregression and probit analysis (Table 6 ). Both the SIPU\nand UKIS survey datasets are cross sectional, so here we"
+        },
+        {
+          "bbox": [
+            55,
+            457,
+            544,
+            471
+          ],
+          "label": "cap",
+          "reading_order": 6,
+          "text": "Table 4 Percentage of innovators applying for patents in the UKIS 2015 and in SIPU for their most valuable innovation"
+        },
+        {
+          "bbox": [
+            55,
+            473,
+            609,
+            792
+          ],
+          "label": "tab",
+          "reading_order": 7,
+          "text": "<table><tr><td></td><td colspan=\"2\">Patents all CIS innovators</td><td colspan=\"2\">Patents SIPU</td></tr><tr><td></td><td>(1) Num.</td><td> $\\%$ </td><td>(2) Num.</td><td> $\\%$ </td></tr><tr><td>Total innovating firms</td><td>2641</td><td></td><td>277</td><td></td></tr><tr><td>Total patenting firms</td><td>666</td><td>25.22</td><td>71</td><td>25.63</td></tr><tr><td>Small firms (&lt;49 employees)</td><td>197</td><td>19.58***</td><td>35</td><td>24.8</td></tr><tr><td>Medium firms (50–249 employees)</td><td>285</td><td>26.46***</td><td>25</td><td>27.2</td></tr><tr><td>Large Firms (&gt;250 employees)</td><td>184</td><td>32.97***</td><td>11</td><td>25</td></tr><tr><td>Product innovation</td><td>546</td><td>35.23***</td><td>57</td><td>33.1**</td></tr><tr><td>Process innovation</td><td>381</td><td>21.04</td><td>10</td><td>18.9</td></tr><tr><td>New to market</td><td>397</td><td>43.77***</td><td>44</td><td>32.5**</td></tr><tr><td>New to firm</td><td>328</td><td>23.4</td><td>10</td><td>14.3</td></tr><tr><td>Continuous R&amp;D</td><td>451</td><td>38.06***</td><td>49</td><td>34.75***</td></tr><tr><td>No R&amp;D or discontinuous R&amp;D</td><td>215</td><td>14.77</td><td>22</td><td>16.18</td></tr><tr><td>Independent firms</td><td>–</td><td>–</td><td>30</td><td>20.6</td></tr><tr><td>Affiliated to a group</td><td>–</td><td>–</td><td>41</td><td>31.3**</td></tr><tr><td>Internally financed</td><td>–</td><td>–</td><td>46</td><td>22.1</td></tr><tr><td>Any external finance</td><td>–</td><td>–</td><td>23</td><td>40.4***</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            794,
+            474,
+            808
+          ],
+          "label": "anno",
+          "reading_order": 8,
+          "text": "Source: Computations from UKIS 2015 and SIPU 2015. **Ssignificance at 5%; ***Significance at 1%"
+        },
+        {
+          "bbox": [
+            560,
+            825,
+            611,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 9,
+          "text": "![Figure](figures/figure_009.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_009.png"
+        }
+      ]
+    },
+    {
+      "page_number": 10,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            74,
+            51
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "522"
+        },
+        {
+          "bbox": [
+            536,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            55,
+            64,
+            610,
+            90
+          ],
+          "label": "cap",
+          "reading_order": 2,
+          "text": "Table 5 Percentage of innovations protected by patents in UKIS 2015 for different groups of firms—percent of firms and number of firms in\nparentheses"
+        },
+        {
+          "bbox": [
+            56,
+            92,
+            609,
+            309
+          ],
+          "label": "tab",
+          "reading_order": 3,
+          "text": "<table><tr><td></td><td colspan=\"6\">Percentage of innovations protected</td></tr><tr><td></td><td>None</td><td>10%</td><td>10 to 40%</td><td>41 to 60%</td><td>61 to 90%</td><td>90%</td></tr><tr><td>All innovating firms</td><td>75.50 (2009)</td><td>9.39 (250)</td><td>4.81 (128)</td><td>2.71 (72)</td><td>2.48 (66)</td><td>5.11 (136)</td></tr><tr><td>Small firms</td><td>81.51 (829)</td><td>5.31 (54)</td><td>2.56 (26)</td><td>2.16 (22)</td><td>2.75 (28)</td><td>5.70 (58)</td></tr><tr><td>Medium firms</td><td>74.05 (802)</td><td>10.71 (116)</td><td>5.91 (64)</td><td>2.77 (30)</td><td>2.22 (24)</td><td>4.34 (47)</td></tr><tr><td>Large firms</td><td>67.38 (378)</td><td>14.26 (80)</td><td>6.77 (38)</td><td>3.57 (20)</td><td>2.50 (14)</td><td>5.53 (31)</td></tr><tr><td>Product innovator</td><td>65.71 (1025)</td><td>13.21 (206)</td><td>6.86 (107)</td><td>3.78 (59)</td><td>3.40 (53)</td><td>7.05 (110)</td></tr><tr><td>Process innovators</td><td>79.68 (1455)</td><td>7.78 (142)</td><td>4.05 (74)</td><td>2.46 (45)</td><td>2.19 (40)</td><td>3.83 (70)</td></tr><tr><td>New to market</td><td>57.53 (527)</td><td>14.30 (131)</td><td>8.95 (82)</td><td>5.02 (46)</td><td>4.59 (42)</td><td>9.61 (88)</td></tr><tr><td>New to firm</td><td>77.28 (1092)</td><td>10.26 (145)</td><td>4.60 (65)</td><td>2.48 (35)</td><td>1.98 (28)</td><td>3.40 (48)</td></tr><tr><td>Continuous R\\&amp;D</td><td>62.62 (747)</td><td>13.50 (161)</td><td>8.47 (101)</td><td>3.94 (47)</td><td>4.11 (49)</td><td>7.38 (88)</td></tr><tr><td>No R\\&amp;D or discontinuous R\\&amp;D</td><td>79.65 (454)</td><td>8.42 (48)</td><td>3.33 (19)</td><td>2.63 (15)</td><td>1.93 (11)</td><td>4.04 (23)</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            312,
+            255,
+            325
+          ],
+          "label": "anno",
+          "reading_order": 4,
+          "text": "Source: Authors' computations from UKIS 2015"
+        },
+        {
+          "bbox": [
+            55,
+            344,
+            322,
+            376
+          ],
+          "label": "half_para",
+          "reading_order": 5,
+          "text": "use regression analysis as a purely descriptive (rather\nthan causal) tool to assess if there are differences"
+        },
+        {
+          "bbox": [
+            343,
+            344,
+            611,
+            376
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "between small and large firms in their probability of\npatenting. Table 6 , model 1 reports the conditional"
+        },
+        {
+          "bbox": [
+            55,
+            397,
+            265,
+            411
+          ],
+          "label": "cap",
+          "reading_order": 7,
+          "text": "Table 6 Patent propensity among innovating firms"
+        },
+        {
+          "bbox": [
+            56,
+            413,
+            609,
+            777
+          ],
+          "label": "tab",
+          "reading_order": 8,
+          "text": "<table><tr><td></td><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td></tr><tr><td>Dependent variables</td><td>Probability of patenting any innovation</td><td>Probability of patenting any innovation</td><td>Probability of patenting most valued innovation</td><td>Share of innovations patented</td><td>Share of innovations patented</td></tr><tr><td>Sample</td><td>UKIS</td><td>SIPU</td><td>SIPU</td><td>UKIS</td><td>SIPU</td></tr><tr><td>Estimation method</td><td>Probit</td><td>Probit</td><td>Probit</td><td>OLS</td><td>OLS</td></tr><tr><td rowspan=\"2\">Continuous R&amp;D</td><td>0.135***</td><td>0.182***</td><td>0.110**</td><td>0.054***</td><td>0.071*</td></tr><tr><td>(0.019)</td><td>(0.069)</td><td>(0.045)</td><td>(0.011)</td><td>(0.036)</td></tr><tr><td rowspan=\"2\">Small firm (&lt;49 employees)</td><td>−0.126***</td><td>−0.274***</td><td>−0.04</td><td>−0.016</td><td>0.000</td></tr><tr><td>(0.021)</td><td>(0.093)</td><td>(0.066)</td><td>(0.013)</td><td>(0.048)</td></tr><tr><td rowspan=\"2\">Medium firm (50–249 emps)</td><td>−0.067***</td><td>−0.268***</td><td>−0.037</td><td>−0.022*</td><td>−0.027</td></tr><tr><td>(0.021)</td><td>(0.082)</td><td>(0.064)</td><td>(0.013)</td><td>(0.045)</td></tr><tr><td>Innovation externally financed</td><td></td><td></td><td>0.222***</td><td></td><td></td></tr><tr><td rowspan=\"2\">Product innovator</td><td>0.130***</td><td></td><td>(0.076)</td><td></td><td></td></tr><tr><td>(0.022)</td><td>0.287***</td><td>−0.07</td><td>0.024*</td><td>0.126***</td></tr><tr><td rowspan=\"2\">Process innovator</td><td>0.022)</td><td>(0.071)</td><td>(0.043)</td><td>(0.012)</td><td>(0.043)</td></tr><tr><td>(0.024)</td><td>0.181***</td><td>−0.122***</td><td>−0.027*</td><td>0.130***</td></tr><tr><td>Process innovator</td><td>−0.042*</td><td>0.181***</td><td>−0.122***</td><td>−0.027*</td><td>0.130***</td></tr><tr><td>(0.022)</td><td>(0.068)</td><td>(0.044)</td><td>(0.014)</td><td>(0.048)</td></tr><tr><td>New to market</td><td>0.177***</td><td>0.232***</td><td>0.047</td><td>0.094***</td><td>0.133***</td></tr><tr><td>Innovator</td><td>(0.020)</td><td>(0.066)</td><td>(0.043)</td><td>(0.012)</td><td>(0.037)</td></tr><tr><td>Observations</td><td>2618</td><td>268</td><td>277</td><td>2641</td><td>291</td></tr><tr><td>Pseudo  $R^{2} / R^{2}$ </td><td>0.154</td><td>0.236</td><td>0.185</td><td>0.088</td><td>0.19</td></tr><tr><td>Log likelihood</td><td>−1483</td><td>−176.5</td><td>−157.7</td><td>−50.37</td><td>−53.39</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            778,
+            406,
+            808
+          ],
+          "label": "anno",
+          "reading_order": 9,
+          "text": "Models include a set of industry dummies—not reported (see Annex 2)\nNotes: * for significance at 10 % ; ** for significance at 5 % ; *** for significance at 1 %"
+        },
+        {
+          "bbox": [
+            55,
+            825,
+            106,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 10,
+          "text": "![Figure](figures/figure_010.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_010.png"
+        }
+      ]
+    },
+    {
+      "page_number": 11,
+      "elements": [
+        {
+          "bbox": [
+            54,
+            38,
+            196,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            591,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "523"
+        },
+        {
+          "bbox": [
+            54,
+            65,
+            322,
+            278
+          ],
+          "label": "half_para",
+          "reading_order": 2,
+          "text": "probability of a firm obtaining a patent in the UKIS\nsample of innovators, around 2600 firms. The reference\ngroup in the model is larger firms, and we find the\nfamiliar result that small and medium firms are less\nlikely to patent. Small firms are 12.6 % less likely to be\npatenting than large firms, a gap which falls to 6.7 % for\nmedium firms (Table 6 , model 1). We see a similar result\nfor the smaller group of firms which are included in the\nSIPU dataset (Table 6 , model 2). Here again small and\nmedium firms are significantly less likely to be\npatenting than larger firms. These differences in the\nprobability of patenting at firm-level reflect the combi-\nnation of the portfolio and propensity to patent effect,\nand provide strong confirmation of Hypothesis 1."
+        },
+        {
+          "bbox": [
+            54,
+            278,
+            322,
+            611
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "Hypothesis 2 reflects the propensity to patent firms'\ninnovations excluding any portfolio effect. We test this\nproposition in two ways. First, by focusing on whether\nthere is any difference in large firms' and small firms'\npropensity to patent their most valuable innovation and,\nsecondly, by exploring whether there is any difference in\nthe proportion of firms' portfolio of innovations is pat-\nented. Table 6 , model 3 focuses on the propensity to\npatent firms' most valuable innovation which we are\nonly able to estimate for the smaller SIPU sample. $^10$ In\nline with the descriptive results in Table 5 , we find here\nthat being a small firm (less than 50 employees) does not\nsignificantly decrease the propensity to patent the firms'\nmost valuable innovation. Note, however, that both for\nsmall and medium firms, coefficients are negative but\ninsignificant. The implication is that there is no signifi-\ncant difference in the probability that smaller firms and\nlarge firms will patent their most valuable innovation,\nand that it is therefore the portfolio effect rather than the\npropensity to innovate effect which explains the differ-\nence between the probability of small and large firm\npatenting."
+        },
+        {
+          "bbox": [
+            54,
+            611,
+            321,
+            688
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "A second test of Hypothesis 2 is provided by the\nmodels in Table 6 columns 4 and 5. $^11$ Here, we directly\nde-scale the patenting data by looking at the proportion\nof firms' innovations protected by patents. Again, this\nfocuses attention on the propensity to patent and"
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            611,
+            294
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "removes any portfolio effect. Here again, in both the\n(larger) UKIS and (smaller) SIPU samples, we find no\nsignificant difference in the proportion of small and\nlarger firms' innovations which are protected by\npatenting (Table 6 , models 4 and 5). The very similar\nresults here obtained for both the larger UKIS and\nsmaller SIPU samples also suggest that this result is\nnot simply a consequence of differences in sample size\nin the SIPU and UKIS surveys. Instead, our result of the\ninsignificance of the difference in the proportion of\npatented innovations in larger and small firms proves\nrobust in both samples. Taken together, our analysis\ntherefore provides strong support for Hypothesis 2 and\nthe idea that small and large firms have similar patent\npropensity."
+        },
+        {
+          "bbox": [
+            343,
+            322,
+            463,
+            338
+          ],
+          "label": "sec_2",
+          "reading_order": 6,
+          "text": "4.2 Barriers to patenting"
+        },
+        {
+          "bbox": [
+            343,
+            352,
+            611,
+            549
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "We turn now to the discussion of why firms may not\npatent their valuable innovation. Using data from the\nsmaller SIPU sample, we consider the responses of all\nfirms that reported a valuable innovation, but did not\npatent that innovation (Table 7 ). The three most impor-\ntant reasons for not patenting were the innovation could\nnot be patented (68 % ), followed by the patent would\nhave been difficult to enforce (31 % ), and lack of novelty\n(30 % ). Interestingly, these three reasons continue to be\nthe main reasons for not patenting even when we look\nacross the different groups of firms. $^12$ The fear that\npatents would disclose too much was the least frequent-\nly reported reason for not patenting (4 % )."
+        },
+        {
+          "bbox": [
+            343,
+            549,
+            611,
+            702
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "The next three columns in Table 7 look at the reasons\nfor not patenting by firm size. Statistically significant\ndifferences are highlighted in italic. In general, the rea-\nsons for not patenting the most valuable innovation were\nsimilar between medium and large firms. Medium and\nlarge firms were more likely not to patent because their\ninnovations could not be protected by patents, especially\nwhen compared to small firms. Large firms often have\nin-house legal advisors and this may make them more\naware of the patentability of innovations. One in five"
+        },
+        {
+          "bbox": [
+            55,
+            701,
+            321,
+            772
+          ],
+          "label": "fnote",
+          "reading_order": 9,
+          "text": "10 Among the other control variables, we also include some new\nvariables not included in Table 5 but which have been suggested by\nthe literature on patenting. Additionally, we check for the effect of\nopenness, i.e., the fact that a firm develops its most important innova-\ntion collaboratively with other external partners, and we find that it\nexerts a negative effect on patenting."
+        },
+        {
+          "bbox": [
+            55,
+            772,
+            321,
+            808
+          ],
+          "label": "fnote",
+          "reading_order": 10,
+          "text": "$^{11}$ Table 6 reports OLS estimates but we found qualitatively similar\nresults using fractional logit models (not reported here). These results\nare available from the authors upon request."
+        },
+        {
+          "bbox": [
+            343,
+            712,
+            610,
+            808
+          ],
+          "label": "fnote",
+          "reading_order": 11,
+          "text": "12 Our summary category of non-patentable innovation includes three\nsub-categories identified in the SIPU survey: (a) innovation was not\neligible for patenting, (b) patenting was not considered important by\nthe firm, and (c) innovation was not new to the market. It is notable that\n(b) was ranked as relevant only by 8.2 % of the population of firms and\nsmall firms were not significantly different from the average. Patent-\nability is a significant reason for not patenting but this is not a reason\nreported disproportionately often by small firms."
+        },
+        {
+          "bbox": [
+            559,
+            824,
+            611,
+            842
+          ],
+          "label": "fig",
+          "reading_order": 12,
+          "text": "![Figure](figures/figure_012.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_012.png"
+        }
+      ]
+    },
+    {
+      "page_number": 12,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            74,
+            51
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "524"
+        },
+        {
+          "bbox": [
+            536,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            55,
+            64,
+            447,
+            78
+          ],
+          "label": "cap",
+          "reading_order": 2,
+          "text": "Table 7 Reasons for not patenting given by innovating firms (% of firms choosing each reason)"
+        },
+        {
+          "bbox": [
+            55,
+            80,
+            610,
+            330
+          ],
+          "label": "tab",
+          "reading_order": 3,
+          "text": "<table><tr><td>Reasons for not patenting</td><td>Non-patenting firms ( n = 206)</td><td>Small firms</td><td>Medium Firms</td><td>Large firms</td><td>Product innovators</td><td>Process innovators</td><td>Not continuous R&amp;D</td><td>Continuous R&amp;D</td><td>Not Open</td><td>Open</td></tr><tr><td>The innovation was not eligible for patent protection</td><td>140</td><td>67.9</td><td>62.3</td><td>76.1</td><td>69.7</td><td>62.6</td><td>72.1</td><td>75.4</td><td>58.7</td><td>75.7</td><td>63.6</td></tr><tr><td>The patent would have been difficult to enforce</td><td>64</td><td>31.1</td><td>34.9</td><td>26.8</td><td>27.2</td><td>33.0</td><td>39.5</td><td>25.4</td><td>38.1</td><td>28.3</td><td>32.5</td></tr><tr><td>Innovation was not new to the market</td><td>62</td><td>30</td><td>33.0</td><td>28.4</td><td>24.2</td><td>23.5</td><td>41.9</td><td>37.7</td><td>20.7</td><td>31.1</td><td>29.5</td></tr><tr><td>The cost of patent application was too high</td><td>28</td><td>13.5</td><td>20.8</td><td>7.5</td><td>3.0</td><td>18.3</td><td>11.6</td><td>7.9</td><td>20.7</td><td>13.5</td><td>13.6</td></tr><tr><td>Infringement of the patent would be difficult to detect</td><td>21</td><td>10.2</td><td>11.3</td><td>9.0</td><td>9.1</td><td>12.2</td><td>9.3</td><td>9.6</td><td>10.9</td><td>12.2</td><td>9.1</td></tr><tr><td>Patent was not relevant</td><td>17</td><td>8.2</td><td>8.5</td><td>10.4</td><td>3.0</td><td>9.6</td><td>0.0</td><td>12.3</td><td>3.3</td><td>4.1</td><td>10.6</td></tr><tr><td>A patent would have disclosed too much</td><td>8</td><td>3.8</td><td>6.6</td><td>1.5</td><td>0.0</td><td>4.3</td><td>4.7</td><td>2.6</td><td>5.4</td><td>2.7</td><td>4.5</td></tr><tr><td>Other</td><td>4</td><td>1.9</td><td>0.9</td><td>3.0</td><td>3.3</td><td>2.6</td><td>0.0</td><td>0.8</td><td>3.3</td><td>1.4</td><td>2.3</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            332,
+            450,
+            345
+          ],
+          "label": "anno",
+          "reading_order": 4,
+          "text": "Values in italic identify statistically significant differences. Source: Computations from SIPU2015"
+        },
+        {
+          "bbox": [
+            55,
+            395,
+            265,
+            409
+          ],
+          "label": "cap",
+          "reading_order": 5,
+          "text": "Table 8 Probit models of reasons for not patenting"
+        },
+        {
+          "bbox": [
+            55,
+            411,
+            610,
+            792
+          ],
+          "label": "tab",
+          "reading_order": 6,
+          "text": "<table><tr><td></td><td>(1)</td><td>(2)</td><td>(3)</td></tr><tr><td>Dependent variables</td><td>Not patentable</td><td>Not enforceable</td><td>High costs</td></tr><tr><td>Sample</td><td>SIPU</td><td>SIPU</td><td>SIPU</td></tr><tr><td>Estimation method</td><td>Probit</td><td>Probit</td><td>Probit</td></tr><tr><td>Value of invention</td><td>−0.021 (0.021)</td><td>0.057*** (0.021)</td><td>0 (0.000)</td></tr><tr><td>Continuous R&amp;D</td><td>−0.132* (0.072)</td><td>0.049 (0.077)</td><td>0 (0.000)</td></tr><tr><td>Small firm (&lt;49 employees)</td><td>0.055 (0.110)</td><td>−0.019 (0.121)</td><td>0.183*** (0.068)</td></tr><tr><td>Medium firm (50–249 emps)</td><td>0.156 (0.097)</td><td>−0.068 (0.117)</td><td>0.477*** (0.097)</td></tr><tr><td>Any external finance</td><td>−0.03 (0.091)</td><td>−0.091 (0.080)</td><td>0 (0.000)</td></tr><tr><td>Process innovation</td><td>0.003 (0.085)</td><td>−0.034 (0.091)</td><td>0 (0.000)</td></tr><tr><td>Business strategy</td><td>0.142** (0.070)</td><td>−0.140* (0.085)</td><td>−0.004 (0.003)</td></tr><tr><td>New to the market innovation</td><td>−0.142** (0.065)</td><td>0.190*** (0.073)</td><td>0 (0.000)</td></tr><tr><td>Openness (dummy)</td><td>−0.041 (0.063)</td><td>−0.013 (0.075)</td><td>0 (0.000)</td></tr><tr><td>Observations</td><td>197</td><td>197</td><td>197</td></tr><tr><td>Pseudo  $R^{2} / R^{2}$ </td><td>0.225</td><td>0.149</td><td>0.373</td></tr><tr><td>Log likelihood</td><td>−88.07</td><td>−103</td><td>−49.39</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            794,
+            345,
+            808
+          ],
+          "label": "anno",
+          "reading_order": 7,
+          "text": "Models include a set of industry dummies-not reported (see Annex 2)"
+        },
+        {
+          "bbox": [
+            55,
+            825,
+            106,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 8,
+          "text": "![Figure](figures/figure_008.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_008.png"
+        }
+      ]
+    },
+    {
+      "page_number": 13,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            38,
+            196,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            591,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "525"
+        },
+        {
+          "bbox": [
+            55,
+            65,
+            321,
+            172
+          ],
+          "label": "half_para",
+          "reading_order": 2,
+          "text": "small firms (20 % ) reported not patenting because they\nfound the cost of patenting to be too high (as compared\nto 7 % of medium and 3 % of large firms). This latter\nfinding is consistent with the literature on small firms\nreviewed in Hughes and Mina ( 2010 ) which identifies\nthe cost of patenting to be the single largest obstacle to\nthe use of patents by small firms."
+        },
+        {
+          "bbox": [
+            55,
+            172,
+            322,
+            490
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "In order to understand which factors are associated\nwith each of the motivations for not patenting, we\nrestrict our analysis to firms from the SIPU survey\nwho innovated but did not apply for a patent for their\nmost valuable innovation (Table 8 ). We run three sepa-\nrate probit models, as outlined in Eq. ( 2 ): for each of\nthem, we use as dependent variable whether the inno-\nvation was “ not, ” “ not enforceable, ” or “ high costs. ” $^13$\nThe independent variables consist of all the other char-\nacteristics of the firm and innovation that we have\nintroduced in the previous sections as likely to influence\neach of the motivations. In particular, these include the\nsize of each firm, whether the firm performs R & D\nactivities, the general propensity of a firm to patent its\ninnovations, the specific value of the innovation, the\ntype of innovation introduced (whether a product or\nprocess innovation, or a new business strategy), the\nnovelty of the innovation (new to the market or new\nonly for the firm), the specific source of financing for the\ninnovation ,and whether a collaboration put in place to\ndevelop the valuable innovation. $^14$"
+        },
+        {
+          "bbox": [
+            55,
+            490,
+            321,
+            552
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "Our estimation suggests no significant difference in\nthe patentability of small and larger firms most valuable\ninnovation (Table 8 , model 1). Innovation quality — at\nleast in terms of firms' most valuable innovation —"
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            611,
+            264
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "appears not to be a significantly greater barrier to\npatenting in smaller firms. Similarly, the enforceability\nof patents is not seen as a stronger barrier to patenting in\nsmaller firms (Table 8 , model 2). As suggested by\nTable 7 , however, high costs of patenting were more\ncommonly cited as a barrier to patenting their most\nvaluable innovation by smaller and medium-sized firms\n(Table 8 , model 3). Interestingly, this effect remained\nunchanged whether or not firms were using external\nfinance to fund their innovation activity. Our results\nprovide support for Hypothesis 3: smaller firms do have\na stronger perception of cost barriers to using patents as\na means of protecting their most valuable innovations."
+        },
+        {
+          "bbox": [
+            343,
+            307,
+            418,
+            324
+          ],
+          "label": "sec_1",
+          "reading_order": 6,
+          "text": "5 Conclusions"
+        },
+        {
+          "bbox": [
+            343,
+            339,
+            611,
+            505
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "It is a widely held view that small firms patent less than\nlarge firms (Hall et al., 2013 ; Pajak, 2016 ) . In this paper,\nwe analyze whether this is simply because small firms\nhave fewer innovations or because they are less likely to\npatent any specific innovation (due to lower patent\npropensity) or because the costs of owning and\nenforcing patents are too high. Using novel data which\ncombine innovation and firm level information, our\npaper tries to disentangle these three sources of differ-\nence which could result in the observed lower patenting\nbehavior of small firms."
+        },
+        {
+          "bbox": [
+            343,
+            505,
+            611,
+            808
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "Our empirical results suggest three key findings.\nFirst, confirming evidence from other studies, we too\nfind that smaller firms are less likely to be patenting than\nlarger firms. However, using data on individual innova-\ntions, our analysis also suggests that smaller firms are no\nless likely than large firms to patent any specific inno-\nvation or proportion of their innovations. In other words,\nthe propensity to patent any specific innovation is\nbroadly similar in firms of all sizes. The implication is\nthat differences in the probability that smaller and larger\nfirms will patent relate not to a “ propensity to patent ”\neffect but primarily to the “ effect. ” i.e., larger firms\ncreate a greater number of innovations than smaller\nfirms and therefore are simply more likely to create\none or more which are patentable. This is consistent\nwith studies of innovation survey data which consistent-\nly suggest a positive relationship between firm size and\nthe likelihood, volume, and novelty of innovation. Our\nthird finding is that where firms do not patent specific\ninnovations, it is cost barriers rather than issues related"
+        },
+        {
+          "bbox": [
+            55,
+            573,
+            321,
+            738
+          ],
+          "label": "fnote",
+          "reading_order": 9,
+          "text": "13 Since we show that some of the reasons were jointly considered as\nimportant by some firms, we also checked whether the use of a\ntrivariate probit model, which allows for the correlation between the\nerror terms of each model, was more appropriate. The results showed\nthat indeed there is some correlation between the error terms of the\nthree models, in particular there is a positive and significant correlation\nbetween the error term of the non-enforceable patent model and the\nhigh cost of patenting specification. However, the signs and signifi-\ncance of the trivariate probit model are perfectly in line with those\nobtained running three separate probit analyses. Since in the case of the\ntrivariate probit, it is not straight forward to calculate marginal effects\nfor each of the independent variables, we eventually decided to report\nmarginal effects from the separate probit models, which are much\neasier to interpret."
+        },
+        {
+          "bbox": [
+            55,
+            738,
+            321,
+            808
+          ],
+          "label": "fnote",
+          "reading_order": 10,
+          "text": "14 In the regressions, we only use 190 observations instead of 206,\nbecause some firms did not answer to some of the questions in the\nsurvey that we use to build our independent variables (7 firms did not\nanswer to the question related to financing sources, while other 9 did\nnot indicate the specific type of innovation). For this reason, 16\nobservations could not be used in the empirical analyses."
+        },
+        {
+          "bbox": [
+            560,
+            825,
+            611,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 11,
+          "text": "![Figure](figures/figure_011.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_011.png"
+        }
+      ]
+    },
+    {
+      "page_number": 14,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            74,
+            52
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "526"
+        },
+        {
+          "bbox": [
+            536,
+            39,
+            610,
+            53
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            55,
+            65,
+            321,
+            96
+          ],
+          "label": "half_para",
+          "reading_order": 2,
+          "text": "to the awareness of patenting or innovation quality\nwhich are driving any firm size differences."
+        },
+        {
+          "bbox": [
+            55,
+            97,
+            322,
+            582
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "Our results paint a picture where small firms which\nhave patentable innovations of actual or potential com-\nmercial value are equally likely to patent these as larger\nfirms. Policy concerns about lower patenting rates\namong smaller firms may therefore be misplaced being\ninstead a natural consequence of firm size differences\nand the fact that large firms typically have a larger\nnumber of patentable innovations. Issues do remain,\nhowever, about small firms engagement with patenting\nparticularly as small firms are more likely to cite cost\nbarriers to patenting than larger firms (Table 8 ), and any\ncost reductions may therefore have a disproportionate\neffect on smaller firms. Yet, although the costs of\npatenting are well known and understood (WIPO,\nundated), this is an area where policy measures are\nlimited. For example, in the UK,, patenting and trade\nmark costs are explicitly excluded from the eligible\nexpenses which are covered by R & D tax credits for all\nsizes of firms although these costs may be offset using\nother tax breaks. $^15$ Most policy initiatives targeted at\nsmall firms have instead concentrated on creating\nawareness and educating small firms about the value\nof patenting. Helping smaller firms to offset the costs of\nobtaining patents by extending the eligible expenses for\nR & D tax credits would increase patent use by smaller\nfirms. Alongside this, it has been suggested that small\nfirms may be helped by establishing patent litigation\ninsurance schemes which could help with the costs of\ndefending patents (CJA Consultants Ltd, 2006 ) with\nsome countries (China, Japan) offering subsidies to\nsmall firms to join private IP insurance schemes\n(EUIPO, 2018 , p. 6)."
+        },
+        {
+          "bbox": [
+            55,
+            582,
+            322,
+            748
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "At a more general level, our results suggest the value\nof combining firm-level and innovation-level data.\nInnovation-level data can provide more detailed insights\ninto firms' decision rules as they applied to a specific\nproject, effects which are obscured where firms are\nmaking decisions about a portfolio of innovations. Our\nstudy suffers from a number of limitations. First, our\ndata is restricted to the UK, and international replication\nwould therefore be desirable. Second, we focus here on\npatenting in isolation, and it would also be valuable to\nexplore potential complementary or substitute"
+        },
+        {
+          "bbox": [
+            343,
+            65,
+            611,
+            340
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "relationships between forms of IP protection. This may\nbe particularly important for smaller firms where patent\ncosts may encourage the adoption of less costly IP\nprotection mechanisms. Third, our estimation sample\ndrawn from the SIPU data is relatively small reducing\nthe potential for sub-sample analysis. Larger samples\nwould enable us to explore whether the general patterns\nwe see in terms of portfolio and propensity effects prove\ngenerally robust. For example, it may be useful to con-\nsider separately the patenting behaviors of high growth\nfirms and those in the more general SME population.\nFinally, future analyses could also use panel data to add\nrobustness to our exploratory analysis: this may de-\ncrease the potential endogeneity problems that could\naffect our cross-sectional estimates. Such analyses could\nalso explore interactions between patenting propensity\nand portfolio size which may arise as both may depend\nto some extent on the cost-benefit of patenting."
+        },
+        {
+          "bbox": [
+            344,
+            352,
+            611,
+            451
+          ],
+          "label": "para",
+          "reading_order": 6,
+          "text": "We We are grateful to the UK Intellectual Prop-\nerty Office for making available the survey data on which this\npaper is based. Sandeep Kapur (Birkbeck) provided valuable\ncomments on an earlier draft. We are indebted to an anonymous\nreviewer for this journal who suggested a formal model supporting\nour hypotheses which we include in Annex 1 . Other valuable\ncomments were received from the editor and two further anony-\nmous reviewers. Remaining errors are our own."
+        },
+        {
+          "bbox": [
+            344,
+            482,
+            381,
+            497
+          ],
+          "label": "sec_1",
+          "reading_order": 7,
+          "text": "Annex"
+        },
+        {
+          "bbox": [
+            344,
+            512,
+            557,
+            528
+          ],
+          "label": "sec_2",
+          "reading_order": 8,
+          "text": "Annex 1. A formalization of the hypotheses"
+        },
+        {
+          "bbox": [
+            344,
+            542,
+            611,
+            589
+          ],
+          "label": "para",
+          "reading_order": 9,
+          "text": "The paper contains three hypotheses that could belong\ninto a single optimization problem written formally as\nfollows:"
+        },
+        {
+          "bbox": [
+            344,
+            595,
+            609,
+            618
+          ],
+          "label": "equ",
+          "reading_order": 10,
+          "text": "$$Max V(P, N, p)=P\\left(\\pi^{\\prime} p+\\pi(1-p)\\right)+(N-P) \\pi-\\Gamma(P) \\quad(4)$$"
+        },
+        {
+          "bbox": [
+            344,
+            625,
+            611,
+            703
+          ],
+          "label": "para",
+          "reading_order": 11,
+          "text": "where $V$ is the expected profit of innovation to the firm\n(maximized over $P$ ), $N$ is the number of innovations the\nfirm is able to create by virtue of its size (large/small).\nWe assume $N$ is increasing in firm size so that N and\nfirm size are synonymous."
+        },
+        {
+          "bbox": [
+            344,
+            703,
+            611,
+            779
+          ],
+          "label": "para",
+          "reading_order": 12,
+          "text": "$P$ is the number of patents the firm decides to apply\nfor. $P$ / $N$ $\\leq$ 1, firms can at most patent all their innova-\ntions but usually only a fraction is patented because of\nthe conditions surrounding the grant of a patent (viz.,\nnovelty and codifiability of technical knowledge)."
+        },
+        {
+          "bbox": [
+            344,
+            779,
+            611,
+            809
+          ],
+          "label": "para",
+          "reading_order": 13,
+          "text": "$p$ is the probability that a submitted patent is granted,\nassumed to be exogenous and common to both large and"
+        },
+        {
+          "bbox": [
+            55,
+            770,
+            321,
+            808
+          ],
+          "label": "fnote",
+          "reading_order": 14,
+          "text": "15 See https://www.gov.uk/guidance/corporation-tax-research-and-\ndevelopment-tax-relief-for-small-and-medium-sized-\nenterprises#costs-you-can-claim."
+        },
+        {
+          "bbox": [
+            55,
+            825,
+            106,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 15,
+          "text": "![Figure](figures/figure_015.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_015.png"
+        }
+      ]
+    },
+    {
+      "page_number": 15,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            197,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            592,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "527"
+        },
+        {
+          "bbox": [
+            55,
+            65,
+            322,
+            248
+          ],
+          "label": "half_para",
+          "reading_order": 2,
+          "text": "small firms, although this assumption may be relaxed. In\nfact, $p$ may be a function of the maturity of the\ntechnology/ sector. More mature technologies may find\nit hard to find a truly novel innovation that can earn a\npatent, conversely new technologies may offer a lot of\nopportunity for patenting. The quality of a firm's R&D\nprojects may also influence $p$ and the received wisdom\nis that (unobservable) R&D management capabilities\ndrive better project choice. Hence, in the way we esti-\nmate our model, we include both industrial sector\ndummies and whether a firm is a continuous R&D\nperformer as controls for the potential influences on $p$ ."
+        },
+        {
+          "bbox": [
+            55,
+            248,
+            322,
+            293
+          ],
+          "label": "para",
+          "reading_order": 3,
+          "text": "Profits from an innovation that has patent protection\n( $\\pi'$ ) can be assumed to exceed those from an innovation\nthat is not protected ( $\\pi$ ), so ( $\\pi' - \\pi$ ) > 0."
+        },
+        {
+          "bbox": [
+            55,
+            293,
+            322,
+            415
+          ],
+          "label": "para",
+          "reading_order": 4,
+          "text": "$\\Gamma$ is the fixed cost of patenting, which increases in the\nnumber of patent applications ( $P$ ) but has a fixed com-\nponent $C$ that is incurred irrespective of whether the firm\nfiles one or many patents. This could be the costs of\nsetting up an in-house IP department for a large firm or\nengaging a patent attorney over the length of a patent\nlife to show a credible commitment to enforcing the\npatent, should it be infringed."
+        },
+        {
+          "bbox": [
+            358,
+            65,
+            571,
+            82
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "The first order condition for this problem is:"
+        },
+        {
+          "bbox": [
+            344,
+            89,
+            609,
+            105
+          ],
+          "label": "equ",
+          "reading_order": 6,
+          "text": "$$\\partial V/\\partial P=(\\pi^{\\prime}-\\pi)p-\\partial\\Gamma(P)/\\partial P\\quad(5)$$"
+        },
+        {
+          "bbox": [
+            343,
+            114,
+            611,
+            189
+          ],
+          "label": "para",
+          "reading_order": 7,
+          "text": "This provides an interior solution for $P$ , which de-\nscribes an interior maximum if the second-order condi-\ntion is negative. In other words, it must be true that the\nfixed costs of patenting are increasing at an increasing\nrate in $P$ for each firm."
+        },
+        {
+          "bbox": [
+            358,
+            189,
+            557,
+            204
+          ],
+          "label": "para",
+          "reading_order": 8,
+          "text": "We assume that $\\Gamma(P)=C+P^{b}$ with $b \\geq 2$."
+        },
+        {
+          "bbox": [
+            343,
+            204,
+            610,
+            236
+          ],
+          "label": "para",
+          "reading_order": 9,
+          "text": "Then the first-order condition implies that the equi-\nlibrium number of patents $P^{*}$ is:"
+        },
+        {
+          "bbox": [
+            344,
+            243,
+            609,
+            279
+          ],
+          "label": "equ",
+          "reading_order": 10,
+          "text": "$$P^{*}=\\left\\{\\frac{1}{b}\\left(\\pi^{\\prime}-\\pi\\right)p\\right\\}^{1 / b-1}\\quad(6)$$"
+        },
+        {
+          "bbox": [
+            343,
+            287,
+            610,
+            333
+          ],
+          "label": "para",
+          "reading_order": 11,
+          "text": "Notice that this equation does not involve $N$ (equiv-\nalently is independent of firm size in this simple formu-\nlation) and forms the basis for Hypothesis 2."
+        },
+        {
+          "bbox": [
+            343,
+            333,
+            611,
+            423
+          ],
+          "label": "para",
+          "reading_order": 12,
+          "text": "However, the fixed cost element in the cost function\nmeans that depending upon the size of the fixed cost,\nthere will be a minimum threshold of patentable inno-\nvations that are needed before a firm applies for a patent.\n$C \\leq (\\pi') P^{*}$ . This reasoning forms the basis for Hypoth-\nesis 3."
+        },
+        {
+          "bbox": [
+            55,
+            452,
+            102,
+            469
+          ],
+          "label": "para",
+          "reading_order": 13,
+          "text": "Annex 2."
+        },
+        {
+          "bbox": [
+            55,
+            503,
+            224,
+            517
+          ],
+          "label": "cap",
+          "reading_order": 14,
+          "text": "Table 9 Variable definitions and sources"
+        },
+        {
+          "bbox": [
+            55,
+            519,
+            609,
+            798
+          ],
+          "label": "tab",
+          "reading_order": 15,
+          "text": "<table><tr><td>Variable</td><td>Source of data</td><td>Description of the variable</td></tr><tr><td colspan=\"3\">Dependent variable (Table 6)</td></tr><tr><td>Patent application</td><td>UKIS 2015 and SIPU 2015</td><td>Dummy variable = 1 when respondent reports applying for a patent to protect any innovation</td></tr><tr><td>Patent application</td><td>SIPU 2015</td><td>Dummy variable = 1 when respondent reports applying for a patent to protect their most valuable innovation</td></tr><tr><td>Patent coverage</td><td>UKIS 2015 and SIPU 2015</td><td>Share of firms’ innovations protected by patents (%)</td></tr><tr><td colspan=\"3\">Dependent variables (Table 8)</td></tr><tr><td>Non-patentable innovation</td><td>SIPU 2015</td><td>Dummy variable = 1, if firm said any of the following reasons prevented them from applying for a patent— (a) innovation was not eligible for patenting, (b) patenting was not considered important by the firm, and (c) innovation was not new to the market.</td></tr><tr><td>Non-enforceable patent</td><td>SIPU 2015</td><td>Dummy variable = 1, if firm said any of the following reasons prevented them from applying for a patent— (a) the patent would have been difficult to enforce, (b) infringement of the patent would have been hard to detect and (c) and patent would have disclosed too much</td></tr><tr><td>High cost of patenting</td><td>SIPU 2015</td><td></td></tr></table>"
+        },
+        {
+          "bbox": [
+            560,
+            824,
+            611,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 16,
+          "text": "![Figure](figures/figure_016.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_016.png"
+        }
+      ]
+    },
+    {
+      "page_number": 16,
+      "elements": [
+        {
+          "bbox": [
+            54,
+            39,
+            74,
+            52
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "528"
+        },
+        {
+          "bbox": [
+            536,
+            39,
+            610,
+            52
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            55,
+            64,
+            142,
+            77
+          ],
+          "label": "cap",
+          "reading_order": 2,
+          "text": "Table 9 (continued)"
+        },
+        {
+          "bbox": [
+            55,
+            80,
+            609,
+            610
+          ],
+          "label": "tab",
+          "reading_order": 3,
+          "text": "<table><tr><td>Variable</td><td>Source of data</td><td>Description of the variable</td></tr><tr><td></td><td></td><td>Dummy variable = 1, if firm said high costs prevented them from applying for a patent</td></tr><tr><td colspan=\"3\">Firm-specific variables</td></tr><tr><td>Small firm</td><td>UKIS 2015</td><td>Dummy variable = 1, if the firm employed less than 50 persons</td></tr><tr><td>Medium firm</td><td>UKIS 2015</td><td>Dummy variable = 1, if the firm employed between 50 and 249 employees</td></tr><tr><td>Large firm</td><td>UKIS 2015</td><td>Dummy variable = 1, if the firm employed more than 250 employees</td></tr><tr><td>Continuous R&amp;D</td><td>UKIS 2015</td><td>Dummy variable that takes value 1 if firms had undertaken internal R&amp;D in 2012, 2013, and 2014</td></tr><tr><td>Overall patent propensity</td><td>UKIS 2015</td><td>The proportion of innovations between 2012 and 2014 that was protected by patents</td></tr><tr><td>Overall trademark propensity</td><td>UKIS 2015</td><td>The proportion of innovations between 2012 and 2014 that was protected by trademarks</td></tr><tr><td>17 Industrial sectors</td><td>UKIS 2015</td><td>Based on the 2-digit SIC and aggregated to get a minimum of 20 observations per group. See Table 1 for details</td></tr><tr><td colspan=\"3\">Innovation-specific variables (for the commercially most valuable innovation)</td></tr><tr><td>Openness</td><td>SIPU 2015</td><td>Dummy variable = 1 when respondent reports’ collaborative partner was involved in producing its most valuable innovation</td></tr><tr><td>Suppliers</td><td>SIPU 2015</td><td>Dummy variable = 1 when respondent reports’ collaboration with supplier was involved in producing its most valuable innovation</td></tr><tr><td>Clients</td><td>SIPU 2015</td><td>Dummy variable = 1 when respondent reports’ collaboration with client was involved in producing its most valuable innovation</td></tr><tr><td>Other types of collaboration</td><td>SIPU 2015</td><td>Dummy variable = 1 when respondent reports’ collaboration with public sector labs, consultants, competitors, or HEI was involved in producing its most valuable innovation</td></tr><tr><td>Value of innovation</td><td>SIPU 2015</td><td>Value of turnover (%) in 2014 accounted for by the most valuable innovation</td></tr><tr><td>Product innovation</td><td>SIPU 2015</td><td>Dummy variable= 1, if the most valuable innovation was a product innovation</td></tr><tr><td>Process innovation</td><td>SIPU 2015</td><td>Dummy variable = 1, if the most valuable innovation was a process innovation</td></tr><tr><td>Business strategy innovation</td><td>SIPU 2015</td><td>Dummy variable = 1, if the most valuable innovation was a wider innovation</td></tr><tr><td>New to the market innovation</td><td>SIPU 2015</td><td>Dummy variable= 1, if the most valuable innovation was a new to the market</td></tr><tr><td>New to the firm innovation</td><td>SIPU 2015</td><td>Dummy variable = 1, if the most valuable innovation was new to the firm</td></tr><tr><td>Any external finance</td><td>SIPU 2015</td><td>Dummy variable = 1, if the firm used any external finance to finance its most valuable innovation</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            824,
+            106,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 4,
+          "text": "![Figure](figures/figure_004.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_004.png"
+        }
+      ]
+    },
+    {
+      "page_number": 17,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            197,
+            53
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "Small firms and patenting revisited"
+        },
+        {
+          "bbox": [
+            592,
+            39,
+            610,
+            51
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "529"
+        },
+        {
+          "bbox": [
+            55,
+            65,
+            102,
+            81
+          ],
+          "label": "sec_1",
+          "reading_order": 2,
+          "text": "Annex 3."
+        },
+        {
+          "bbox": [
+            55,
+            110,
+            295,
+            124
+          ],
+          "label": "cap",
+          "reading_order": 3,
+          "text": "Table 10 Industry control variables included in all models"
+        },
+        {
+          "bbox": [
+            56,
+            125,
+            320,
+            413
+          ],
+          "label": "tab",
+          "reading_order": 4,
+          "text": "<table><tr><td>1</td><td>Food and textiles (SIC 2007 codes: 10 13 14 15)</td></tr><tr><td>2</td><td>Wood and paper (SIC 2007 codes: 16 17)</td></tr><tr><td>3</td><td>Chemicals and rubber (SIC 2007 codes: 20 22)</td></tr><tr><td>4</td><td>Metal and non metal products (SIC 2007 codes: 23 24 25)</td></tr><tr><td>5</td><td>Electrical and computing devices (SIC 2007 codes: 26 27)</td></tr><tr><td>6</td><td>Machines and repairing of (SIC 2007 codes: 28 33)</td></tr><tr><td>7</td><td>Automotive (SIC 2007 code: 29 30)</td></tr><tr><td>8</td><td>Other manufacturing (SIC 2007 codes: 18 31 32)</td></tr><tr><td>9</td><td>Construction (SIC 2007 codes: 41 42 43)</td></tr><tr><td>10</td><td>Whole sale and retail trade (SIC 2007 codes: 45 46 47)</td></tr><tr><td>11</td><td>Tourism (SIC 2007 codes: 55 56)</td></tr><tr><td>12</td><td>ICT (SIC 2007 codes: from 58 to 63)</td></tr><tr><td>13</td><td>Financial services (SIC 2007 codes: 64 65 66)</td></tr><tr><td>14</td><td>Professional and scientific tools (SIC 2007 codes: from 69 to 75)</td></tr><tr><td>15</td><td>Administrative activities (SIC 2007 codes: from 77 to 82)</td></tr><tr><td>16</td><td>Transport (SIC 2007 codes: from 49 to 53)</td></tr><tr><td>17</td><td>Other sectors</td></tr></table>"
+        },
+        {
+          "bbox": [
+            55,
+            440,
+            322,
+            600
+          ],
+          "label": "para",
+          "reading_order": 5,
+          "text": "Open Access This article is licensed under a Creative Commons\nAttribution 4.0 International License, which permits use, sharing,\nadaptation, distribution and reproduction in any medium or format,\nas long as you give appropriate credit to the original author(s) and\nthe source, provide a link to the Creative Commons licence, and\nindicate if changes were made. The images or other third party\nmaterial in this article are included in the article's Creative Com-\nmons licence, unless indicated otherwise in a credit line to the\nmaterial. If material is not included in the article's Creative Com-\nmons licence and your intended use is not permitted by statutory\nregulation or exceeds the permitted use, you will need to obtain\npermission directly from the copyright holder. To view a copy of\nthis licence, visit http://creativecommons.org/licenses/by/4.0/ ."
+        },
+        {
+          "bbox": [
+            55,
+            633,
+            114,
+            649
+          ],
+          "label": "sec_1",
+          "reading_order": 6,
+          "text": "References"
+        },
+        {
+          "bbox": [
+            56,
+            670,
+            320,
+            706
+          ],
+          "label": "reference",
+          "reading_order": 7,
+          "text": "Arora, A., Athreye, S., Huang, C. (2013) Innovation, patenting\nand licensing in the UK: evidence from the SIPU survey, UK\nIPO Working Paper Series , 2013/25."
+        },
+        {
+          "bbox": [
+            56,
+            707,
+            320,
+            745
+          ],
+          "label": "reference",
+          "reading_order": 8,
+          "text": "Arora, A., Ceccagnoli, M., Cohen, W.M., (2008) R&D and the\npatent premium, International Journal of Industrial\nOrganization 26,(5), 1153-1179."
+        },
+        {
+          "bbox": [
+            56,
+            745,
+            320,
+            770
+          ],
+          "label": "reference",
+          "reading_order": 9,
+          "text": "Arundel, A. (2001). The relative effectiveness of patents and\nsecrecy for appropriation. Research Policy, 30(4), 611-624."
+        },
+        {
+          "bbox": [
+            56,
+            771,
+            320,
+            807
+          ],
+          "label": "reference",
+          "reading_order": 10,
+          "text": "Arundel, A., & Kabla, I. (1998). What percentage of innovations\nare patented? Empirical estimates for European firms.\nResearch Policy, 27, 127-141."
+        },
+        {
+          "bbox": [
+            345,
+            65,
+            610,
+            113
+          ],
+          "label": "reference",
+          "reading_order": 11,
+          "text": "Athreye, S., & Fassio, C. (2018). When do firms not use patents\nand trademarks to protect valuable innovations? Evidence\nfrom the SIPU 2015 survey. Newport: Intellectual Property\nOffice."
+        },
+        {
+          "bbox": [
+            345,
+            116,
+            609,
+            139
+          ],
+          "label": "reference",
+          "reading_order": 12,
+          "text": "Baumol, W. J. (2002). The free market innovation machine.\nPrinceton Princeton University Press."
+        },
+        {
+          "bbox": [
+            345,
+            141,
+            609,
+            176
+          ],
+          "label": "reference",
+          "reading_order": 13,
+          "text": "Bourke, J., & Roper, S. (2016). AMT adoption and innovation: an\ninvestigation of dynamic and complementary effects.\nTechnovation, 55-56, 42-55."
+        },
+        {
+          "bbox": [
+            345,
+            177,
+            609,
+            213
+          ],
+          "label": "reference",
+          "reading_order": 14,
+          "text": "Bourke, J., & Roper, S. (2017). Innovation, quality management\nand learning: short-term and longer-term effects. Research\nPolicy, 46, 1505–1518."
+        },
+        {
+          "bbox": [
+            345,
+            214,
+            609,
+            250
+          ],
+          "label": "reference",
+          "reading_order": 15,
+          "text": "CJA Consultants Ltd (2006) Patent litigation insurance – a study\nfor the European Commission on the feasibility of possible\ninsurance schemes against patent litigation risks."
+        },
+        {
+          "bbox": [
+            345,
+            251,
+            610,
+            299
+          ],
+          "label": "reference",
+          "reading_order": 16,
+          "text": "Cohen, W. M., Nelson, R.R., and Walsh, J.P., (2000) Protecting\ntheir intellectual assets: appropriability conditions and why\nU.S. manufacturing firms patent (or not). NBER Working\nPaper, No. 7552."
+        },
+        {
+          "bbox": [
+            345,
+            300,
+            609,
+            324
+          ],
+          "label": "reference",
+          "reading_order": 17,
+          "text": "Design Council. (2015). The design economy: the value of design\nto the UK. London: Design Council."
+        },
+        {
+          "bbox": [
+            345,
+            325,
+            567,
+            338
+          ],
+          "label": "reference",
+          "reading_order": 18,
+          "text": "EUIPO (2018) IP litigation insurance landscape, April."
+        },
+        {
+          "bbox": [
+            345,
+            339,
+            610,
+            375
+          ],
+          "label": "reference",
+          "reading_order": 19,
+          "text": "Fernandez-Ribas, A. (2010). International patent strategies of\nsmall and large firms: an empirical study of nanotechnology.\nReview of Policy Research, 27, 457–473."
+        },
+        {
+          "bbox": [
+            345,
+            375,
+            609,
+            400
+          ],
+          "label": "reference",
+          "reading_order": 20,
+          "text": "Galasso, A., & Schankerman, M. (2015). Patent rights and inno-\nvation by small and large firms. NBER working paper, 21769."
+        },
+        {
+          "bbox": [
+            345,
+            401,
+            610,
+            437
+          ],
+          "label": "reference",
+          "reading_order": 21,
+          "text": "Galia, F., & Zenou, E. (2012). Board composition and forms of\ninnovation: does diversity make a difference? European\nJournal of International Management, 6, 630–650."
+        },
+        {
+          "bbox": [
+            345,
+            437,
+            609,
+            462
+          ],
+          "label": "reference",
+          "reading_order": 22,
+          "text": "Gambardella, A., Giuri, P., & Luzzi, A. (2007). The market for\npatents in Europe. Research Policy, 36, 1163-1183."
+        },
+        {
+          "bbox": [
+            345,
+            462,
+            609,
+            548
+          ],
+          "label": "reference",
+          "reading_order": 23,
+          "text": "Giuri, P., Mariani, M., Brusoni, S., Crespi, G., Francoz, D.,\nGambardella, A., Garcia-Fontes, W., Geuna, A., Gonzales,\nR., Harhoff, D., Hoisl, K., Le Bas, C., Luzzi, A., Magazzini,\nL., Nesta, L., Nomaler, O., Palomerasi, N., Patel, P.,\nRomanelli, M., & Verspagen, B. (2007). Inventors and in-\nvention processes in Europe: Results from the PatVal-EU\nsurvey. Research Policy, 36 , 1107–1127."
+        },
+        {
+          "bbox": [
+            345,
+            548,
+            609,
+            585
+          ],
+          "label": "reference",
+          "reading_order": 24,
+          "text": "Griffith, R., Redding, S., & Van Reenan, J. (2003). R&D and\nabsorptive capacity: theory and empirical evidence.\nScandinavian Journal of Economics, 105, 99-118."
+        },
+        {
+          "bbox": [
+            345,
+            585,
+            609,
+            645
+          ],
+          "label": "reference",
+          "reading_order": 25,
+          "text": "Gundry, L., Kickul, J., Welsch, H. P., & Posig, M. (2003).\nTechnological innovation in women-owned firms: influence\nof entrepreneurial motivation and strategic intention. The\nInternational Journal of Entrepreneurship and Innovation,\n4, 265-274."
+        },
+        {
+          "bbox": [
+            345,
+            648,
+            609,
+            683
+          ],
+          "label": "reference",
+          "reading_order": 26,
+          "text": "Hall, B. H., Helmers, C., Rogers, M., & Sena, V. (2013). The\nimportance (or not) of patents to UK firms. Oxford Economic\nPapers, 65 (3), 603–629."
+        },
+        {
+          "bbox": [
+            345,
+            685,
+            609,
+            708
+          ],
+          "label": "reference",
+          "reading_order": 27,
+          "text": "Hughes, A. and Mina, A. (2010) The impact of the patent system\non SMEs. Cambridge Centre for Business Research."
+        },
+        {
+          "bbox": [
+            345,
+            710,
+            609,
+            782
+          ],
+          "label": "reference",
+          "reading_order": 28,
+          "text": "IPO (2017) Building the Evidence Base on the Performance of the\nUK Patent System, UK Intellectual Property Office.\nAvailable at: https://assets.publishing.service.gov.\nuk/government/uploads/system/uploads/attachment_\ndata/file/639203/building-evidence-performance-patent-\nsystem.pdf . accessed 31Jan 2020."
+        },
+        {
+          "bbox": [
+            345,
+            783,
+            609,
+            807
+          ],
+          "label": "reference",
+          "reading_order": 29,
+          "text": "Kingston, W. (2001). Innovation needs patents reform. Research\nPolicy, 30, 403-423."
+        },
+        {
+          "bbox": [
+            560,
+            825,
+            610,
+            841
+          ],
+          "label": "fig",
+          "reading_order": 30,
+          "text": "![Figure](figures/figure_030.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_030.png"
+        }
+      ]
+    },
+    {
+      "page_number": 18,
+      "elements": [
+        {
+          "bbox": [
+            55,
+            39,
+            74,
+            51
+          ],
+          "label": "header",
+          "reading_order": 0,
+          "text": "530"
+        },
+        {
+          "bbox": [
+            536,
+            39,
+            610,
+            53
+          ],
+          "label": "header",
+          "reading_order": 1,
+          "text": "S. S. Athreye et al."
+        },
+        {
+          "bbox": [
+            56,
+            65,
+            322,
+            115
+          ],
+          "label": "reference",
+          "reading_order": 2,
+          "text": "Kok, R. A. W., & Ligthart, P. E. M. (2014). Differentiating major\nand incremental new product development: the effects of\nfunctional and numerical workforce flexibility. Journal of\nProduct Innovation Management, 31, 30-42."
+        },
+        {
+          "bbox": [
+            56,
+            115,
+            321,
+            149
+          ],
+          "label": "reference",
+          "reading_order": 3,
+          "text": "Kopel, M., & Loffler, C. (2008). Commitment, first-mover-, and\nsecond-mover advantage. Journal of Economics, 94, 143–\n166."
+        },
+        {
+          "bbox": [
+            56,
+            150,
+            321,
+            187
+          ],
+          "label": "reference",
+          "reading_order": 4,
+          "text": "Leonard-Barton, D. (1992). Core capabilities and core rigidities: a\nparadox in managing new product development. Strategic\nManagement Journal, 13 , 111–125."
+        },
+        {
+          "bbox": [
+            56,
+            187,
+            321,
+            247
+          ],
+          "label": "reference",
+          "reading_order": 5,
+          "text": "Levin, R.C., Klevorick, A.K., Nelson, R.,R., Winter, S.G., Gilbert,\nR., & Z. Griliches (1987) Appropriating the Returns from\nIndustrial Research and Development, Brookings Papers on\nEconomic ActivityVol. 1987, No. 3, Special Issue On\nMicroeconomics, pp. 783-831."
+        },
+        {
+          "bbox": [
+            56,
+            247,
+            321,
+            284
+          ],
+          "label": "reference",
+          "reading_order": 6,
+          "text": "Marzi, G., Dabic, M., Daim, T., & Garces, E. (2017). Product and\nprocess innovation in manufacturing firms: a 30-year\nbibliometric analysis. Scientometrics, 113, 673-704."
+        },
+        {
+          "bbox": [
+            56,
+            284,
+            321,
+            321
+          ],
+          "label": "reference",
+          "reading_order": 7,
+          "text": "Mina, A., Bascavusoglu-Moreau, E., & Hughes, A. (2014). Open\nservice innovation and the firm's search for external knowl-\nedge. Research Policy, 43, 853–866."
+        },
+        {
+          "bbox": [
+            56,
+            321,
+            321,
+            367
+          ],
+          "label": "reference",
+          "reading_order": 8,
+          "text": "Pajak, S. (2016). Do innovative firms rely on big secrets? An\nanalysis of IP protection strategies with the CIS 4 survey.\nEconomics of Innovation and New Technology, 25(5), 516–\n532."
+        },
+        {
+          "bbox": [
+            56,
+            368,
+            321,
+            406
+          ],
+          "label": "reference",
+          "reading_order": 9,
+          "text": "Perez-Cano, C., & Villen-Altamirano, J. (2013). Factors that in-\nfluence the propensity to patent. Emj-Engineering\nManagement Journal, 25, 27–38."
+        },
+        {
+          "bbox": [
+            56,
+            406,
+            321,
+            443
+          ],
+          "label": "reference",
+          "reading_order": 10,
+          "text": "Rosing, K., Frese, M., & Bausch, A. (2011). Explaining the\nheterogeneity of the leadership-innovation relationship: am-\nbidextrous leadership. Leadership Quarterly, 22, 956–974."
+        },
+        {
+          "bbox": [
+            56,
+            443,
+            321,
+            479
+          ],
+          "label": "reference",
+          "reading_order": 11,
+          "text": "Scherer, F. M., & Harhoff, D. (2000). Technology policy for a\nworld of skew-distributed outcomes. Research Policy, 29(4–\n5), 559–566."
+        },
+        {
+          "bbox": [
+            56,
+            479,
+            321,
+            505
+          ],
+          "label": "reference",
+          "reading_order": 12,
+          "text": "Schumpeter, J.A. 1912. Theorie der wirtschaftlichen Entwicklung\nLeipzig: Duncker & Humblo."
+        },
+        {
+          "bbox": [
+            345,
+            65,
+            610,
+            101
+          ],
+          "label": "reference",
+          "reading_order": 13,
+          "text": "Simon, H. (1996). Hidden champions - lessons from 500 of the\nworld's best unknown companies. Boston: Harvard Business\nSchool Press."
+        },
+        {
+          "bbox": [
+            345,
+            103,
+            610,
+            152
+          ],
+          "label": "reference",
+          "reading_order": 14,
+          "text": "Talke, K., Salomo, S., & Rost, K. (2010). How top management\nteam diversity affects innovativeness and performance via the\nstrategic choice to focus on innovation fields. Research\nPolicy, 39, 907-918."
+        },
+        {
+          "bbox": [
+            345,
+            152,
+            610,
+            189
+          ],
+          "label": "reference",
+          "reading_order": 15,
+          "text": "Ulhoi, J. P. (2012). Modes and orders of market entry: revisiting\ninnovation and imitation strategies. Technology Analysis &\nStrategic Management, 24, 37-50."
+        },
+        {
+          "bbox": [
+            345,
+            190,
+            610,
+            226
+          ],
+          "label": "reference",
+          "reading_order": 16,
+          "text": "Vahter, P., Love, J. H., & Roper, S. (2014). Openness and innova-\ntion performance: are small firms different? Industry and\nInnovation, 21, 553-573."
+        },
+        {
+          "bbox": [
+            345,
+            227,
+            610,
+            277
+          ],
+          "label": "reference",
+          "reading_order": 17,
+          "text": "Valentim, L., Lisboa, J. V., & Franco, M. (2016). Knowledge\nmanagement practices and absorptive capacity in small and\nmedium-sized enterprises: is there really a linkage? R & D\nManagement, 46, 711-725."
+        },
+        {
+          "bbox": [
+            345,
+            277,
+            610,
+            325
+          ],
+          "label": "reference",
+          "reading_order": 18,
+          "text": "Veer, T., & Jell, F. (2012). Contributing to markets for technology?\nA comparison of patent filing motives of individual inven-\ntors, small companies and universities. Technovation, 32,\n513–522."
+        },
+        {
+          "bbox": [
+            345,
+            327,
+            610,
+            364
+          ],
+          "label": "reference",
+          "reading_order": 19,
+          "text": "Venohr, B. and Mayer, K.E. (2007) The German miracle keeps\nrunning: how Gemany's hidden champions stay ahead in the\nglobal economy mimeo."
+        },
+        {
+          "bbox": [
+            345,
+            364,
+            610,
+            401
+          ],
+          "label": "reference",
+          "reading_order": 20,
+          "text": "Vossen, R. W. (1998). Relative strengths and weaknesses of small\nfirms in innovation. International Small Business Journal,\n16, 88-95."
+        },
+        {
+          "bbox": [
+            345,
+            401,
+            610,
+            449
+          ],
+          "label": "reference",
+          "reading_order": 21,
+          "text": "WIPO (undated) ‘Managing patent costs: an overview’. Available\nat: https://www.wipo.int/export/sites/www/sme/\nen/documents/pdf/managing_patent_costs.pdf . Accessed 30\nJan 2020"
+        },
+        {
+          "bbox": [
+            343,
+            466,
+            611,
+            504
+          ],
+          "label": "para",
+          "reading_order": 22,
+          "text": "Publisher's note Springer Nature remains neutral with regard to\njurisdictional claims in published maps and institutional\naffiliations."
+        },
+        {
+          "bbox": [
+            55,
+            824,
+            106,
+            842
+          ],
+          "label": "fig",
+          "reading_order": 23,
+          "text": "![Figure](figures/figure_023.png)",
+          "figure_path": "/Users/eliebruno/Desktop/code/project-2-rag/output/test_local_processing/markdown/figures/figure_023.png"
+        }
+      ]
+    }
+  ],
+  "metadata": {}
+}

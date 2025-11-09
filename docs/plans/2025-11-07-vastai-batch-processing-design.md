@@ -106,7 +106,7 @@ s3://your-bucket/
 # S3 Credentials (AWS S3)
 AWS_ACCESS_KEY_ID=AKIA...
 AWS_SECRET_ACCESS_KEY=secret...
-AWS_REGION=us-east-1
+AWS_REGION=eu-north-1
 S3_BUCKET=my-pdf-bucket
 
 # OR for Infomaniak Swift (S3-compatible)
@@ -187,7 +187,7 @@ s3_client = boto3.client(
     's3',
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-    region_name=os.getenv('AWS_REGION', 'us-east-1')
+    region_name=os.getenv('AWS_REGION', 'eu-north-1')
 )
 ```
 
@@ -200,7 +200,7 @@ s3_client = boto3.client(
     endpoint_url=os.getenv('S3_ENDPOINT_URL'),  # e.g., https://s3.pub1.infomaniak.cloud
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-    region_name='us-east-1'  # Required but not used by custom endpoints
+    region_name='eu-north-1'  # Required but not used by custom endpoints
 )
 ```
 

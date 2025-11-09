@@ -29,7 +29,7 @@ python scripts/setup_aws_infrastructure.py
 ```
 
 This creates:
-- IAM Role: `EC2-S3-PDF-Processing`
+- IAM Role: `pdf-processing-user`
 - Permissions: S3 read/write on `cs433-rag-project2` bucket
 
 ## Step 2: Test with Dry Run
@@ -51,7 +51,7 @@ Expected output:
 ```
 Validating prerequisites...
 ✓ AWS credentials found
-✓ IAM role 'EC2-S3-PDF-Processing' exists
+✓ IAM role 'pdf-processing-user' exists
 ✓ Deep Learning AMI found: ami-xxxxx
 ✓ All prerequisites validated
 
@@ -81,7 +81,7 @@ You'll be prompted to confirm:
 ⚠️  About to launch 5 Spot instances:
    Instance type: g4dn.xlarge
    Max price: $0.30/hour
-   Region: us-east-1
+   Region: eu-north-1
    Estimated cost: ~$31.60 for 40 hours
 
 Continue? [y/N]: y
@@ -115,14 +115,14 @@ Output:
 **Check Spot requests:**
 ```bash
 aws ec2 describe-spot-instance-requests \
-  --region us-east-1 \
+  --region eu-north-1 \
   --filters Name=tag:Project,Values=pdf-processing
 ```
 
 **Check running instances:**
 ```bash
 aws ec2 describe-instances \
-  --region us-east-1 \
+  --region eu-north-1 \
   --filters Name=tag:Project,Values=pdf-processing \
            Name=instance-state-name,Values=running
 ```
@@ -152,7 +152,7 @@ Workers automatically shut down when finished. Check:
 ```bash
 # Should show 0 running instances
 aws ec2 describe-instances \
-  --region us-east-1 \
+  --region eu-north-1 \
   --filters Name=tag:Project,Values=pdf-processing \
            Name=instance-state-name,Values=running
 ```
@@ -335,18 +335,18 @@ aws ec2 describe-instances \
 
 # Delete IAM role (optional)
 aws iam remove-role-from-instance-profile \
-  --instance-profile-name EC2-S3-PDF-Processing \
-  --role-name EC2-S3-PDF-Processing
+  --instance-profile-name pdf-processing-user \
+  --role-name pdf-processing-user
 
 aws iam delete-instance-profile \
-  --instance-profile-name EC2-S3-PDF-Processing
+  --instance-profile-name pdf-processing-user
 
 aws iam delete-role-policy \
-  --role-name EC2-S3-PDF-Processing \
+  --role-name pdf-processing-user \
   --policy-name S3Access
 
 aws iam delete-role \
-  --role-name EC2-S3-PDF-Processing
+  --role-name pdf-processing-user
 ```
 
 ## Success Criteria

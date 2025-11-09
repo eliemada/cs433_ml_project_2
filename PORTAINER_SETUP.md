@@ -38,7 +38,7 @@ cp .env.example .env
    ```
    AWS_ACCESS_KEY_ID=your_key
    AWS_SECRET_ACCESS_KEY=your_secret
-   AWS_DEFAULT_REGION=us-east-1
+   AWS_DEFAULT_REGION=eu-north-1
    S3_BUCKET=cs433-rag-project2
    ```
 
@@ -164,7 +164,7 @@ Launch container with shell instead of auto-running:
 docker run -it --rm --gpus all \
   -e AWS_ACCESS_KEY_ID=your_key \
   -e AWS_SECRET_ACCESS_KEY=your_secret \
-  -e AWS_DEFAULT_REGION=us-east-1 \
+  -e AWS_DEFAULT_REGION=eu-north-1 \
   -e S3_BUCKET=cs433-rag-project2 \
   ravinala/pdf-parser:latest \
   /bin/bash
