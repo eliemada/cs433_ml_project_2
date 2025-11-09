@@ -41,11 +41,23 @@ RUN git lfs install && \
     cd /app/models/dolphin && \
     git lfs pull
 
-# Copy processing script
-COPY scripts/process_pdfs_batch.py ./scripts/
+# Copy all scripts (including distributed worker)
+COPY scripts/ ./scripts/
+COPY tests/ ./tests/
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 
+# Default environment variables for distributed worker
+ENV WORKER_ID=0
+ENV TOTAL_WORKERS=1
+ENV S3_INPUT_PREFIX=raw_pdfs/
+ENV S3_OUTPUT_PREFIX=processed/
+ENV MAX_RETRIES=2
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
 # Entrypoint
-ENTRYPOINT ["uv", "run", "python", "scripts/process_pdfs_batch.py"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
