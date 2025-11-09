@@ -121,24 +121,49 @@ class DistributedWorker:
                 pipeline = self.get_pipeline()
                 result = pipeline.parse_document(local_pdf)
 
-                # Get markdown output - construct path manually
+                # Get output paths
+                pdf_id = extract_pdf_id(pdf_key)
+                base_s3_path = f"{self.s3_output_prefix}{pdf_id}/"
+
+                # 1. Upload markdown as document.md
                 markdown_dir = self.config.output.get_markdown_dir()
-                markdown_filename = local_pdf.stem + ".md"
-                markdown_path = markdown_dir / markdown_filename
+                markdown_path = markdown_dir / f"{local_pdf.stem}.md"
 
                 if not markdown_path.exists():
                     raise FileNotFoundError(f"Markdown not generated: {markdown_path}")
 
-                markdown_content = markdown_path.read_text()
-
-                # Upload to S3
-                self.logger.info(f"Uploading {output_key}...")
+                self.logger.info(f"Uploading document.md...")
                 upload_to_s3(
                     self.s3,
                     self.s3_output_bucket,
-                    output_key,
-                    markdown_content
+                    f"{base_s3_path}document.md",
+                    markdown_path.read_text()
                 )
+
+                # 2. Upload metadata.json
+                json_dir = self.config.output.get_json_dir()
+                json_path = json_dir / f"{local_pdf.stem}.json"
+
+                if json_path.exists():
+                    self.logger.info(f"Uploading metadata.json...")
+                    upload_to_s3(
+                        self.s3,
+                        self.s3_output_bucket,
+                        f"{base_s3_path}metadata.json",
+                        json_path.read_text()
+                    )
+
+                # 3. Upload all figures
+                figures_dir = self.config.output.get_figures_dir()
+                if figures_dir.exists():
+                    for figure_file in figures_dir.glob("*.png"):
+                        self.logger.info(f"Uploading figures/{figure_file.name}...")
+                        # Upload binary file (image)
+                        self.s3.upload_file(
+                            str(figure_file),
+                            self.s3_output_bucket,
+                            f"{base_s3_path}figures/{figure_file.name}"
+                        )
 
                 self.logger.info(f"✓ Successfully processed {pdf_key}")
                 return True
