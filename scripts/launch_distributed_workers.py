@@ -52,6 +52,10 @@ class EC2WorkerLauncher:
         self.ec2 = boto3.client('ec2', region_name=region)
         self.ec2_resource = boto3.resource('ec2', region_name=region)
 
+        # Get AWS account ID for IAM ARNs
+        sts = boto3.client('sts', region_name=region)
+        self.account_id = sts.get_caller_identity()['Account']
+
         # Configuration from environment
         self.s3_input_bucket = os.getenv('S3_INPUT_BUCKET', 'cs433-rag-project2')
         self.s3_input_prefix = os.getenv('S3_INPUT_PREFIX', 'raw_pdfs/')
@@ -200,11 +204,14 @@ shutdown -h now
 
             try:
                 # Build LaunchSpecification
+                # Use full ARN for IAM instance profile (required for Spot instances)
+                instance_profile_arn = f"arn:aws:iam::{self.account_id}:instance-profile/pdf-processing-user"
+
                 launch_spec = {
                     'ImageId': ami_id,
                     'InstanceType': self.instance_type,
                     'IamInstanceProfile': {
-                        'Name': 'pdf-processing-user'
+                        'Arn': instance_profile_arn
                     },
                     'SecurityGroups': ['default'],
                     'UserData': user_data_b64,
