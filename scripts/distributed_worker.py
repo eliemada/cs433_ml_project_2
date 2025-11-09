@@ -23,7 +23,7 @@ from scripts.utils.s3_utils import (
     upload_to_s3,
     s3_object_exists,
 )
-from scripts.utils.worker_distribution import get_worker_pdfs, get_output_key
+from scripts.utils.worker_distribution import get_worker_pdfs, get_output_key, extract_pdf_id
 from rag_pipeline.pdf_parsing.core.pipeline import PDFParsingPipeline
 from rag_pipeline.pdf_parsing.config import PDFParsingConfig
 
