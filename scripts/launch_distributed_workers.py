@@ -94,7 +94,7 @@ class EC2WorkerLauncher:
                     {'Name': 'state', 'Values': ['available']},
                 ],
                 Owners=['amazon'],
-                MaxResults=1
+                MaxResults=5
             )
             if response['Images']:
                 print(f"✓ Deep Learning AMI found: {response['Images'][0]['ImageId']}")
