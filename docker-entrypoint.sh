@@ -13,6 +13,7 @@ if [ -n "$S3_INPUT_BUCKET" ] && [ -n "$S3_OUTPUT_BUCKET" ]; then
     echo "=========================================="
     echo "Worker ID: $WORKER_ID"
     echo "Total Workers: $TOTAL_WORKERS"
+    echo "Concurrent PDFs: $CONCURRENT_PDFS"
     echo "Input: s3://$S3_INPUT_BUCKET/$S3_INPUT_PREFIX"
     echo "Output: s3://$S3_OUTPUT_BUCKET/$S3_OUTPUT_PREFIX"
     echo "=========================================="

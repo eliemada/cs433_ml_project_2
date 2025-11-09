@@ -12,6 +12,7 @@ import tempfile
 import logging
 from pathlib import Path
 from typing import List, Dict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import boto3
 
 # Add project root to path
@@ -48,6 +49,7 @@ class DistributedWorker:
         self.s3_output_bucket = os.getenv('S3_OUTPUT_BUCKET')
         self.s3_output_prefix = os.getenv('S3_OUTPUT_PREFIX', 'processed/')
         self.max_retries = int(os.getenv('MAX_RETRIES', '2'))
+        self.concurrent_pdfs = int(os.getenv('CONCURRENT_PDFS', '3'))  # Process 3 PDFs at once
 
         # Validate configuration
         if not self.s3_input_bucket:
@@ -71,7 +73,7 @@ class DistributedWorker:
 
         # Setup logger
         self.logger = logging.getLogger(__name__)
-        self.logger.info(f"Worker {self.worker_id}/{self.total_workers} initialized")
+        self.logger.info(f"Worker {self.worker_id}/{self.total_workers} initialized (concurrent PDFs: {self.concurrent_pdfs})")
 
     def get_pipeline(self) -> PDFParsingPipeline:
         """Lazy load PDF parsing pipeline."""
@@ -196,17 +198,30 @@ class DistributedWorker:
             self.logger.info("No PDFs assigned to this worker - exiting")
             return
 
-        # Process each PDF
+        # Process PDFs concurrently
         successful = 0
         failed = 0
 
-        for i, pdf_key in enumerate(my_pdfs, 1):
-            self.logger.info(f"Progress: {i}/{len(my_pdfs)} ({i*100//len(my_pdfs)}%)")
+        self.logger.info(f"Processing {len(my_pdfs)} PDFs with {self.concurrent_pdfs} concurrent workers...")
 
-            if self.process_pdf(pdf_key):
-                successful += 1
-            else:
-                failed += 1
+        with ThreadPoolExecutor(max_workers=self.concurrent_pdfs) as executor:
+            # Submit all PDF processing tasks
+            future_to_pdf = {executor.submit(self.process_pdf, pdf_key): pdf_key for pdf_key in my_pdfs}
+
+            # Process results as they complete
+            for i, future in enumerate(as_completed(future_to_pdf), 1):
+                pdf_key = future_to_pdf[future]
+                try:
+                    if future.result():
+                        successful += 1
+                    else:
+                        failed += 1
+                except Exception as e:
+                    self.logger.error(f"Unexpected error processing {pdf_key}: {e}")
+                    failed += 1
+
+                # Log progress
+                self.logger.info(f"Progress: {i}/{len(my_pdfs)} ({i*100//len(my_pdfs)}%) - Success: {successful}, Failed: {failed}")
 
         # Upload failure report if any
         if self.failures:

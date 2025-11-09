@@ -54,6 +54,7 @@ ENV TOTAL_WORKERS=1
 ENV S3_INPUT_PREFIX=raw_pdfs/
 ENV S3_OUTPUT_PREFIX=processed/
 ENV MAX_RETRIES=2
+ENV CONCURRENT_PDFS=3
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /
