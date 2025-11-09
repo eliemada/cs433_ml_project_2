@@ -26,7 +26,7 @@ Design for a distributed batch processing system to convert 4000 PDFs to markdow
 ```
 ┌─────────────────────────────────────────────────────────┐
 │           S3 Input Bucket (4000 PDFs)                   │
-│              s3://cs433-rag-project2/pdfs/              │
+│           s3://cs433-rag-project2/raw_pdfs/             │
 └────────────────────┬────────────────────────────────────┘
                      │
         ┌────────────┼────────────┬────────────┬──────────┐
@@ -140,7 +140,7 @@ if s3.object_exists(output_bucket, output_key):
 WORKER_ID=0                           # Unique ID: 0, 1, 2, 3, 4
 TOTAL_WORKERS=5                       # Total number of parallel workers
 S3_INPUT_BUCKET=cs433-rag-project2    # Input PDFs bucket
-S3_INPUT_PREFIX=pdfs/                 # Prefix for PDFs
+S3_INPUT_PREFIX=raw_pdfs/             # Prefix for PDFs
 S3_OUTPUT_BUCKET=cs433-rag-project2   # Output markdown bucket
 S3_OUTPUT_PREFIX=processed/           # Prefix for outputs
 AWS_DEFAULT_REGION=us-east-1          # AWS region
@@ -250,7 +250,7 @@ docker run --gpus all \
   -e WORKER_ID=${WORKER_ID} \
   -e TOTAL_WORKERS=5 \
   -e S3_INPUT_BUCKET=cs433-rag-project2 \
-  -e S3_INPUT_PREFIX=pdfs/ \
+  -e S3_INPUT_PREFIX=raw_pdfs/ \
   -e S3_OUTPUT_BUCKET=cs433-rag-project2 \
   -e S3_OUTPUT_PREFIX=processed/ \
   -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
@@ -451,7 +451,7 @@ docker run --gpus all \
   -e WORKER_ID=0 \
   -e TOTAL_WORKERS=5 \
   -e S3_INPUT_BUCKET=cs433-rag-project2 \
-  -e S3_INPUT_PREFIX=pdfs/ \
+  -e S3_INPUT_PREFIX=raw_pdfs/ \
   ravinala/pdf-parser:v2-distributed
 
 # Expected: Processes PDFs at indices 0, 5 (2 PDFs)
