@@ -71,16 +71,20 @@ class EC2WorkerLauncher:
             return False
         print("✓ AWS credentials found")
 
-        # Check IAM role exists
-        iam = boto3.client('iam')
+        # Check IAM role exists (skip if no IAM permissions)
         role_name = 'pdf-processing-user'
         try:
+            iam = boto3.client('iam')
             iam.get_role(RoleName=role_name)
             print(f"✓ IAM role '{role_name}' exists")
-        except ClientError:
-            print(f"❌ IAM role '{role_name}' not found")
-            print(f"   Create it with: python scripts/setup_aws_infrastructure.py")
-            return False
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'AccessDenied':
+                print(f"⚠️  Cannot verify IAM role (no IAM permissions)")
+                print(f"   Assuming role '{role_name}' exists...")
+            else:
+                print(f"❌ IAM role '{role_name}' not found")
+                print(f"   Contact your AWS admin to create it")
+                return False
 
         # Check Deep Learning AMI
         try:
