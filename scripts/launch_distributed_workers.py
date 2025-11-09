@@ -31,6 +31,7 @@ class EC2WorkerLauncher:
         max_spot_price: str = "0.60",
         region: str = "eu-north-1",
         docker_image: str = "ravinala/pdf-parser:v2-distributed",
+        use_on_demand: bool = False,
     ):
         """
         Initialize launcher.
@@ -38,15 +39,17 @@ class EC2WorkerLauncher:
         Args:
             num_workers: Number of parallel workers to launch
             instance_type: EC2 instance type (must have GPU)
-            max_spot_price: Maximum Spot price per hour
+            max_spot_price: Maximum Spot price per hour (ignored if use_on_demand=True)
             region: AWS region
             docker_image: Docker image to run
+            use_on_demand: Use on-demand instances instead of Spot
         """
         self.num_workers = num_workers
         self.instance_type = instance_type
         self.max_spot_price = max_spot_price
         self.region = region
         self.docker_image = docker_image
+        self.use_on_demand = use_on_demand
 
         # Initialize AWS clients
         self.ec2 = boto3.client('ec2', region_name=region)
@@ -155,7 +158,7 @@ shutdown -h now
 
     def launch_workers(self, dry_run: bool = False) -> List[str]:
         """
-        Launch EC2 Spot instances for all workers.
+        Launch EC2 instances (Spot or On-Demand) for all workers.
 
         Args:
             dry_run: If True, don't actually launch instances
@@ -184,55 +187,97 @@ shutdown -h now
                 continue
 
             try:
-                # Build LaunchSpecification
-                # Note: Not using IAM instance profile - AWS credentials passed via env vars in User Data
-                launch_spec = {
-                    'ImageId': ami_id,
-                    'InstanceType': self.instance_type,
-                    'SecurityGroups': ['default'],
-                    'UserData': user_data_b64,
-                    'BlockDeviceMappings': [
-                        {
-                            'DeviceName': '/dev/sda1',
-                            'Ebs': {
-                                'VolumeSize': 125,
-                                'VolumeType': 'gp3',
-                                'DeleteOnTermination': True
+                if self.use_on_demand:
+                    # Launch On-Demand instance
+                    launch_params = {
+                        'ImageId': ami_id,
+                        'InstanceType': self.instance_type,
+                        'MinCount': 1,
+                        'MaxCount': 1,
+                        'SecurityGroups': ['default'],
+                        'UserData': user_data_b64,
+                        'BlockDeviceMappings': [
+                            {
+                                'DeviceName': '/dev/sda1',
+                                'Ebs': {
+                                    'VolumeSize': 125,
+                                    'VolumeType': 'gp3',
+                                    'DeleteOnTermination': True
+                                }
                             }
-                        }
-                    ]
-                }
-
-                # Add KeyName if configured
-                key_name = os.getenv('AWS_KEY_PAIR')
-                if key_name:
-                    launch_spec['KeyName'] = key_name
-
-                # Launch Spot instance
-                response = self.ec2.request_spot_instances(
-                    InstanceCount=1,
-                    Type='one-time',
-                    SpotPrice=self.max_spot_price,
-                    LaunchSpecification=launch_spec
-                )
-
-                spot_request_id = response['SpotInstanceRequests'][0]['SpotInstanceRequestId']
-                print(f"  ✓ Spot request created: {spot_request_id}")
-
-                # Tag the Spot request
-                try:
-                    self.ec2.create_tags(
-                        Resources=[spot_request_id],
-                        Tags=[
-                            {'Key': 'Name', 'Value': f'pdf-worker-{worker_id}'},
-                            {'Key': 'Project', 'Value': 'pdf-processing'},
-                            {'Key': 'WorkerID', 'Value': str(worker_id)},
+                        ],
+                        'TagSpecifications': [
+                            {
+                                'ResourceType': 'instance',
+                                'Tags': [
+                                    {'Key': 'Name', 'Value': f'pdf-worker-{worker_id}'},
+                                    {'Key': 'Project', 'Value': 'pdf-processing'},
+                                    {'Key': 'WorkerID', 'Value': str(worker_id)},
+                                ]
+                            }
                         ]
-                    )
-                except ClientError as tag_error:
-                    print(f"  ⚠️  Could not tag Spot request: {tag_error}")
+                    }
 
-                # Wait a bit for request to be fulfilled
+                    # Add KeyName if configured
+                    key_name = os.getenv('AWS_KEY_PAIR')
+                    if key_name:
+                        launch_params['KeyName'] = key_name
+
+                    response = self.ec2.run_instances(**launch_params)
+                    instance_id = response['Instances'][0]['InstanceId']
+                    instance_ids.append(instance_id)
+                    print(f"  ✓ On-demand instance launched: {instance_id}")
+
+                else:
+                    # Launch Spot instance
+                    # Build LaunchSpecification
+                    # Note: Not using IAM instance profile - AWS credentials passed via env vars in User Data
+                    launch_spec = {
+                        'ImageId': ami_id,
+                        'InstanceType': self.instance_type,
+                        'SecurityGroups': ['default'],
+                        'UserData': user_data_b64,
+                        'BlockDeviceMappings': [
+                            {
+                                'DeviceName': '/dev/sda1',
+                                'Ebs': {
+                                    'VolumeSize': 125,
+                                    'VolumeType': 'gp3',
+                                    'DeleteOnTermination': True
+                                }
+                            }
+                        ]
+                    }
+
+                    # Add KeyName if configured
+                    key_name = os.getenv('AWS_KEY_PAIR')
+                    if key_name:
+                        launch_spec['KeyName'] = key_name
+
+                    response = self.ec2.request_spot_instances(
+                        InstanceCount=1,
+                        Type='one-time',
+                        SpotPrice=self.max_spot_price,
+                        LaunchSpecification=launch_spec
+                    )
+
+                    spot_request_id = response['SpotInstanceRequests'][0]['SpotInstanceRequestId']
+                    print(f"  ✓ Spot request created: {spot_request_id}")
+
+                    # Tag the Spot request
+                    try:
+                        self.ec2.create_tags(
+                            Resources=[spot_request_id],
+                            Tags=[
+                                {'Key': 'Name', 'Value': f'pdf-worker-{worker_id}'},
+                                {'Key': 'Project', 'Value': 'pdf-processing'},
+                                {'Key': 'WorkerID', 'Value': str(worker_id)},
+                            ]
+                        )
+                    except ClientError as tag_error:
+                        print(f"  ⚠️  Could not tag Spot request: {tag_error}")
+
+                # Wait a bit for instance to start
                 time.sleep(2)
 
             except ClientError as e:
@@ -295,6 +340,11 @@ def main():
         action='store_true',
         help='Dry run mode - do not actually launch instances'
     )
+    parser.add_argument(
+        '--on-demand',
+        action='store_true',
+        help='Use on-demand instances instead of Spot instances'
+    )
 
     args = parser.parse_args()
 
@@ -303,7 +353,8 @@ def main():
         num_workers=args.workers,
         instance_type=args.instance_type,
         max_spot_price=args.max_price,
-        region=args.region
+        region=args.region,
+        use_on_demand=args.on_demand
     )
 
     # Validate prerequisites
@@ -313,11 +364,27 @@ def main():
 
     # Confirm launch
     if not args.dry_run:
-        print(f"\n⚠️  About to launch {args.workers} Spot instances:")
-        print(f"   Instance type: {args.instance_type}")
-        print(f"   Max price: ${args.max_price}/hour")
-        print(f"   Region: {args.region}")
-        print(f"   Estimated cost: ~${float(args.max_price) * args.workers * 40:.2f} for 40 hours")
+        # On-demand pricing for g4dn.xlarge
+        on_demand_prices = {
+            'g4dn.xlarge': 0.526,
+            'g4dn.2xlarge': 0.752,
+            'g4dn.4xlarge': 1.204,
+        }
+
+        if args.on_demand:
+            hourly_price = on_demand_prices.get(args.instance_type, 0.526)
+            print(f"\n⚠️  About to launch {args.workers} On-Demand instances:")
+            print(f"   Instance type: {args.instance_type}")
+            print(f"   Price: ${hourly_price:.3f}/hour per instance")
+            print(f"   Region: {args.region}")
+            print(f"   Estimated cost: ~${hourly_price * args.workers * 40:.2f} for 40 hours")
+        else:
+            print(f"\n⚠️  About to launch {args.workers} Spot instances:")
+            print(f"   Instance type: {args.instance_type}")
+            print(f"   Max price: ${args.max_price}/hour")
+            print(f"   Region: {args.region}")
+            print(f"   Estimated cost: ~${float(args.max_price) * args.workers * 40:.2f} for 40 hours")
+
         print()
         response = input("Continue? [y/N]: ")
         if response.lower() != 'y':
