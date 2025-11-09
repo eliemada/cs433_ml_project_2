@@ -92,9 +92,7 @@ class EC2WorkerLauncher:
                 Filters=[
                     {'Name': 'name', 'Values': ['Deep Learning Base AMI*CUDA*(Ubuntu 22.04)*']},
                     {'Name': 'state', 'Values': ['available']},
-                ],
-                Owners=['amazon'],
-                MaxResults=5
+                ]
             )
             if response['Images']:
                 # Get the latest one
@@ -116,8 +114,7 @@ class EC2WorkerLauncher:
             Filters=[
                 {'Name': 'name', 'Values': ['Deep Learning Base AMI*CUDA*(Ubuntu 22.04)*']},
                 {'Name': 'state', 'Values': ['available']},
-            ],
-            Owners=['amazon']
+            ]
         )
 
         # Sort by creation date and get latest
@@ -185,8 +182,8 @@ shutdown -h now
             print("🔍 DRY RUN MODE - No instances will be launched\n")
 
         # Get latest AMI
-        ami_id = self.get_latest_ubuntu_ami()
-        print(f"Using Ubuntu AMI: {ami_id}\n")
+        ami_id = self.get_latest_dl_ami()
+        print(f"Using Deep Learning AMI: {ami_id}\n")
 
         instance_ids = []
 
