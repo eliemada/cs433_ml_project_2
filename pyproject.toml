@@ -51,6 +51,8 @@ dependencies = [
     "tenacity>=9.1.2",
     "bs4>=0.0.2",
     "ruff>=0.14.4",
+    "opencv-python>=4.12.0.88",
+    "pymupdf>=1.26.6",
 ]
 
 [project.optional-dependencies]
