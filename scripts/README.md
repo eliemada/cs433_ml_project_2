@@ -12,8 +12,11 @@ s3://cs433-rag-project2/
 │   ├── 00002_W2122361802_Navigating...pdf
 │   ├── 00003_W2122361803_...pdf
 │   └── ...
-├── processed/                             # Output markdown files
-│   ├── 00002_W2122361802_Navigating...md
+├── processed/                             # Output folders (one per PDF)
+│   ├── 00002_W2122361802/
+│   │   └── document.md
+│   ├── 00003_W2122361803/
+│   │   └── document.md
 │   └── ...
 ├── raw_metadata/                          # Existing metadata
 └── failures/                              # Failure reports (auto-created)
@@ -116,9 +119,13 @@ This means you can:
 
 ### Check Progress
 
-Count processed files:
+Count processed PDFs (counts folders):
 ```bash
-aws s3 ls s3://cs433-rag-project2/processed/ --recursive | wc -l
+# Count folders in processed/
+aws s3 ls s3://cs433-rag-project2/processed/ | grep "PRE" | wc -l
+
+# Or count document.md files
+aws s3 ls s3://cs433-rag-project2/processed/ --recursive | grep "document.md" | wc -l
 ```
 
 ### View Failures
@@ -141,12 +148,14 @@ Input PDF:
 raw_pdfs/00002_W2122361802_Navigating_the_Patent_Thicket_Cross_Licenses,_Patent_Pools,_and_Standard-Setting.pdf
 ```
 
-Output markdown:
+Output structure:
 ```
-processed/00002_W2122361802_Navigating_the_Patent_Thicket_Cross_Licenses,_Patent_Pools,_and_Standard-Setting.md
+processed/
+  └── 00002_W2122361802/          ← Folder named by PDF ID
+      └── document.md              ← Always "document.md"
 ```
 
-Same filename, just `.pdf` → `.md` and different folder.
+The PDF ID (`00002_W2122361802`) is extracted from the filename, and a folder is created with that ID containing `document.md`.
 
 ## Cost Estimate
 

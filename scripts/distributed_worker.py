@@ -85,16 +85,21 @@ class DistributedWorker:
         Process a single PDF.
 
         Args:
-            pdf_key: S3 key of PDF file
+            pdf_key: S3 key of PDF file (e.g., 'raw_pdfs/00002_W2122361802_Title.pdf')
 
         Returns:
             True if successful, False otherwise
+
+        Output Structure:
+            Creates: processed/{PDF_ID}/document.md
+            Example: processed/00002_W2122361802/document.md
         """
+        # Get output key: processed/{PDF_ID}/document.md
         output_key = get_output_key(pdf_key, self.s3_input_prefix, self.s3_output_prefix)
 
         # Check if already processed
         if s3_object_exists(self.s3, self.s3_output_bucket, output_key):
-            self.logger.info(f"Skipping {pdf_key} (already processed)")
+            self.logger.info(f"Skipping {pdf_key} (already processed at {output_key})")
             return True
 
         # Download PDF to temporary file

@@ -84,21 +84,48 @@ class TestWorkerDistribution(unittest.TestCase):
 
         self.assertEqual(worker_0, all_pdfs)
 
-    def test_get_output_key_converts_pdf_to_markdown(self):
-        """get_output_key should convert PDF key to markdown key."""
+    def test_extract_pdf_id_from_filename(self):
+        """extract_pdf_id should extract the ID from PDF filename."""
+        from scripts.utils.worker_distribution import extract_pdf_id
+
+        # Real examples
+        pdf_id = extract_pdf_id('00002_W2122361802_Navigating_the_Patent_Thicket.pdf')
+        self.assertEqual(pdf_id, '00002_W2122361802')
+
+        pdf_id = extract_pdf_id('00004_W2114989862_Some_Paper_Title.pdf')
+        self.assertEqual(pdf_id, '00004_W2114989862')
+
+        # With path
+        pdf_id = extract_pdf_id('raw_pdfs/00007_W2150316800_Title.pdf')
+        self.assertEqual(pdf_id, '00007_W2150316800')
+
+    def test_get_output_key_converts_pdf_to_folder_with_document_md(self):
+        """get_output_key should create folder structure with document.md."""
         from scripts.utils.worker_distribution import get_output_key
 
-        # Basic conversion
-        output = get_output_key('pdfs/paper.pdf', 'pdfs/', 'processed/')
-        self.assertEqual(output, 'processed/paper.md')
+        # Real example: extract ID and create folder/document.md
+        output = get_output_key(
+            'raw_pdfs/00002_W2122361802_Navigating_the_Patent_Thicket.pdf',
+            'raw_pdfs/',
+            'processed/'
+        )
+        self.assertEqual(output, 'processed/00002_W2122361802/document.md')
 
-        # Nested path
-        output = get_output_key('pdfs/2023/paper.pdf', 'pdfs/', 'processed/')
-        self.assertEqual(output, 'processed/2023/paper.md')
+        # Another example
+        output = get_output_key(
+            'raw_pdfs/00004_W2114989862_Some_Paper_Title.pdf',
+            'raw_pdfs/',
+            'processed/'
+        )
+        self.assertEqual(output, 'processed/00004_W2114989862/document.md')
 
-        # No prefix
-        output = get_output_key('paper.pdf', '', 'output/')
-        self.assertEqual(output, 'output/paper.md')
+        # Edge case: PDF with no prefix
+        output = get_output_key(
+            '12345_W9999999999_Paper.pdf',
+            '',
+            'output/'
+        )
+        self.assertEqual(output, 'output/12345_W9999999999/document.md')
 
 
 if __name__ == '__main__':
