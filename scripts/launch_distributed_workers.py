@@ -199,45 +199,55 @@ shutdown -h now
                 continue
 
             try:
+                # Build LaunchSpecification
+                launch_spec = {
+                    'ImageId': ami_id,
+                    'InstanceType': self.instance_type,
+                    'IamInstanceProfile': {
+                        'Name': 'pdf-processing-user'
+                    },
+                    'SecurityGroups': ['default'],
+                    'UserData': user_data_b64,
+                    'BlockDeviceMappings': [
+                        {
+                            'DeviceName': '/dev/sda1',
+                            'Ebs': {
+                                'VolumeSize': 125,
+                                'VolumeType': 'gp3',
+                                'DeleteOnTermination': True
+                            }
+                        }
+                    ]
+                }
+
+                # Add KeyName if configured
+                key_name = os.getenv('AWS_KEY_PAIR')
+                if key_name:
+                    launch_spec['KeyName'] = key_name
+
                 # Launch Spot instance
                 response = self.ec2.request_spot_instances(
                     InstanceCount=1,
                     Type='one-time',
                     SpotPrice=self.max_spot_price,
-                    LaunchSpecification={
-                        'ImageId': ami_id,
-                        'InstanceType': self.instance_type,
-                        'KeyName': os.getenv('AWS_KEY_PAIR'),  # Optional
-                        'IamInstanceProfile': {
-                            'Name': 'pdf-processing-user'
-                        },
-                        'SecurityGroups': ['default'],
-                        'UserData': user_data_b64,
-                        'BlockDeviceMappings': [
-                            {
-                                'DeviceName': '/dev/sda1',
-                                'Ebs': {
-                                    'VolumeSize': 125,
-                                    'VolumeType': 'gp3',
-                                    'DeleteOnTermination': True
-                                }
-                            }
-                        ],
-                        'TagSpecifications': [
-                            {
-                                'ResourceType': 'instance',
-                                'Tags': [
-                                    {'Key': 'Name', 'Value': f'pdf-worker-{worker_id}'},
-                                    {'Key': 'Project', 'Value': 'pdf-processing'},
-                                    {'Key': 'WorkerID', 'Value': str(worker_id)},
-                                ]
-                            }
-                        ]
-                    }
+                    LaunchSpecification=launch_spec
                 )
 
                 spot_request_id = response['SpotInstanceRequests'][0]['SpotInstanceRequestId']
                 print(f"  ✓ Spot request created: {spot_request_id}")
+
+                # Tag the Spot request
+                try:
+                    self.ec2.create_tags(
+                        Resources=[spot_request_id],
+                        Tags=[
+                            {'Key': 'Name', 'Value': f'pdf-worker-{worker_id}'},
+                            {'Key': 'Project', 'Value': 'pdf-processing'},
+                            {'Key': 'WorkerID', 'Value': str(worker_id)},
+                        ]
+                    )
+                except ClientError as tag_error:
+                    print(f"  ⚠️  Could not tag Spot request: {tag_error}")
 
                 # Wait a bit for request to be fulfilled
                 time.sleep(2)
