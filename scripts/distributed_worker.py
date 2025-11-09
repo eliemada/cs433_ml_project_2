@@ -28,10 +28,10 @@ from rag_pipeline.pdf_parsing.core.pipeline import PDFParsingPipeline
 from rag_pipeline.pdf_parsing.config import PDFParsingConfig
 
 
-# Configure logging
+# Configure logging (simple format first, will add worker_id later)
 logging.basicConfig(
     level=logging.INFO,
-    format='[Worker %(worker_id)s] %(asctime)s - %(levelname)s - %(message)s',
+    format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
@@ -58,19 +58,19 @@ class DistributedWorker:
         # Initialize S3 client
         self.s3 = boto3.client('s3')
 
-        # Initialize PDF parsing pipeline
-        self.config = PDFParsingConfig()
+        # Initialize PDF parsing config with temp output directory
+        from rag_pipeline.pdf_parsing.config import OutputConfig
+        self.config = PDFParsingConfig(
+            output=OutputConfig(output_dir=Path('/tmp/pdf_output'))
+        )
         self.pipeline = None  # Lazy load to avoid loading model unless needed
 
         # Track failures
         self.failures: List[Dict] = []
 
-        # Setup logging with worker ID
+        # Setup logger
         self.logger = logging.getLogger(__name__)
-        self.logger = logging.LoggerAdapter(
-            self.logger,
-            {'worker_id': self.worker_id}
-        )
+        self.logger.info(f"Worker {self.worker_id}/{self.total_workers} initialized")
 
     def get_pipeline(self) -> PDFParsingPipeline:
         """Lazy load PDF parsing pipeline."""
