@@ -86,22 +86,22 @@ class EC2WorkerLauncher:
                 print(f"   Contact your AWS admin to create it")
                 return False
 
-        # Check for Ubuntu AMI (we'll use Docker, so just need Ubuntu)
+        # Check for Deep Learning AMI (has Docker + NVIDIA pre-installed)
         try:
             response = self.ec2.describe_images(
                 Filters=[
-                    {'Name': 'name', 'Values': ['ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*']},
+                    {'Name': 'name', 'Values': ['Deep Learning Base AMI*CUDA*(Ubuntu 22.04)*']},
                     {'Name': 'state', 'Values': ['available']},
                 ],
-                Owners=['099720109477'],  # Canonical (Ubuntu)
+                Owners=['amazon'],
                 MaxResults=5
             )
             if response['Images']:
                 # Get the latest one
                 latest = sorted(response['Images'], key=lambda x: x['CreationDate'], reverse=True)[0]
-                print(f"✓ Ubuntu AMI found: {latest['ImageId']}")
+                print(f"✓ Deep Learning AMI found: {latest['ImageId']}")
             else:
-                print("❌ No Ubuntu AMI found")
+                print("❌ No Deep Learning AMI found")
                 return False
         except ClientError as e:
             print(f"❌ Error checking AMI: {e}")
@@ -110,14 +110,14 @@ class EC2WorkerLauncher:
         print("✓ All prerequisites validated\n")
         return True
 
-    def get_latest_ubuntu_ami(self) -> str:
-        """Get the latest Ubuntu 22.04 AMI ID."""
+    def get_latest_dl_ami(self) -> str:
+        """Get the latest Deep Learning Base AMI ID."""
         response = self.ec2.describe_images(
             Filters=[
-                {'Name': 'name', 'Values': ['ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*']},
+                {'Name': 'name', 'Values': ['Deep Learning Base AMI*CUDA*(Ubuntu 22.04)*']},
                 {'Name': 'state', 'Values': ['available']},
             ],
-            Owners=['099720109477']  # Canonical (Ubuntu)
+            Owners=['amazon']
         )
 
         # Sort by creation date and get latest
@@ -145,28 +145,8 @@ echo "=========================================="
 echo "PDF Worker {worker_id} - Starting Setup"
 echo "=========================================="
 
-# Install Docker if not already installed
-if ! command -v docker &> /dev/null; then
-    echo "Installing Docker..."
-    apt-get update
-    apt-get install -y docker.io
-    systemctl start docker
-    systemctl enable docker
-fi
-
-# Install NVIDIA Container Toolkit for GPU support
-echo "Installing NVIDIA Container Toolkit..."
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | \
-    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-    tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-apt-get update
-apt-get install -y nvidia-container-toolkit
-nvidia-ctk runtime configure --runtime=docker
-systemctl restart docker
-
-# Pull Docker image
+# Deep Learning AMI already has Docker + NVIDIA toolkit
+# Just pull the image
 echo "Pulling Docker image..."
 docker pull {self.docker_image}
 
