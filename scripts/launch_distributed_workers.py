@@ -52,10 +52,6 @@ class EC2WorkerLauncher:
         self.ec2 = boto3.client('ec2', region_name=region)
         self.ec2_resource = boto3.resource('ec2', region_name=region)
 
-        # Get AWS account ID for IAM ARNs
-        sts = boto3.client('sts', region_name=region)
-        self.account_id = sts.get_caller_identity()['Account']
-
         # Configuration from environment
         self.s3_input_bucket = os.getenv('S3_INPUT_BUCKET', 'cs433-rag-project2')
         self.s3_input_prefix = os.getenv('S3_INPUT_PREFIX', 'raw_pdfs/')
@@ -68,27 +64,12 @@ class EC2WorkerLauncher:
         """Validate that all prerequisites are met."""
         print("Validating prerequisites...")
 
-        # Check AWS credentials
+        # Check AWS credentials (will be passed to container via env vars)
         if not self.aws_access_key or not self.aws_secret_key:
             print("❌ AWS credentials not found in environment")
             print("   Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY")
             return False
         print("✓ AWS credentials found")
-
-        # Check IAM role exists (skip if no IAM permissions)
-        role_name = 'pdf-processing-user'
-        try:
-            iam = boto3.client('iam')
-            iam.get_role(RoleName=role_name)
-            print(f"✓ IAM role '{role_name}' exists")
-        except ClientError as e:
-            if e.response['Error']['Code'] == 'AccessDenied':
-                print(f"⚠️  Cannot verify IAM role (no IAM permissions)")
-                print(f"   Assuming role '{role_name}' exists...")
-            else:
-                print(f"❌ IAM role '{role_name}' not found")
-                print(f"   Contact your AWS admin to create it")
-                return False
 
         # Check for Deep Learning AMI (has Docker + NVIDIA pre-installed)
         try:
@@ -204,15 +185,10 @@ shutdown -h now
 
             try:
                 # Build LaunchSpecification
-                # Use full ARN for IAM instance profile (required for Spot instances)
-                instance_profile_arn = f"arn:aws:iam::{self.account_id}:instance-profile/pdf-processing-user"
-
+                # Note: Not using IAM instance profile - AWS credentials passed via env vars in User Data
                 launch_spec = {
                     'ImageId': ami_id,
                     'InstanceType': self.instance_type,
-                    'IamInstanceProfile': {
-                        'Arn': instance_profile_arn
-                    },
                     'SecurityGroups': ['default'],
                     'UserData': user_data_b64,
                     'BlockDeviceMappings': [
