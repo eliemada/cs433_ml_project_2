@@ -22,7 +22,7 @@ class DolphinModelConfig(BaseModel):
         default=True, description="Use half precision (FP16) on CUDA for faster inference"
     )
     max_batch_size: int = Field(
-        default=16, ge=1, le=32, description="Maximum batch size for element recognition"
+        default=32, ge=1, le=64, description="Maximum batch size for element recognition"
     )
 
     @field_validator("model_path")

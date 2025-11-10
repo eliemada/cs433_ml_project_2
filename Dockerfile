@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     python3.11 \
     python3.11-dev \
     git \
+    git-lfs \
     curl \
     ca-certificates \
     # OpenCV dependencies
@@ -34,13 +35,30 @@ COPY rag_pipeline/ ./rag_pipeline/
 RUN uv sync --frozen
 
 # Download Dolphin model (~2GB)
-RUN git clone https://huggingface.co/ByteDance/Dolphin-1.5 /app/models/dolphin
+# Initialize Git LFS and clone with LFS files
+RUN git lfs install && \
+    git clone https://huggingface.co/ByteDance/Dolphin-1.5 /app/models/dolphin && \
+    cd /app/models/dolphin && \
+    git lfs pull
 
-# Copy processing script
-COPY scripts/process_pdfs_batch.py ./scripts/
+# Copy all scripts (including distributed worker)
+COPY scripts/ ./scripts/
+COPY tests/ ./tests/
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 
+# Default environment variables for distributed worker
+ENV WORKER_ID=0
+ENV TOTAL_WORKERS=1
+ENV S3_INPUT_PREFIX=raw_pdfs/
+ENV S3_OUTPUT_PREFIX=processed/
+ENV MAX_RETRIES=2
+ENV CONCURRENT_PDFS=3
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
 # Entrypoint
-ENTRYPOINT ["uv", "run", "python", "scripts/process_pdfs_batch.py"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

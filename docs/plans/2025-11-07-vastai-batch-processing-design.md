@@ -106,7 +106,7 @@ s3://your-bucket/
 # S3 Credentials (AWS S3)
 AWS_ACCESS_KEY_ID=AKIA...
 AWS_SECRET_ACCESS_KEY=secret...
-AWS_REGION=us-east-1
+AWS_REGION=eu-north-1
 S3_BUCKET=my-pdf-bucket
 
 # OR for Infomaniak Swift (S3-compatible)
@@ -152,7 +152,7 @@ COPY vast_batch_process.py /workspace/
 COPY requirements.txt /workspace/
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --system -r requirements.txt
 
 # Model weights already included in rag_pipeline/pdf_parsing/models/
 # (copied during build - 796MB safetensors file)
@@ -187,7 +187,7 @@ s3_client = boto3.client(
     's3',
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-    region_name=os.getenv('AWS_REGION', 'us-east-1')
+    region_name=os.getenv('AWS_REGION', 'eu-north-1')
 )
 ```
 
@@ -200,7 +200,7 @@ s3_client = boto3.client(
     endpoint_url=os.getenv('S3_ENDPOINT_URL'),  # e.g., https://s3.pub1.infomaniak.cloud
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-    region_name='us-east-1'  # Required but not used by custom endpoints
+    region_name='eu-north-1'  # Required but not used by custom endpoints
 )
 ```
 
@@ -348,7 +348,7 @@ Upload your PDFs from `data/openalex/pdfs/` to S3:
 **For AWS S3**:
 ```bash
 # Install AWS CLI
-pip install awscli
+uv pip install awscli
 
 # Configure credentials
 aws configure
@@ -400,7 +400,7 @@ docker push yourusername/pdf-parser:latest
 
 ```bash
 # Install Vast.ai CLI
-pip install vast
+uv pip install vast
 
 # Login
 vastai set api-key YOUR_VASTAI_API_KEY

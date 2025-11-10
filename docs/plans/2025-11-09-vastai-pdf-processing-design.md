@@ -111,7 +111,7 @@ cs433-rag-project2/
 ```bash
 AWS_ACCESS_KEY_ID=xxx
 AWS_SECRET_ACCESS_KEY=xxx
-AWS_DEFAULT_REGION=us-east-1
+AWS_DEFAULT_REGION=eu-north-1
 S3_BUCKET=cs433-rag-project2
 ```
 

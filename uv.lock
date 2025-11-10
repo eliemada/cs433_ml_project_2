@@ -421,6 +421,15 @@ css = [
 ]
 
 [[package]]
+name = "boto"
+version = "2.49.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c8/af/54a920ff4255664f5d238b5aebd8eedf7a07c7a5e71e27afcfe840b82f51/boto-2.49.0.tar.gz", hash = "sha256:ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a", size = 1478498, upload-time = "2018-07-11T20:58:58.057Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/23/10/c0b78c27298029e4454a472a1919bde20cb182dab1662cec7f2ca1dcc523/boto-2.49.0-py2.py3-none-any.whl", hash = "sha256:147758d41ae7240dc989f0039f27da8ca0d53734be0eb869ef16e3adcfa462e8", size = 1359202, upload-time = "2018-07-11T20:58:55.711Z" },
+]
+
+[[package]]
 name = "boto3"
 version = "1.40.69"
 source = { registry = "https://pypi.org/simple" }
@@ -1830,6 +1839,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/da/34/28fff3ab31ccff1fd4f6c7c7b0ceb2b6968d8ea4950663eadcb5720591a0/lark-1.3.1.tar.gz", hash = "sha256:b426a7a6d6d53189d318f2b6236ab5d6429eaf09259f1ca33eb716eed10d2905", size = 382732, upload-time = "2025-10-27T18:25:56.653Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/82/3d/14ce75ef66813643812f3093ab17e46d3a206942ce7376d31ec2d36229e7/lark-1.3.1-py3-none-any.whl", hash = "sha256:c629b661023a014c37da873b4ff58a817398d12635d3bbb2c5a03be7fe5d1e12", size = 113151, upload-time = "2025-10-27T18:25:54.882Z" },
+]
+
+[[package]]
+name = "loadotenv"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/29/8f/0f613996f80c194cce530a9143b97a160afb5b996914cb8f16d7235fb43b/loadotenv-1.0.1.tar.gz", hash = "sha256:9f5117f991d6eb5ff96e062d73f61b6e19664f9f38809d18497872aee79c3c70", size = 2816, upload-time = "2023-12-09T06:13:28.451Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/69/b5/fbc29b3e92b729fae5c27a0f616cb16d5cbc7fb35000aaff9c779317a988/loadotenv-1.0.1-py3-none-any.whl", hash = "sha256:0978a2895771e32915ab03b15b5478f2c56cad8ff079bb4cf974cc8ec06c9305", size = 2865, upload-time = "2023-12-09T06:13:27.033Z" },
 ]
 
 [[package]]
@@ -3572,9 +3590,11 @@ source = { editable = "." }
 dependencies = [
     { name = "accelerate" },
     { name = "aiohttp" },
+    { name = "boto" },
     { name = "boto3" },
     { name = "botocore" },
     { name = "bs4" },
+    { name = "loadotenv" },
     { name = "loguru" },
     { name = "markdown" },
     { name = "nltk" },
@@ -3589,6 +3609,7 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "pymupdf" },
     { name = "pypdf" },
+    { name = "pytest" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "requests" },
@@ -3641,10 +3662,12 @@ requires-dist = [
     { name = "aiohttp", specifier = ">=3.9.0" },
     { name = "bitsandbytes", marker = "extra == 'gpu'", specifier = ">=0.41.3" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.11.0" },
+    { name = "boto", specifier = ">=2.49.0" },
     { name = "boto3", specifier = ">=1.34.0" },
     { name = "botocore", specifier = ">=1.34.0" },
     { name = "bs4", specifier = ">=0.0.2" },
     { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.104.1" },
+    { name = "loadotenv", specifier = ">=1.0.1" },
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "markdown", specifier = ">=3.5.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.7.1" },
@@ -3661,6 +3684,7 @@ requires-dist = [
     { name = "pydantic-settings", specifier = ">=2.1.0" },
     { name = "pymupdf", specifier = ">=1.26.6" },
     { name = "pypdf", specifier = ">=3.17.0" },
+    { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.3" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.1" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },

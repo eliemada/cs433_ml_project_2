@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  pdf-parser:
+    image: ravinala/pdf-parser:latest
+    container_name: pdf-parser
+
+    # GPU support (requires nvidia-docker2)
+    runtime: nvidia
+
+    environment:
+      # AWS S3 credentials
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-north-1}
+      - S3_BUCKET=${S3_BUCKET:-cs433-rag-project2}
+
+      # GPU configuration
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+    # Optional: Mount local directories for debugging/caching
+    volumes:
+      # Persistent model cache (optional - model is already in image)
+      # - ./models:/app/models
+
+      # Local output for debugging (optional)
+      # - ./output:/tmp/output
+
+      # Log file access (optional)
+      - ./logs:/tmp
+
+    # Resource limits (adjust based on your GPU)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+    # Restart policy
+    restart: "no"  # Don't auto-restart (batch job should exit when done)
+
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -76,4 +76,4 @@ tmp/
 temp/
 
 # Archive (old code - optional, remove this line if you want to track archive)
-archive/
+archive/.worktrees/

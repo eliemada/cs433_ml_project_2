@@ -53,6 +53,9 @@ dependencies = [
     "ruff>=0.14.4",
     "opencv-python>=4.12.0.88",
     "pymupdf>=1.26.6",
+    "pytest>=8.4.2",
+    "boto>=2.49.0",
+    "loadotenv>=1.0.1",
 ]
 
 [project.optional-dependencies]
