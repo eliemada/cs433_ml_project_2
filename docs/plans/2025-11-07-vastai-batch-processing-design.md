@@ -152,7 +152,7 @@ COPY vast_batch_process.py /workspace/
 COPY requirements.txt /workspace/
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --system -r requirements.txt
 
 # Model weights already included in rag_pipeline/pdf_parsing/models/
 # (copied during build - 796MB safetensors file)
@@ -348,7 +348,7 @@ Upload your PDFs from `data/openalex/pdfs/` to S3:
 **For AWS S3**:
 ```bash
 # Install AWS CLI
-pip install awscli
+uv pip install awscli
 
 # Configure credentials
 aws configure
@@ -400,7 +400,7 @@ docker push yourusername/pdf-parser:latest
 
 ```bash
 # Install Vast.ai CLI
-pip install vast
+uv pip install vast
 
 # Login
 vastai set api-key YOUR_VASTAI_API_KEY

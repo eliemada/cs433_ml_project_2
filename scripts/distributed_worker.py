@@ -168,6 +168,16 @@ class DistributedWorker:
                         )
 
                 self.logger.info(f"✓ Successfully processed {pdf_key}")
+
+                # Clear GPU cache to prevent memory fragmentation
+                try:
+                    import torch
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                        torch.cuda.synchronize()
+                except:
+                    pass
+
                 return True
 
             except Exception as e:
@@ -177,6 +187,16 @@ class DistributedWorker:
                     'error': str(e),
                     'error_type': type(e).__name__
                 })
+
+                # Clear GPU cache even on failure
+                try:
+                    import torch
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                        torch.cuda.synchronize()
+                except:
+                    pass
+
                 return False
 
     def run(self):
