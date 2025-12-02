@@ -1,0 +1,34 @@
+{
+    "sidebar": {
+        "appName": "PolicyRAG",
+        "newChat": "Nouvelle discussion",
+        "recent": "Récent",
+        "settings": "Paramètres",
+        "logout": "Déconnexion",
+        "history": {
+            "patents_sme": "Effet des brevets sur PME",
+            "patent_boxes": "Patent boxes & R&D",
+            "maintenance_fees": "Réforme taxes maintien"
+        }
+    },
+    "input": {
+        "placeholder": "Posez une question de politique publique...",
+        "disclaimer": "L'IA peut faire des erreurs. Vérifiez toujours les sources académiques fournies.",
+        "starters": [
+            "Que sait-on de l'effet des brevets sur l'innovation ?",
+            "Les patent boxes ont-elles stimulé la R&D ?",
+            "Comparaison du système suisse avec ses voisins",
+            "Conséquences d'une hausse des taxes de maintien ?"
+        ]
+    },
+    "response": {
+        "executiveSummary": "Synthèse Exécutive",
+        "analystView": "Vue Analyste & Méthodologie",
+        "keyReferences": "Références Clés"
+    },
+    "chat": {
+        "headerTitle": "Assistant Politique Publique",
+        "emptyTitle": "Assistant Politique Publique",
+        "emptyDescription": "Posez des questions sur l'innovation, les brevets et les politiques économiques. Obtenez des réponses structurées et sourcées."
+    }
+}

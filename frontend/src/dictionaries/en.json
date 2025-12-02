@@ -1,0 +1,34 @@
+{
+    "sidebar": {
+        "appName": "PolicyRAG",
+        "newChat": "New Chat",
+        "recent": "Recent",
+        "settings": "Settings",
+        "logout": "Logout",
+        "history": {
+            "patents_sme": "Patent effects on SMEs",
+            "patent_boxes": "Patent boxes & R&D",
+            "maintenance_fees": "Maintenance fees reform"
+        }
+    },
+    "input": {
+        "placeholder": "Ask a public policy question...",
+        "disclaimer": "AI can make mistakes. Always verify academic sources.",
+        "starters": [
+            "What is known about the effect of patents on innovation?",
+            "Have patent boxes actually stimulated R&D?",
+            "Comparison of the Swiss system with its neighbors",
+            "Consequences of increasing maintenance fees?"
+        ]
+    },
+    "response": {
+        "executiveSummary": "Executive Summary",
+        "analystView": "Analyst View & Methodology",
+        "keyReferences": "Key References"
+    },
+    "chat": {
+        "headerTitle": "Public Policy Assistant",
+        "emptyTitle": "Public Policy Assistant",
+        "emptyDescription": "Ask questions about innovation, patents, and economic policies. Get structured and sourced answers."
+    }
+}
