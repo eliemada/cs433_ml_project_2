@@ -1,6 +1,37 @@
 version: '3.8'
 
 services:
+  # RAG Search API
+  rag-api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: rag-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ZEROENTROPY_API_KEY=${ZEROENTROPY_API_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+      - S3_BUCKET=${S3_BUCKET:-cs433-rag-project2}
+      - CHUNK_TYPE=${CHUNK_TYPE:-coarse}
+      - FAISS_CANDIDATES=${FAISS_CANDIDATES:-75}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PDF Parser (GPU)
   pdf-parser:
     image: ravinala/pdf-parser:latest
     container_name: pdf-parser
