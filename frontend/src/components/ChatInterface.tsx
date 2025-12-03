@@ -86,7 +86,7 @@ export function ChatInterface({ dict }: { dict: any }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);
-    const [selectedModel, setSelectedModel] = useState('openai/gpt-5-mini');
+    const [selectedModel, setSelectedModel] = useState('openrouter/openai/gpt-5-mini');
     const scrollRef = useRef<HTMLDivElement>(null);
 
     // Load default model from API on mount

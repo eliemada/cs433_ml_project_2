@@ -390,14 +390,9 @@ def chat(request: ChatRequest):
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt}
             ],
-            api_base="https://openrouter.ai/api/v1",
             api_key=OPENROUTER_API_KEY,
             temperature=temperature,
-            max_tokens=2000,
-            extra_headers={
-                "HTTP-Referer": OPENROUTER_SITE_URL,
-                "X-Title": OPENROUTER_APP_NAME
-            }
+            max_tokens=2000
         )
 
         answer = completion_response.choices[0].message.content
@@ -416,7 +411,6 @@ def chat(request: ChatRequest):
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": user_prompt}
                     ],
-                    api_base="https://openrouter.ai/api/v1",
                     api_key=OPENROUTER_API_KEY,
                     temperature=fallback_temperature,
                     max_tokens=2000
