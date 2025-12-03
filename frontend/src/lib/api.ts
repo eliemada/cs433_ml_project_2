@@ -63,6 +63,35 @@ export async function checkHealth(): Promise<{ status: string; index_loaded: boo
 }
 
 // ============================================================================
+// Models API
+// ============================================================================
+
+export interface Model {
+    id: string;
+    name: string;
+    provider: string;
+    tier: 'fast' | 'balanced' | 'premium';
+    context: number;
+    description: string;
+}
+
+export interface ModelsResponse {
+    models: Model[];
+    default: string;
+}
+
+/**
+ * Get list of available LLM models
+ */
+export async function getAvailableModels(): Promise<ModelsResponse> {
+    const response = await fetch(`${API_BASE_URL}/models`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch models');
+    }
+    return response.json();
+}
+
+// ============================================================================
 // Chat API (RAG with LLM generation)
 // ============================================================================
 
@@ -78,7 +107,7 @@ export interface ChatRequest {
     message: string;
     top_k?: number;
     use_reranker?: boolean;
-    model?: 'gpt-4o-mini' | 'gpt-4o';
+    model?: string;
 }
 
 export interface ChatResponse {

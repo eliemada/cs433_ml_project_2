@@ -64,6 +64,7 @@ dependencies = [
     "kaleido>=1.2.0",
     "jinja2>=3.1.6",
     "nbformat>=5.10.4",
+    "litellm>=1.80.7",
 ]
 
 [project.optional-dependencies]
