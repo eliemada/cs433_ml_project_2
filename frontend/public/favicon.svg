@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- White background -->
+  <rect width="128" height="128" rx="24" fill="#ffffff"/>
+
+  <!-- Outer circle (light grey - primary/10) -->
+  <circle cx="64" cy="64" r="48" fill="#2d2d2d" opacity="0.1"/>
+
+  <!-- Inner circle (dark grey - primary) -->
+  <circle cx="64" cy="64" r="28" fill="#2d2d2d"/>
+</svg>
