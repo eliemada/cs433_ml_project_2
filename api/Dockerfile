@@ -7,8 +7,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 # Set up working directory
 WORKDIR /app
 
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
+# Copy dependency files and README (required by hatchling build backend)
+COPY pyproject.toml uv.lock README.md ./
 
 # Install ONLY API dependencies (exclude heavy ML packages like PyTorch)
 # This installs core dependencies + api group
