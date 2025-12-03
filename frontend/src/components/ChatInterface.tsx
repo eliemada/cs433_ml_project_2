@@ -5,6 +5,7 @@ import { Menu, User } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { InputComposer } from './InputComposer';
 import { StructuredResponse } from './StructuredResponse';
+import { ModelSelector } from './ModelSelector';
 import { Message, StructuredContent } from '@/types';
 import { cn } from '@/lib/utils';
 import { chatWithRAG, ChatResponse, ChatCitation } from '@/lib/api';
@@ -70,6 +71,7 @@ export function ChatInterface({ dict }: { dict: any }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);
+    const [selectedModel, setSelectedModel] = useState('openai/gpt-4o-mini');
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const handleNewChat = () => {
@@ -93,7 +95,7 @@ export function ChatInterface({ dict }: { dict: any }) {
                 message: text,
                 top_k: 10,
                 use_reranker: true,
-                model: 'gpt-4o-mini'
+                model: selectedModel
             });
 
             // Parse LLM response into structured content
@@ -151,7 +153,12 @@ export function ChatInterface({ dict }: { dict: any }) {
                     >
                         <Menu className="w-5 h-5 text-muted-foreground" />
                     </button>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
+                        {/* Model Selector */}
+                        <ModelSelector
+                            selectedModel={selectedModel}
+                            onModelChange={setSelectedModel}
+                        />
                         {/* Placeholder for User Profile */}
                         <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
                             <User className="w-4 h-4 text-muted-foreground" />

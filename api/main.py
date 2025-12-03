@@ -24,7 +24,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from rag_pipeline.rag.retriever import HybridRetriever, FAISSRetriever, ZeroEntropyReranker
 from openai import OpenAI
+from litellm import completion
 from api.prompts import SYSTEM_PROMPT, RAG_PROMPT_TEMPLATE, format_sources_for_prompt
+from api.config import AVAILABLE_MODELS, DEFAULT_MODEL
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # ============================================================================
@@ -33,6 +38,9 @@ from api.prompts import SYSTEM_PROMPT, RAG_PROMPT_TEMPLATE, format_sources_for_p
 
 BUCKET_NAME = os.environ.get("S3_BUCKET", "cs433-rag-project2")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+OPENROUTER_SITE_URL = os.environ.get("OPENROUTER_SITE_URL", "")
+OPENROUTER_APP_NAME = os.environ.get("OPENROUTER_APP_NAME", "RAG Research Assistant")
 ZEROENTROPY_API_KEY = os.environ.get("ZEROENTROPY_API_KEY")
 CHUNK_TYPE = os.environ.get("CHUNK_TYPE", "coarse")  # "coarse" or "fine"
 FAISS_CANDIDATES = int(os.environ.get("FAISS_CANDIDATES", "75"))
@@ -247,6 +255,29 @@ def root():
     }
 
 
+@app.get("/models")
+def get_available_models():
+    """
+    Get list of available LLM models for chat.
+
+    Returns model configurations including name, provider, tier, and description.
+    """
+    return {
+        "models": [
+            {
+                "id": model_id,
+                "name": info["name"],
+                "provider": info["provider"],
+                "tier": info["tier"],
+                "context": info["context"],
+                "description": info["description"]
+            }
+            for model_id, info in AVAILABLE_MODELS.items()
+        ],
+        "default": DEFAULT_MODEL
+    }
+
+
 @app.get("/pdf/{paper_id}")
 def get_pdf_url(paper_id: str):
     """
@@ -312,11 +343,15 @@ def chat(request: ChatRequest):
     if not retriever:
         raise HTTPException(status_code=503, detail="Retriever not loaded")
 
-    if not openai_client:
-        raise HTTPException(status_code=503, detail="OpenAI client not initialized")
+    if not OPENROUTER_API_KEY:
+        raise HTTPException(status_code=503, detail="OpenRouter API key not configured")
 
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
+
+    # Validate model selection
+    if request.model not in AVAILABLE_MODELS:
+        raise HTTPException(status_code=400, detail=f"Invalid model: {request.model}. Use /models endpoint to see available models.")
 
     start = time.time()
 
@@ -345,17 +380,49 @@ def chat(request: ChatRequest):
         question=request.message
     )
 
-    completion = openai_client.chat.completions.create(
-        model=request.model,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_prompt}
-        ],
-        temperature=0.3,  # Lower temperature for more factual responses
-        max_tokens=2000
-    )
+    try:
+        completion_response = completion(
+            model=request.model,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt}
+            ],
+            api_base="https://openrouter.ai/api/v1",
+            api_key=OPENROUTER_API_KEY,
+            temperature=0.3,
+            max_tokens=2000,
+            extra_headers={
+                "HTTP-Referer": OPENROUTER_SITE_URL,
+                "X-Title": OPENROUTER_APP_NAME
+            }
+        )
 
-    answer = completion.choices[0].message.content
+        answer = completion_response.choices[0].message.content
+
+    except Exception as e:
+        logger.error(f"LLM completion failed for {request.model}: {e}")
+
+        # Fallback to default model if requested model fails
+        if request.model != DEFAULT_MODEL:
+            try:
+                logger.info(f"Attempting fallback to {DEFAULT_MODEL}")
+                completion_response = completion(
+                    model=DEFAULT_MODEL,
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    api_base="https://openrouter.ai/api/v1",
+                    api_key=OPENROUTER_API_KEY,
+                    temperature=0.3,
+                    max_tokens=2000
+                )
+                answer = f"[Using fallback model {DEFAULT_MODEL}]\n\n{completion_response.choices[0].message.content}"
+            except Exception as fallback_error:
+                logger.error(f"Fallback also failed: {fallback_error}")
+                raise HTTPException(status_code=503, detail="All LLM providers unavailable")
+        else:
+            raise HTTPException(status_code=503, detail=f"LLM error: {str(e)}")
 
     # Step 4: Build citations from unique papers
     seen_papers = set()
