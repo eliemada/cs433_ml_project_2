@@ -10,24 +10,38 @@ WORKDIR /app
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install dependencies with api extras (cached layer)
-RUN uv sync --frozen --no-dev --no-install-project --extra api
+# Install ONLY API dependencies (exclude heavy ML packages)
+# Create minimal requirements for API-only deployment
+RUN uv pip install --system \
+    fastapi \
+    uvicorn[standard] \
+    python-multipart \
+    openai \
+    litellm \
+    tiktoken \
+    faiss-cpu \
+    boto3 \
+    weaviate-client \
+    pydantic \
+    pydantic-settings \
+    python-dotenv \
+    requests \
+    tenacity \
+    loguru
 
 # Production stage
 FROM python:3.11-slim
 
-# Install OpenCV system dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgl1 \
-    libglib2.0-0 \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy UV and virtual environment from builder
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
-COPY --from=builder /app/.venv /app/.venv
+# Copy installed packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY rag_pipeline/ ./rag_pipeline/
@@ -35,7 +49,6 @@ COPY api/ ./api/
 COPY scripts/utils/ ./scripts/utils/
 
 # Set environment variables
-ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH="/app"
 ENV PYTHONUNBUFFERED=1
 
