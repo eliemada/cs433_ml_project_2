@@ -8,7 +8,7 @@ import { StructuredResponse } from './StructuredResponse';
 import { ModelSelector } from './ModelSelector';
 import { Message, StructuredContent } from '@/types';
 import { cn } from '@/lib/utils';
-import { chatWithRAG, ChatResponse, ChatCitation } from '@/lib/api';
+import { chatWithRAG, ChatResponse, ChatCitation, getAvailableModels } from '@/lib/api';
 
 /**
  * Parse LLM-generated markdown answer into structured content
@@ -71,8 +71,21 @@ export function ChatInterface({ dict }: { dict: any }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);
-    const [selectedModel, setSelectedModel] = useState('openai/gpt-4o-mini');
+    const [selectedModel, setSelectedModel] = useState('openai/gpt-5o-mini');
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    // Load default model from API on mount
+    useEffect(() => {
+        getAvailableModels()
+            .then(data => {
+                if (data.default) {
+                    setSelectedModel(data.default);
+                }
+            })
+            .catch(err => {
+                console.error('Failed to load default model:', err);
+            });
+    }, []);
 
     const handleNewChat = () => {
         setMessages([]);
