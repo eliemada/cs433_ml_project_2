@@ -11,19 +11,19 @@ AVAILABLE_MODELS = {
         "context": 128000,
         "description": "Fast & cost-effective, multimodal"
     },
-    "google/gemini-2.0-flash-exp": {
-        "name": "Gemini 2.0 Flash",
-        "provider": "Google",
-        "tier": "fast",
-        "context": 32000,
-        "description": "Ultra-fast inference"
-    },
     "openai/gpt-4o": {
         "name": "GPT-4o",
         "provider": "OpenAI",
         "tier": "fast",
         "context": 128000,
         "description": "Full GPT-4o model, more capable than mini"
+    },
+    "google/gemini-2.0-flash-exp": {
+        "name": "Gemini 2.0 Flash",
+        "provider": "Google",
+        "tier": "fast",
+        "context": 32000,
+        "description": "Ultra-fast inference"
     },
 
     # Balanced Tier
@@ -34,12 +34,12 @@ AVAILABLE_MODELS = {
         "context": 200000,
         "description": "Excellent reasoning & coding"
     },
-    "google/gemini-2.5-pro": {
-        "name": "Gemini 2.5 Pro",
+    "google/gemini-pro-1.5": {
+        "name": "Gemini Pro 1.5",
         "provider": "Google",
         "tier": "balanced",
-        "context": 1000000,
-        "description": "Top performance, massive context"
+        "context": 2000000,
+        "description": "Large context, strong performance"
     },
     "deepseek/deepseek-chat": {
         "name": "DeepSeek Chat",
@@ -50,19 +50,19 @@ AVAILABLE_MODELS = {
     },
 
     # Premium Tier
-    "anthropic/claude-sonnet-4.5": {
-        "name": "Claude Sonnet 4.5",
+    "anthropic/claude-3-opus": {
+        "name": "Claude 3 Opus",
         "provider": "Anthropic",
         "tier": "premium",
         "context": 200000,
-        "description": "Latest flagship, complex reasoning"
+        "description": "Most capable Claude model"
     },
     "deepseek/deepseek-r1": {
         "name": "DeepSeek R1",
         "provider": "DeepSeek",
         "tier": "premium",
         "context": 64000,
-        "description": "Top Arena performance"
+        "description": "Top Arena performance with reasoning"
     },
     "qwen/qwen-2.5-72b-instruct": {
         "name": "Qwen 2.5 72B",
