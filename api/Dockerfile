@@ -8,31 +8,11 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 WORKDIR /app
 
 # Copy dependency files
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 
-# Install ONLY API dependencies (exclude heavy ML packages)
-# Create minimal requirements for API-only deployment
-RUN uv pip install --system \
-    fastapi \
-    uvicorn[standard] \
-    python-multipart \
-    openai \
-    litellm \
-    tiktoken \
-    faiss-cpu \
-    boto3 \
-    weaviate-client \
-    pydantic \
-    pydantic-settings \
-    python-dotenv \
-    requests \
-    tenacity \
-    loguru \
-    pandas \
-    numpy \
-    pyarrow \
-    beautifulsoup4 \
-    pillow
+# Install ONLY base dependencies + api extras (excludes worker/gpu packages)
+# With lazy imports in rag_pipeline/__init__.py, PyTorch won't be loaded
+RUN uv sync --frozen --no-dev --no-install-project --extra api
 
 # Production stage
 FROM python:3.11-slim
@@ -44,9 +24,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy installed packages from builder
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+
+# Add venv to PATH
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy application code
 COPY rag_pipeline/ ./rag_pipeline/
