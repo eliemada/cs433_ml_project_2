@@ -4,19 +4,26 @@ Configuration for available LLM models via OpenRouter.
 
 AVAILABLE_MODELS = {
     # Fast & Cheap Tier
-    "openai/gpt-4o-mini": {
-        "name": "GPT-4o Mini",
+    "openai/gpt-5o-mini": {
+        "name": "GPT-5o Mini",
         "provider": "OpenAI",
         "tier": "fast",
         "context": 128000,
         "description": "Fast & cost-effective, multimodal"
     },
-    "google/gemini-2.0-flash-exp": {
-        "name": "Gemini 2.0 Flash",
+    "google/gemini-3-pro-preview": {
+        "name": "Gemini 3 Pro Preview",
         "provider": "Google",
         "tier": "fast",
-        "context": 32000,
+        "context": 65500,
         "description": "Ultra-fast inference"
+    },
+    "openai/gpt-5o": {
+        "name": "GPT-5o",
+        "provider": "OpenAI",
+        "tier": "fast",
+        "context": 128000,
+        "description": "Full GPT-4o model, more capable than mini"
     },
 
     # Balanced Tier
@@ -66,4 +73,4 @@ AVAILABLE_MODELS = {
     }
 }
 
-DEFAULT_MODEL = "openai/gpt-4o-mini"
+DEFAULT_MODEL = "openai/gpt-5o-mini"
