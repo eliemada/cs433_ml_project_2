@@ -30,7 +30,8 @@ RUN uv pip install --system \
     loguru \
     pandas \
     numpy \
-    pyarrow
+    pyarrow \
+    beautifulsoup4
 
 # Production stage
 FROM python:3.11-slim
