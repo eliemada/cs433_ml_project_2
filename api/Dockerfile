@@ -11,9 +11,8 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 
 # Install ONLY API dependencies (exclude heavy ML packages like PyTorch)
-# Install core dependencies + api group using pip compile + install
-RUN uv pip compile pyproject.toml --extra api --no-dev -o requirements.txt && \
-    uv pip install --system -r requirements.txt
+# This installs core dependencies + api group
+RUN uv sync --frozen --no-dev --extra api
 
 # Production stage
 FROM python:3.11-slim
@@ -25,9 +24,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy installed packages from builder
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+
+# Add venv to PATH
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy application code
 COPY rag_pipeline/ ./rag_pipeline/
