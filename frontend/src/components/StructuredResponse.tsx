@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, BookOpen, FileText, X, ExternalLink, Loader2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { StructuredContent, Citation } from '@/types';
 import { cn } from '@/lib/utils';
 import { getPdfUrl } from '@/lib/api';
@@ -113,7 +115,11 @@ export function StructuredResponse({ content, dict }: StructuredResponseProps) {
                     {content.summary.map((point, idx) => (
                         <li key={idx} className="flex gap-3 text-foreground/90 leading-relaxed">
                             <span className="block w-1.5 h-1.5 mt-2.5 rounded-full bg-primary shrink-0" />
-                            <span>{point}</span>
+                            <div className="flex-1 prose prose-sm dark:prose-invert max-w-none">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {point}
+                                </ReactMarkdown>
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -151,9 +157,11 @@ export function StructuredResponse({ content, dict }: StructuredResponseProps) {
                                             <h4 className="font-semibold text-foreground mb-2 text-sm">
                                                 {section.title}
                                             </h4>
-                                            <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
-                                                {section.content}
-                                            </p>
+                                            <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground">
+                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                    {section.content}
+                                                </ReactMarkdown>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
