@@ -10,24 +10,10 @@ WORKDIR /app
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install ONLY API dependencies (exclude heavy ML packages)
-# Create minimal requirements for API-only deployment
-RUN uv pip install --system \
-    fastapi \
-    uvicorn[standard] \
-    python-multipart \
-    openai \
-    litellm \
-    tiktoken \
-    faiss-cpu \
-    boto3 \
-    weaviate-client \
-    pydantic \
-    pydantic-settings \
-    python-dotenv \
-    requests \
-    tenacity \
-    loguru
+# Install ONLY API dependencies (exclude heavy ML packages like PyTorch)
+# Install core dependencies + api group using pip compile + install
+RUN uv pip compile pyproject.toml --extra api --no-dev -o requirements.txt && \
+    uv pip install --system -r requirements.txt
 
 # Production stage
 FROM python:3.11-slim
