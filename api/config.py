@@ -4,26 +4,26 @@ Configuration for available LLM models via OpenRouter.
 
 AVAILABLE_MODELS = {
     # Fast & Cheap Tier
-    "openai/gpt-4o-mini": {
-        "name": "GPT-4o Mini",
+    "openai/gpt-5-mini": {
+        "name": "GPT-5 Mini",
         "provider": "OpenAI",
         "tier": "fast",
         "context": 128000,
         "description": "Fast & cost-effective, multimodal"
     },
-    "openai/gpt-4o": {
-        "name": "GPT-4o",
+    "google/gemini-3-pro-preview": {
+        "name": "Gemini 3 Pro Preview",
+        "provider": "Google",
+        "tier": "fast",
+        "context": 65500,
+        "description": "Ultra-fast inference"
+    },
+    "openai/gpt-5o": {
+        "name": "GPT-5o",
         "provider": "OpenAI",
         "tier": "fast",
         "context": 128000,
-        "description": "Full GPT-4o model, more capable than mini"
-    },
-    "google/gemini-2.0-flash-exp": {
-        "name": "Gemini 2.0 Flash",
-        "provider": "Google",
-        "tier": "fast",
-        "context": 32000,
-        "description": "Ultra-fast inference"
+        "description": "Full GPT-5o model, more capable than mini"
     },
 
     # Balanced Tier
@@ -34,12 +34,12 @@ AVAILABLE_MODELS = {
         "context": 200000,
         "description": "Excellent reasoning & coding"
     },
-    "google/gemini-pro-1.5": {
-        "name": "Gemini Pro 1.5",
+    "google/gemini-2.5-pro": {
+        "name": "Gemini 2.5 Pro",
         "provider": "Google",
         "tier": "balanced",
-        "context": 2000000,
-        "description": "Large context, strong performance"
+        "context": 1000000,
+        "description": "Top performance, massive context"
     },
     "deepseek/deepseek-chat": {
         "name": "DeepSeek Chat",
@@ -50,19 +50,19 @@ AVAILABLE_MODELS = {
     },
 
     # Premium Tier
-    "anthropic/claude-3-opus": {
-        "name": "Claude 3 Opus",
+    "anthropic/claude-sonnet-4.5": {
+        "name": "Claude Sonnet 4.5",
         "provider": "Anthropic",
         "tier": "premium",
         "context": 200000,
-        "description": "Most capable Claude model"
+        "description": "Latest flagship, complex reasoning"
     },
     "deepseek/deepseek-r1": {
         "name": "DeepSeek R1",
         "provider": "DeepSeek",
         "tier": "premium",
         "context": 64000,
-        "description": "Top Arena performance with reasoning"
+        "description": "Top Arena performance"
     },
     "qwen/qwen-2.5-72b-instruct": {
         "name": "Qwen 2.5 72B",
@@ -73,4 +73,4 @@ AVAILABLE_MODELS = {
     }
 }
 
-DEFAULT_MODEL = "openai/gpt-4o-mini"
+DEFAULT_MODEL = "openai/gpt-5-mini"

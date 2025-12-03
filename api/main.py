@@ -380,8 +380,8 @@ def chat(request: ChatRequest):
         question=request.message
     )
 
-    # All models can use temperature=0.3 for more factual responses
-    temperature = 0.3
+    # GPT-5 models require temperature=1, others can use 0.3
+    temperature = 1.0 if "gpt-5" in request.model else 0.3
 
     try:
         completion_response = completion(
@@ -409,7 +409,7 @@ def chat(request: ChatRequest):
         if request.model != DEFAULT_MODEL:
             try:
                 logger.info(f"Attempting fallback to {DEFAULT_MODEL}")
-                fallback_temperature = 0.3
+                fallback_temperature = 1.0 if "gpt-5" in DEFAULT_MODEL else 0.3
                 completion_response = completion(
                     model=DEFAULT_MODEL,
                     messages=[
