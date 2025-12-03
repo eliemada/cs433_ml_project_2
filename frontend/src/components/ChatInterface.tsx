@@ -16,8 +16,8 @@ import { chatWithRAG, ChatResponse, ChatCitation, getAvailableModels } from '@/l
 const parseRAGResponse = (response: ChatResponse): StructuredContent => {
     const answer = response.answer;
 
-    // Extract Executive Summary section
-    const summaryMatch = answer.match(/##?\s*Executive Summary[\s\S]*?(?=##|$)/i);
+    // Extract Executive Summary section (with or without markdown headers)
+    const summaryMatch = answer.match(/#{0,2}\s*Executive Summary[\s\S]*?(?=#{1,2}\s*Detailed Analysis|Detailed Analysis|$)/i);
     const summaryText = summaryMatch ? summaryMatch[0] : '';
 
     // Parse bullet points from summary
@@ -30,15 +30,15 @@ const parseRAGResponse = (response: ChatResponse): StructuredContent => {
     // If no bullets found, use the whole summary as one point
     const summary = summaryBullets.length > 0
         ? summaryBullets
-        : [summaryText.replace(/##?\s*Executive Summary/i, '').trim()].filter(s => s);
+        : [summaryText.replace(/#{0,2}\s*Executive Summary/i, '').trim()].filter(s => s);
 
-    // Extract Detailed Analysis section
-    const detailsMatch = answer.match(/##?\s*Detailed Analysis[\s\S]*?(?=##\s*Key References|##\s*References|$)/i);
+    // Extract Detailed Analysis section (with or without markdown headers)
+    const detailsMatch = answer.match(/#{0,2}\s*Detailed Analysis[\s\S]*?(?=#{1,2}\s*(?:Key References|References)|$)/i);
     const detailsText = detailsMatch ? detailsMatch[0] : '';
 
     // Parse subsections in details
     const detailSections = detailsText
-        .split(/###\s+/)
+        .split(/###?\s+/)
         .slice(1) // Skip the "Detailed Analysis" header
         .map(section => {
             const lines = section.split('\n');
@@ -51,9 +51,24 @@ const parseRAGResponse = (response: ChatResponse): StructuredContent => {
     // If no subsections, use the whole details as one section
     const details = detailSections.length > 0
         ? detailSections
-        : detailsText.replace(/##?\s*Detailed Analysis/i, '').trim()
-            ? [{ title: 'Detailed Analysis', content: detailsText.replace(/##?\s*Detailed Analysis/i, '').trim() }]
+        : detailsText.replace(/#{0,2}\s*Detailed Analysis/i, '').trim()
+            ? [{ title: 'Detailed Analysis', content: detailsText.replace(/#{0,2}\s*Detailed Analysis/i, '').trim() }]
             : [];
+
+    // If we have no summary or details, use the full answer as summary
+    if (summary.length === 0 && details.length === 0) {
+        return {
+            summary: [answer],
+            details: [],
+            citations: response.citations.map((cite: ChatCitation) => ({
+                id: cite.id,
+                title: cite.title,
+                authors: cite.authors,
+                year: cite.year || '',
+                snippet: cite.snippet
+            }))
+        };
+    }
 
     // Transform citations
     const citations = response.citations.map((cite: ChatCitation) => ({
