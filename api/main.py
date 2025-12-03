@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from rag_pipeline.rag.retriever import HybridRetriever, FAISSRetriever, ZeroEntropyReranker
+from rag_pipeline.rag.retriever import DualIndexRetriever, ZeroEntropyReranker
 from openai import OpenAI
 from api.prompts import SYSTEM_PROMPT, RAG_PROMPT_TEMPLATE, format_sources_for_prompt
 
@@ -34,15 +34,15 @@ from api.prompts import SYSTEM_PROMPT, RAG_PROMPT_TEMPLATE, format_sources_for_p
 BUCKET_NAME = os.environ.get("S3_BUCKET", "cs433-rag-project2")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ZEROENTROPY_API_KEY = os.environ.get("ZEROENTROPY_API_KEY")
-CHUNK_TYPE = os.environ.get("CHUNK_TYPE", "coarse")  # "coarse" or "fine"
-FAISS_CANDIDATES = int(os.environ.get("FAISS_CANDIDATES", "75"))
+COARSE_CANDIDATES = int(os.environ.get("COARSE_CANDIDATES", "50"))
+FINE_CANDIDATES = int(os.environ.get("FINE_CANDIDATES", "50"))
 
 
 # ============================================================================
 # Global state
 # ============================================================================
 
-retriever: Optional[HybridRetriever] = None
+retriever: Optional[DualIndexRetriever] = None
 openai_client: Optional[OpenAI] = None
 
 
@@ -52,11 +52,11 @@ openai_client: Optional[OpenAI] = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Load FAISS index on startup."""
+    """Load both FAISS indexes on startup."""
     global retriever, openai_client
 
     print("=" * 60)
-    print("Loading RAG retriever...")
+    print("Loading RAG retriever (dual-index mode)...")
     print("=" * 60)
 
     if not OPENAI_API_KEY:
@@ -67,30 +67,24 @@ async def lifespan(app: FastAPI):
 
     start = time.time()
 
-    # Load FAISS retriever
-    faiss_retriever = FAISSRetriever.from_s3(
+    # Load dual-index retriever (both coarse and fine)
+    retriever = DualIndexRetriever.from_s3(
         bucket_name=BUCKET_NAME,
-        chunk_type=CHUNK_TYPE,
-        openai_api_key=OPENAI_API_KEY
-    )
-
-    # Setup reranker if available
-    reranker = None
-    if ZEROENTROPY_API_KEY:
-        print("ZeroEntropy API key found - reranking enabled")
-        reranker = ZeroEntropyReranker(api_key=ZEROENTROPY_API_KEY)
-    else:
-        print("No ZeroEntropy API key - using FAISS-only retrieval")
-
-    retriever = HybridRetriever(
-        faiss_retriever=faiss_retriever,
-        reranker=reranker,
-        faiss_candidates=FAISS_CANDIDATES
+        openai_api_key=OPENAI_API_KEY,
+        zeroentropy_api_key=ZEROENTROPY_API_KEY,
+        coarse_candidates=COARSE_CANDIDATES,
+        fine_candidates=FINE_CANDIDATES
     )
 
     elapsed = time.time() - start
     print(f"Retriever loaded in {elapsed:.1f}s")
-    print(f"Index: {faiss_retriever.index.ntotal} vectors ({CHUNK_TYPE})")
+    print(f"Coarse index: {retriever.coarse_index_size} vectors")
+    print(f"Fine index: {retriever.fine_index_size} vectors")
+    print(f"Total: {retriever.coarse_index_size + retriever.fine_index_size} vectors")
+    if ZEROENTROPY_API_KEY:
+        print("ZeroEntropy reranking: enabled")
+    else:
+        print("ZeroEntropy reranking: disabled")
     print("=" * 60)
 
     yield
@@ -150,8 +144,9 @@ class SearchResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     index_loaded: bool
-    index_size: int
-    chunk_type: str
+    coarse_index_size: int
+    fine_index_size: int
+    total_vectors: int
 
 
 class ChatRequest(BaseModel):
@@ -184,11 +179,14 @@ class ChatResponse(BaseModel):
 @app.get("/health", response_model=HealthResponse)
 def health():
     """Health check endpoint."""
+    coarse_size = retriever.coarse_index_size if retriever else 0
+    fine_size = retriever.fine_index_size if retriever else 0
     return HealthResponse(
         status="ok",
         index_loaded=retriever is not None,
-        index_size=retriever.faiss_retriever.index.ntotal if retriever else 0,
-        chunk_type=CHUNK_TYPE
+        coarse_index_size=coarse_size,
+        fine_index_size=fine_size,
+        total_vectors=coarse_size + fine_size
     )
 
 

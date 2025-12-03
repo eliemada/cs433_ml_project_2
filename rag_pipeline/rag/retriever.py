@@ -308,6 +308,179 @@ class HybridRetriever:
 
         return results
 
+
+class DualIndexRetriever:
+    """
+    True hybrid retriever using BOTH coarse and fine chunk indexes.
+
+    Flow:
+    1. Search coarse index (context-rich, ~2000 chars)
+    2. Search fine index (precise, ~300 chars)
+    3. Merge and deduplicate results
+    4. Rerank combined set with ZeroEntropy
+    """
+
+    def __init__(
+        self,
+        coarse_retriever: FAISSRetriever,
+        fine_retriever: FAISSRetriever,
+        reranker: Optional[ZeroEntropyReranker] = None,
+        coarse_candidates: int = 50,
+        fine_candidates: int = 50
+    ):
+        """
+        Initialize dual-index retriever.
+
+        Args:
+            coarse_retriever: FAISS retriever for coarse chunks
+            fine_retriever: FAISS retriever for fine chunks
+            reranker: Optional ZeroEntropy reranker
+            coarse_candidates: Number of candidates from coarse index
+            fine_candidates: Number of candidates from fine index
+        """
+        self.coarse_retriever = coarse_retriever
+        self.fine_retriever = fine_retriever
+        self.reranker = reranker
+        self.coarse_candidates = coarse_candidates
+        self.fine_candidates = fine_candidates
+
+    @classmethod
+    def from_s3(
+        cls,
+        bucket_name: str,
+        openai_api_key: str,
+        zeroentropy_api_key: Optional[str] = None,
+        coarse_candidates: int = 50,
+        fine_candidates: int = 50
+    ) -> "DualIndexRetriever":
+        """
+        Load dual-index retriever from S3.
+
+        Args:
+            bucket_name: S3 bucket name
+            openai_api_key: OpenAI API key
+            zeroentropy_api_key: Optional ZeroEntropy API key
+            coarse_candidates: Number of coarse candidates
+            fine_candidates: Number of fine candidates
+        """
+        print("Loading coarse index...")
+        coarse_retriever = FAISSRetriever.from_s3(
+            bucket_name=bucket_name,
+            chunk_type="coarse",
+            openai_api_key=openai_api_key
+        )
+
+        print("Loading fine index...")
+        fine_retriever = FAISSRetriever.from_s3(
+            bucket_name=bucket_name,
+            chunk_type="fine",
+            openai_api_key=openai_api_key
+        )
+
+        reranker = None
+        if zeroentropy_api_key:
+            reranker = ZeroEntropyReranker(api_key=zeroentropy_api_key)
+
+        return cls(
+            coarse_retriever,
+            fine_retriever,
+            reranker,
+            coarse_candidates,
+            fine_candidates
+        )
+
+    def _merge_results(
+        self,
+        coarse_results: List[SearchResult],
+        fine_results: List[SearchResult]
+    ) -> List[SearchResult]:
+        """
+        Merge and deduplicate results from both indexes.
+
+        Deduplication strategy:
+        - If same paper_id and overlapping text, keep the coarse chunk (more context)
+        - Otherwise, keep both
+
+        Args:
+            coarse_results: Results from coarse index
+            fine_results: Results from fine index
+
+        Returns:
+            Merged list of unique results
+        """
+        merged = []
+        seen_texts = set()
+
+        # Add coarse results first (they have more context)
+        for result in coarse_results:
+            # Use first 100 chars as fingerprint to detect overlap
+            fingerprint = result.text[:100].strip().lower()
+            if fingerprint not in seen_texts:
+                seen_texts.add(fingerprint)
+                merged.append(result)
+
+        # Add fine results that don't overlap
+        for result in fine_results:
+            fingerprint = result.text[:100].strip().lower()
+            # Check if this fine chunk's text is contained in any coarse chunk
+            is_duplicate = fingerprint in seen_texts
+            if not is_duplicate:
+                # Also check if fine chunk text is substring of existing
+                is_substring = any(
+                    result.text[:100].lower() in existing.text.lower()
+                    for existing in merged
+                    if existing.paper_id == result.paper_id
+                )
+                if not is_substring:
+                    seen_texts.add(fingerprint)
+                    merged.append(result)
+
+        return merged
+
+    def search(
+        self,
+        query: str,
+        top_k: int = 10,
+        use_reranker: bool = True
+    ) -> List[SearchResult]:
+        """
+        Search both indexes and return merged, reranked results.
+
+        Args:
+            query: Search query
+            top_k: Number of final results
+            use_reranker: Whether to use ZeroEntropy reranking
+
+        Returns:
+            List of SearchResult objects
+        """
+        # Step 1: Search both indexes
+        coarse_results = self.coarse_retriever.search(query, self.coarse_candidates)
+        fine_results = self.fine_retriever.search(query, self.fine_candidates)
+
+        # Step 2: Merge and deduplicate
+        merged = self._merge_results(coarse_results, fine_results)
+
+        # Step 3: Rerank (if available and enabled)
+        if use_reranker and self.reranker:
+            results = self.reranker.rerank(query, merged, top_k)
+        else:
+            # Sort by score and take top_k
+            merged.sort(key=lambda x: x.score, reverse=True)
+            results = merged[:top_k]
+
+        return results
+
+    @property
+    def coarse_index_size(self) -> int:
+        """Number of vectors in coarse index."""
+        return self.coarse_retriever.index.ntotal
+
+    @property
+    def fine_index_size(self) -> int:
+        """Number of vectors in fine index."""
+        return self.fine_retriever.index.ntotal
+
     def search_with_context(
         self,
         query: str,
