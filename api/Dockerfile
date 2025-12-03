@@ -31,7 +31,8 @@ RUN uv pip install --system \
     pandas \
     numpy \
     pyarrow \
-    beautifulsoup4
+    beautifulsoup4 \
+    pillow
 
 # Production stage
 FROM python:3.11-slim
