@@ -8,11 +8,14 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 WORKDIR /app
 
 # Copy dependency files
-COPY pyproject.toml uv.lock README.md ./
+COPY pyproject.toml ./
 
-# Install ONLY base dependencies + api extras (excludes worker/gpu packages)
-# With lazy imports in rag_pipeline/__init__.py, PyTorch won't be loaded
-RUN uv sync --frozen --no-dev --no-install-project --extra api
+# Compile ONLY API dependencies (excludes worker/gpu packages from lock file)
+# This generates a clean requirements.txt without PyTorch
+RUN uv pip compile pyproject.toml --extra api --python-version 3.11 -o requirements.txt
+
+# Install compiled dependencies
+RUN uv pip install --system -r requirements.txt
 
 # Production stage
 FROM python:3.11-slim
@@ -24,11 +27,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy virtual environment from builder
-COPY --from=builder /app/.venv /app/.venv
-
-# Add venv to PATH
-ENV PATH="/app/.venv/bin:$PATH"
+# Copy installed packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY rag_pipeline/ ./rag_pipeline/
