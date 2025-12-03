@@ -27,7 +27,10 @@ RUN uv pip install --system \
     python-dotenv \
     requests \
     tenacity \
-    loguru
+    loguru \
+    pandas \
+    numpy \
+    pyarrow
 
 # Production stage
 FROM python:3.11-slim
