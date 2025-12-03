@@ -380,6 +380,9 @@ def chat(request: ChatRequest):
         question=request.message
     )
 
+    # GPT-5 models require temperature=1, others can use 0.3
+    temperature = 1.0 if "gpt-5" in request.model else 0.3
+
     try:
         completion_response = completion(
             model=request.model,
@@ -389,7 +392,7 @@ def chat(request: ChatRequest):
             ],
             api_base="https://openrouter.ai/api/v1",
             api_key=OPENROUTER_API_KEY,
-            temperature=0.3,
+            temperature=temperature,
             max_tokens=2000,
             extra_headers={
                 "HTTP-Referer": OPENROUTER_SITE_URL,
@@ -406,6 +409,7 @@ def chat(request: ChatRequest):
         if request.model != DEFAULT_MODEL:
             try:
                 logger.info(f"Attempting fallback to {DEFAULT_MODEL}")
+                fallback_temperature = 1.0 if "gpt-5" in DEFAULT_MODEL else 0.3
                 completion_response = completion(
                     model=DEFAULT_MODEL,
                     messages=[
@@ -414,7 +418,7 @@ def chat(request: ChatRequest):
                     ],
                     api_base="https://openrouter.ai/api/v1",
                     api_key=OPENROUTER_API_KEY,
-                    temperature=0.3,
+                    temperature=fallback_temperature,
                     max_tokens=2000
                 )
                 answer = f"[Using fallback model {DEFAULT_MODEL}]\n\n{completion_response.choices[0].message.content}"
