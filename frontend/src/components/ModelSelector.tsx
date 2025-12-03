@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Zap, Scale, Crown, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getAvailableModels } from '@/lib/api';
 
 interface Model {
   id: string;
@@ -46,8 +47,7 @@ export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorPro
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch('/api/models')
-      .then(res => res.json())
+    getAvailableModels()
       .then(data => {
         setModels(data.models);
         setLoading(false);
