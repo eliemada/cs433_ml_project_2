@@ -7,12 +7,13 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 # Set up working directory
 WORKDIR /app
 
-# Copy dependency files and README (required by hatchling build backend)
-COPY pyproject.toml uv.lock README.md ./
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
 
 # Install ONLY API dependencies (exclude heavy ML packages like PyTorch)
-# This installs core dependencies + api group
-RUN uv sync --frozen --no-dev --extra api
+# Use --no-install-project to skip building the rag-pipeline package itself
+# We'll copy the source code later and rely on PYTHONPATH
+RUN uv sync --frozen --no-dev --no-install-project --extra api
 
 # Production stage
 FROM python:3.11-slim
