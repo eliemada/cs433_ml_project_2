@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Outer circle (background) -->
+  <rect width="128" height="128" rx="24" fill="#0d6efd" opacity="0.1"/>
+
+  <!-- Main circle -->
+  <circle cx="64" cy="64" r="32" fill="#0d6efd"/>
+
+  <!-- Optional: Add a subtle inner circle for depth -->
+  <circle cx="64" cy="64" r="16" fill="#ffffff" opacity="0.3"/>
+</svg>
