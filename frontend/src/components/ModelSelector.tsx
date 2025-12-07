@@ -131,7 +131,7 @@ export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorPro
             transition={{ duration: 0.15 }}
             className="absolute top-full mt-2 w-full min-w-[320px] max-w-md
                        bg-white dark:bg-gray-800 rounded-xl shadow-xl border
-                       border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+                       border-gray-200 dark:border-gray-700 overflow-y-auto max-h-[400px] z-50"
           >
             {Object.entries(groupedModels).map(([tier, tierModels]) => {
               const TierIcon = tierConfig[tier as keyof typeof tierConfig].icon;
