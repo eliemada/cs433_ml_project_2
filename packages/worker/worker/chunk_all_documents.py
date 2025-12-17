@@ -152,7 +152,13 @@ def main():
     print("-" * 60)
 
     # Process papers
-    stats: Dict[str, Any] = {"processed": 0, "failed": 0, "total_coarse": 0, "total_fine": 0, "failed_papers": []}
+    stats: Dict[str, Any] = {
+        "processed": 0,
+        "failed": 0,
+        "total_coarse": 0,
+        "total_fine": 0,
+        "failed_papers": [],
+    }
 
     for paper_id in tqdm(paper_ids, desc="Chunking papers"):
         result = process_paper(loader, chunker, s3_client, paper_id)

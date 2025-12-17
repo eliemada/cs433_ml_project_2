@@ -35,7 +35,9 @@ class ElementRecognizer(
         "title": "Read text in the image.",
     }
 
-    def __init__(self, model: DolphinModel, config: ProcessingConfig, save_dir: Optional[Path] = None):
+    def __init__(
+        self, model: DolphinModel, config: ProcessingConfig, save_dir: Optional[Path] = None
+    ):
         """
         Initialize element recognizer.
 

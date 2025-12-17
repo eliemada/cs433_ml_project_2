@@ -202,7 +202,7 @@ def parse_pdfs(
 
     config = PDFParsingConfig(
         model=DolphinModelConfig(model_path=PathLib(model_path)),
-        output=OutputConfig(output_dir=output_dir)
+        output=OutputConfig(output_dir=output_dir),
     )
     pipeline = PDFParsingPipeline(config)
 

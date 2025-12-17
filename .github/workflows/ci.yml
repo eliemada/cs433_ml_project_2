@@ -132,8 +132,8 @@ jobs:
             # Test API can start (timeout after 5s)
             timeout 5s dist/${{ matrix.package }}.pex api.main:app --host 0.0.0.0 --port 8000 || [ $? -eq 124 ]
           elif [[ "${{ matrix.package }}" == "worker" ]]; then
-            # Test worker can import
-            dist/${{ matrix.package }}.pex -c "import worker; print('Worker imports OK')"
+            # Test worker can import modules
+            dist/${{ matrix.package }}.pex -c "import worker.distributed_worker; print('Worker imports OK')"
           fi
 
   # ==============================================================================

@@ -111,17 +111,17 @@ if [[ "$PACKAGE" == "api" ]]; then
     echo -e "  Run with: ${DIST_DIR}/${PACKAGE}.pex api.main:app --host 0.0.0.0 --port 8000"
 
 elif [[ "$PACKAGE" == "worker" ]]; then
-    # Worker: Distributed PDF processing executable
+    # Worker: Distributed PDF processing executable (console script mode)
     uvx pex \
         --include-tools \
         --project="${BUILD_DIR}/wheels/worker-0.1.0-py3-none-any.whl" \
         --requirements="${BUILD_DIR}/requirements.all.txt" \
         --venv-repository "${BUILD_DIR}/install.venv/" \
-        --exe python \
+        --python-shebang '/usr/bin/env python3' \
         -o "${DIST_DIR}/${PACKAGE}.pex"
 
     echo -e "${GREEN}✓ Built ${DIST_DIR}/${PACKAGE}.pex${NC}"
-    echo -e "  Run with: ${DIST_DIR}/${PACKAGE}.pex packages/worker/worker/distributed_worker.py"
+    echo -e "  Run with: ${DIST_DIR}/${PACKAGE}.pex -m worker.distributed_worker"
 fi
 
 # Show size
