@@ -32,7 +32,7 @@ class LayoutParser(BaseProcessor[Image.Image, List[LayoutElement]]):
         self.model = model
         super().__init__(config=None)
 
-    def process(self, image: Image.Image) -> List[LayoutElement]:
+    def process(self, image: Image.Image) -> List[LayoutElement]:  # type: ignore[override]
         """
         Parse layout of document image.
 
@@ -72,7 +72,7 @@ class LayoutParser(BaseProcessor[Image.Image, List[LayoutElement]]):
         except Exception as e:
             raise LayoutParsingError(f"Failed to parse layout: {str(e)}")
 
-    def validate_input(self, image: Image.Image) -> None:
+    def validate_input(self, image: Image.Image) -> None:  # type: ignore[override]
         """Validate image input."""
         if image is None:
             raise ValueError("Image cannot be None")

@@ -29,7 +29,7 @@ class ImageExtractor(BaseProcessor[Path, List[Image.Image]]):
         """
         super().__init__(config)
 
-    def process(self, pdf_path: Path) -> List[Image.Image]:
+    def process(self, pdf_path: Path) -> List[Image.Image]:  # type: ignore[override]
         """
         Extract images from PDF.
 
@@ -59,7 +59,7 @@ class ImageExtractor(BaseProcessor[Path, List[Image.Image]]):
         except Exception as e:
             raise ImageExtractionError(f"Failed to extract images from PDF: {str(e)}")
 
-    def validate_input(self, pdf_path: Path) -> None:
+    def validate_input(self, pdf_path: Path) -> None:  # type: ignore[override]
         """Validate PDF path."""
         if pdf_path is None:
             raise ValueError("PDF path cannot be None")

@@ -29,7 +29,7 @@ class MarkdownConverter(BaseProcessor[DocumentResult, None]):
         super().__init__(config)
         self.converter = MarkdownConverterUtil()
 
-    def process(self, doc_result: DocumentResult) -> None:
+    def process(self, doc_result: DocumentResult) -> None:  # type: ignore[override]
         """
         Convert document result to Markdown and save outputs.
 
@@ -105,7 +105,7 @@ class MarkdownConverter(BaseProcessor[DocumentResult, None]):
         except Exception as e:
             raise OutputGenerationError(f"Failed to save Markdown: {str(e)}")
 
-    def validate_input(self, doc_result: DocumentResult) -> None:
+    def validate_input(self, doc_result: DocumentResult) -> None:  # type: ignore[override]
         """Validate document result."""
         if doc_result is None:
             raise ValueError("Document result cannot be None")
