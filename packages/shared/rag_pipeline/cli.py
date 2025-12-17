@@ -183,8 +183,8 @@ def parse_pdfs(
     device: str = typer.Option("cuda", "--device", "-d", help="Device to use (cuda, cpu, mps)"),
 ):
     """Parse PDFs to markdown using Dolphin model."""
-    from .parsing.model import DolphinModel
-    from .parsing.pdf_processor import PDFProcessor
+    from .pdf_parsing.model.dolphin import DolphinModel
+    from .pdf_parsing.core.pipeline import PDFParsingPipeline
 
     console.print(f"[bold blue]Parsing PDFs from:[/bold blue] {input_dir}")
     console.print(f"[dim]Model: {model_path}[/dim]")
@@ -196,10 +196,16 @@ def parse_pdfs(
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Initialize model and processor
-    console.print("[yellow]Loading Dolphin model...[/yellow]")
-    model = DolphinModel(model_path=model_path, device=device)
-    processor = PDFProcessor()
+    # Initialize PDF parsing pipeline
+    console.print("[yellow]Loading PDF parsing pipeline...[/yellow]")
+    from .pdf_parsing.config import PDFParsingConfig, DolphinModelConfig, OutputConfig
+    from pathlib import Path as PathLib
+
+    config = PDFParsingConfig(
+        model=DolphinModelConfig(model_path=PathLib(model_path)),
+        output=OutputConfig(output_dir=output_dir)
+    )
+    pipeline = PDFParsingPipeline(config)
 
     pdf_files = list(input_dir.glob("*.pdf"))
 
@@ -218,15 +224,8 @@ def parse_pdfs(
             try:
                 status.update(f"[bold green]Processing: {pdf_path.name}")
 
-                # Convert PDF to images
-                images = processor.pdf_to_images(str(pdf_path))
-
-                # Process with Dolphin
-                markdown = model.process_pdf_document(images)
-
-                # Save markdown
-                output_file = output_dir / f"{pdf_path.stem}.md"
-                output_file.write_text(markdown)
+                # Parse PDF with pipeline
+                pipeline.parse_document(pdf_path)
 
                 successful += 1
                 console.print(f"[green]✓[/green] {pdf_path.name}")
