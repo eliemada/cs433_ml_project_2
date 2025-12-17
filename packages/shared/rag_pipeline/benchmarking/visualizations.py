@@ -5,9 +5,8 @@ This module provides publication-quality, interactive visualizations for
 comparing and analyzing different chunking strategies.
 """
 
-from typing import List, Dict, Optional
+from typing import List, Dict
 import plotly.graph_objects as go
-import plotly.express as px
 from plotly.subplots import make_subplots
 import numpy as np
 import pandas as pd
@@ -115,9 +114,7 @@ def create_comparison_heatmap(
             if max_val > min_val:
                 if col in invert_metrics:
                     # Lower is better - invert normalization
-                    normalized_df[col] = 1 - (
-                        (normalized_df[col] - min_val) / (max_val - min_val)
-                    )
+                    normalized_df[col] = 1 - ((normalized_df[col] - min_val) / (max_val - min_val))
                 else:
                     normalized_df[col] = (normalized_df[col] - min_val) / (max_val - min_val)
 
@@ -332,10 +329,18 @@ def create_citation_analysis_plot(
         col=2,
     )
 
-    fig.update_xaxes(title_text="Strategy", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1)
-    fig.update_xaxes(title_text="Strategy", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2)
-    fig.update_yaxes(title_text="Count", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1)
-    fig.update_yaxes(title_text="Percentage", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2)
+    fig.update_xaxes(
+        title_text="Strategy", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1
+    )
+    fig.update_xaxes(
+        title_text="Strategy", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2
+    )
+    fig.update_yaxes(
+        title_text="Count", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1
+    )
+    fig.update_yaxes(
+        title_text="Percentage", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2
+    )
 
     # Update subplot title font sizes
     for annotation in fig.layout.annotations:
@@ -416,10 +421,7 @@ def create_comprehensive_dashboard(
     fig.add_trace(
         go.Bar(
             x=display_names,
-            y=[
-                all_metrics[s].get("coherence_score", 0) or 0
-                for s in strategies
-            ],
+            y=[all_metrics[s].get("coherence_score", 0) or 0 for s in strategies],
             marker_color=colors_list,
             hovertemplate="<b>%{x}</b><br>Coherence: %{y:.3f}<extra></extra>",
         ),
@@ -431,10 +433,7 @@ def create_comprehensive_dashboard(
     fig.add_trace(
         go.Bar(
             x=display_names,
-            y=[
-                (all_metrics[s].get("citation_coverage", 0) or 0) * 100
-                for s in strategies
-            ],
+            y=[(all_metrics[s].get("citation_coverage", 0) or 0) * 100 for s in strategies],
             marker_color=colors_list,
             hovertemplate="<b>%{x}</b><br>Coverage: %{y:.1f}%<extra></extra>",
         ),
@@ -448,10 +447,18 @@ def create_comprehensive_dashboard(
     fig.update_xaxes(tickfont={"size": 22}, row=2, col=1)
     fig.update_xaxes(tickfont={"size": 22}, row=2, col=2)
 
-    fig.update_yaxes(title_text="Characters", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1)
-    fig.update_yaxes(title_text="Characters", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2)
-    fig.update_yaxes(title_text="Score", title_font={"size": 28}, tickfont={"size": 22}, row=2, col=1)
-    fig.update_yaxes(title_text="Percentage", title_font={"size": 28}, tickfont={"size": 22}, row=2, col=2)
+    fig.update_yaxes(
+        title_text="Characters", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1
+    )
+    fig.update_yaxes(
+        title_text="Characters", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2
+    )
+    fig.update_yaxes(
+        title_text="Score", title_font={"size": 28}, tickfont={"size": 22}, row=2, col=1
+    )
+    fig.update_yaxes(
+        title_text="Percentage", title_font={"size": 28}, tickfont={"size": 22}, row=2, col=2
+    )
 
     # Update subplot title font sizes
     for annotation in fig.layout.annotations:
@@ -473,7 +480,9 @@ def create_comprehensive_dashboard(
     return fig
 
 
-def create_radar_chart(metrics_df: pd.DataFrame, title: str = "Strategy Comparison Radar") -> go.Figure:
+def create_radar_chart(
+    metrics_df: pd.DataFrame, title: str = "Strategy Comparison Radar"
+) -> go.Figure:
     """
     Create radar chart comparing strategies across normalized metrics.
 
@@ -520,14 +529,8 @@ def create_radar_chart(metrics_df: pd.DataFrame, title: str = "Strategy Comparis
 
     fig.update_layout(
         polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 1],
-                tickfont={"size": 22}
-            ),
-            angularaxis=dict(
-                tickfont={"size": 22}
-            )
+            radialaxis=dict(visible=True, range=[0, 1], tickfont={"size": 22}),
+            angularaxis=dict(tickfont={"size": 22}),
         ),
         title={
             "text": title,

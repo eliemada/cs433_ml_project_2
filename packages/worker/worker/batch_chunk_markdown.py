@@ -45,8 +45,7 @@ def chunk_all_papers(
     # Initialize loader and chunker
     loader = S3MarkdownLoader(bucket_name=bucket_name)
     chunker = MarkdownChunker(
-        coarse_target_size=coarse_target_size,
-        fine_target_size=fine_target_size
+        coarse_target_size=coarse_target_size, fine_target_size=fine_target_size
     )
 
     # Get paper IDs
@@ -57,7 +56,7 @@ def chunk_all_papers(
     if num_papers is not None:
         end_index = min(start_index + num_papers, len(all_paper_ids))
         paper_ids = all_paper_ids[start_index:end_index]
-        print(f"Processing papers {start_index} to {end_index-1} ({len(paper_ids)} papers)")
+        print(f"Processing papers {start_index} to {end_index - 1} ({len(paper_ids)} papers)")
     else:
         paper_ids = all_paper_ids[start_index:]
         print(f"Processing all papers from index {start_index} ({len(paper_ids)} papers)")
@@ -70,11 +69,11 @@ def chunk_all_papers(
 
     # Process papers
     stats = {
-        'processed': 0,
-        'failed': 0,
-        'total_coarse_chunks': 0,
-        'total_fine_chunks': 0,
-        'errors': []
+        "processed": 0,
+        "failed": 0,
+        "total_coarse_chunks": 0,
+        "total_fine_chunks": 0,
+        "errors": [],
     }
 
     start_time = time.time()
@@ -84,28 +83,25 @@ def chunk_all_papers(
             # Load paper
             result = loader.load_paper(paper_id)
             if not result:
-                stats['failed'] += 1
-                stats['errors'].append({'paper_id': paper_id, 'error': 'Failed to load'})
+                stats["failed"] += 1
+                stats["errors"].append({"paper_id": paper_id, "error": "Failed to load"})
                 continue
 
             markdown_text, metadata = result
             title = loader.extract_title_from_metadata(metadata)
 
             # Chunk document
-            create_both = (chunk_type == "both")
+            create_both = chunk_type == "both"
             chunks_result = chunker.chunk_document(
-                markdown_text,
-                paper_id,
-                title,
-                create_both_types=create_both
+                markdown_text, paper_id, title, create_both_types=create_both
             )
 
             # Convert chunks to dicts for JSON serialization
-            coarse_chunks = [chunk.to_dict() for chunk in chunks_result['coarse']]
-            fine_chunks = [chunk.to_dict() for chunk in chunks_result['fine']]
+            coarse_chunks = [chunk.to_dict() for chunk in chunks_result["coarse"]]
+            fine_chunks = [chunk.to_dict() for chunk in chunks_result["fine"]]
 
-            stats['total_coarse_chunks'] += len(coarse_chunks)
-            stats['total_fine_chunks'] += len(fine_chunks)
+            stats["total_coarse_chunks"] += len(coarse_chunks)
+            stats["total_fine_chunks"] += len(fine_chunks)
 
             # Save results
             if save_to_s3:
@@ -120,18 +116,18 @@ def chunk_all_papers(
                 paper_output_dir.mkdir(exist_ok=True)
 
                 if chunk_type in ["coarse", "both"]:
-                    with open(paper_output_dir / "coarse_chunks.json", 'w') as f:
+                    with open(paper_output_dir / "coarse_chunks.json", "w") as f:
                         json.dump(coarse_chunks, f, indent=2)
 
                 if chunk_type in ["fine", "both"]:
-                    with open(paper_output_dir / "fine_chunks.json", 'w') as f:
+                    with open(paper_output_dir / "fine_chunks.json", "w") as f:
                         json.dump(fine_chunks, f, indent=2)
 
-            stats['processed'] += 1
+            stats["processed"] += 1
 
         except Exception as e:
-            stats['failed'] += 1
-            stats['errors'].append({'paper_id': paper_id, 'error': str(e)})
+            stats["failed"] += 1
+            stats["errors"].append({"paper_id": paper_id, "error": str(e)})
             print(f"\n❌ Error processing {paper_id}: {e}")
             continue
 
@@ -144,17 +140,17 @@ def chunk_all_papers(
     print(f"Failed: {stats['failed']} papers")
     print(f"Total coarse chunks: {stats['total_coarse_chunks']}")
     print(f"Total fine chunks: {stats['total_fine_chunks']}")
-    print(f"Time elapsed: {elapsed_time:.1f} seconds ({elapsed_time/60:.1f} minutes)")
-    print(f"Avg time per paper: {elapsed_time/max(stats['processed'], 1):.2f} seconds")
+    print(f"Time elapsed: {elapsed_time:.1f} seconds ({elapsed_time / 60:.1f} minutes)")
+    print(f"Avg time per paper: {elapsed_time / max(stats['processed'], 1):.2f} seconds")
 
-    if stats['errors']:
+    if stats["errors"]:
         print(f"\n⚠️  {len(stats['errors'])} errors occurred:")
-        for error in stats['errors'][:10]:  # Show first 10
+        for error in stats["errors"][:10]:  # Show first 10
             print(f"  - {error['paper_id']}: {error['error']}")
 
     # Save summary
     summary_file = Path(output_dir or ".") / "batch_processing_summary.json"
-    with open(summary_file, 'w') as f:
+    with open(summary_file, "w") as f:
         json.dump(stats, f, indent=2)
     print(f"\nSummary saved to: {summary_file}")
 
@@ -163,62 +159,34 @@ def chunk_all_papers(
 
 def main():
     parser = argparse.ArgumentParser(description="Batch chunk papers from S3")
+    parser.add_argument("--bucket", default="cs433-rag-project2", help="S3 bucket name")
+    parser.add_argument("--output-dir", default="./chunks", help="Local directory to save chunks")
     parser.add_argument(
-        "--bucket",
-        default="cs433-rag-project2",
-        help="S3 bucket name"
+        "--save-to-s3", action="store_true", help="Save chunks to S3 instead of locally"
     )
-    parser.add_argument(
-        "--output-dir",
-        default="./chunks",
-        help="Local directory to save chunks"
-    )
-    parser.add_argument(
-        "--save-to-s3",
-        action="store_true",
-        help="Save chunks to S3 instead of locally"
-    )
-    parser.add_argument(
-        "--s3-output-prefix",
-        default="chunks/",
-        help="S3 prefix for output chunks"
-    )
+    parser.add_argument("--s3-output-prefix", default="chunks/", help="S3 prefix for output chunks")
     parser.add_argument(
         "--chunk-type",
         choices=["coarse", "fine", "both"],
         default="both",
-        help="Type of chunks to create"
+        help="Type of chunks to create",
     )
     parser.add_argument(
-        "--num-papers",
-        type=int,
-        default=None,
-        help="Number of papers to process (default: all)"
+        "--num-papers", type=int, default=None, help="Number of papers to process (default: all)"
     )
+    parser.add_argument("--start-index", type=int, default=0, help="Starting index in paper list")
     parser.add_argument(
-        "--start-index",
-        type=int,
-        default=0,
-        help="Starting index in paper list"
+        "--coarse-size", type=int, default=2000, help="Target size for coarse chunks"
     )
-    parser.add_argument(
-        "--coarse-size",
-        type=int,
-        default=2000,
-        help="Target size for coarse chunks"
-    )
-    parser.add_argument(
-        "--fine-size",
-        type=int,
-        default=300,
-        help="Target size for fine chunks"
-    )
+    parser.add_argument("--fine-size", type=int, default=300, help="Target size for fine chunks")
 
     args = parser.parse_args()
 
     print("Starting batch processing with configuration:")
     print(f"  Bucket: {args.bucket}")
-    print(f"  Output: {'S3: ' + args.s3_output_prefix if args.save_to_s3 else 'Local: ' + args.output_dir}")
+    print(
+        f"  Output: {'S3: ' + args.s3_output_prefix if args.save_to_s3 else 'Local: ' + args.output_dir}"
+    )
     print(f"  Chunk type: {args.chunk_type}")
     print(f"  Num papers: {args.num_papers or 'all'}")
     print(f"  Start index: {args.start_index}")
@@ -235,11 +203,11 @@ def main():
         num_papers=args.num_papers,
         start_index=args.start_index,
         coarse_target_size=args.coarse_size,
-        fine_target_size=args.fine_size
+        fine_target_size=args.fine_size,
     )
 
     # Exit with error code if failures
-    if stats['failed'] > 0:
+    if stats["failed"] > 0:
         sys.exit(1)
 
 

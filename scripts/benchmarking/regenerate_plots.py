@@ -19,7 +19,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from rag_pipeline.benchmarking import (
     create_size_distribution_plot,
-    create_comparison_heatmap,
     create_coherence_boxplot,
     create_boundary_quality_plot,
     create_citation_analysis_plot,
@@ -29,9 +28,7 @@ from rag_pipeline.benchmarking import (
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Regenerate plots from existing evaluation JSON"
-    )
+    parser = argparse.ArgumentParser(description="Regenerate plots from existing evaluation JSON")
     parser.add_argument(
         "json_file",
         type=str,
@@ -83,12 +80,8 @@ def main():
     plots = {
         "dashboard": create_comprehensive_dashboard(metrics_dict, size_data),
         "size_distribution": create_size_distribution_plot(size_data),
-        "coherence_plot": create_coherence_boxplot(coherence_data)
-        if coherence_data
-        else None,
-        "boundary_plot": create_boundary_quality_plot(boundary_data)
-        if boundary_data
-        else None,
+        "coherence_plot": create_coherence_boxplot(coherence_data) if coherence_data else None,
+        "boundary_plot": create_boundary_quality_plot(boundary_data) if boundary_data else None,
         "citation_plot": create_citation_analysis_plot(citation_data),
     }
 

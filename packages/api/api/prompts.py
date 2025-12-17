@@ -84,7 +84,7 @@ def format_sources_for_prompt(search_results: list) -> str:
     for i, result in enumerate(search_results, 1):
         source = f"""
 ### Source {i}: {result.paper_title.split(chr(10))[0]}
-**Section**: {' > '.join(result.section_hierarchy)}
+**Section**: {" > ".join(result.section_hierarchy)}
 **Relevance Score**: {result.score:.2%}
 
 {result.text}

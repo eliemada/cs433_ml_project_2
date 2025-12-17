@@ -42,7 +42,9 @@ class LayoutElement(BaseModel):
     """Detected layout element from stage 1 (layout parsing)."""
 
     bbox: BoundingBox
-    label: str = Field(description="Element type (text, title, tab, equ, code, fig, header, footer, etc.)")
+    label: str = Field(
+        description="Element type (text, title, tab, equ, code, fig, header, footer, etc.)"
+    )
     reading_order: int = Field(ge=0, description="Reading order in document")
     confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
 
@@ -51,10 +53,14 @@ class ParsedElement(BaseModel):
     """Fully parsed element with content from stage 2 (element recognition)."""
 
     bbox: BoundingBox
-    label: str = Field(description="Element type (text, title, tab, equ, code, fig, header, footer, etc.)")
+    label: str = Field(
+        description="Element type (text, title, tab, equ, code, fig, header, footer, etc.)"
+    )
     reading_order: int = Field(ge=0, description="Reading order in document")
     text: str = Field(description="Extracted text content")
-    figure_path: Optional[Path] = Field(default=None, description="Path to saved figure (if label=fig)")
+    figure_path: Optional[Path] = Field(
+        default=None, description="Path to saved figure (if label=fig)"
+    )
 
     def to_dict(self) -> dict:
         """Convert to dictionary for JSON serialization."""

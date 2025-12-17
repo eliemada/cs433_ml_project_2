@@ -193,7 +193,9 @@ class DolphinModel(ModelWrapper):
         except Exception as e:
             raise Exception(f"Inference error: {str(e)}")
 
-    def chat(self, prompt: Union[str, List[str]], image: Union[Image.Image, List[Image.Image]]) -> Union[str, List[str]]:
+    def chat(
+        self, prompt: Union[str, List[str]], image: Union[Image.Image, List[Image.Image]]
+    ) -> Union[str, List[str]]:
         """
         Convenience method compatible with Dolphin demo_page.py interface.
 

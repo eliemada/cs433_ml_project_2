@@ -62,9 +62,9 @@ class PDFParsingPipeline(DocumentParser):
         Returns:
             Complete document parsing results
         """
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Parsing document: {document_path.name}")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
 
         # Stage 1: Extract images from PDF
         print("Stage 1: Extracting images from PDF...")
@@ -83,16 +83,14 @@ class PDFParsingPipeline(DocumentParser):
         print(f"\n  ✓ Parsed all {len(pages)} page(s)\n")
 
         # Stage 3: Create document result
-        doc_result = DocumentResult(
-            source_file=document_path, total_pages=len(pages), pages=pages
-        )
+        doc_result = DocumentResult(source_file=document_path, total_pages=len(pages), pages=pages)
 
         # Stage 4: Generate outputs
         print("Stage 3: Generating outputs...")
         self.markdown_converter.process(doc_result)
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("✓ Parsing complete!")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
 
         return doc_result
 

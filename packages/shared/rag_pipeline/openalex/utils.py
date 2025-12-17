@@ -21,13 +21,13 @@ def sanitize_filename(filename: str, max_length: int = 200) -> str:
     # Remove or replace invalid characters
     invalid_chars = r'<>:"/\\|?*'
     for char in invalid_chars:
-        filename = filename.replace(char, '_')
+        filename = filename.replace(char, "_")
 
     # Replace multiple spaces/underscores with single underscore
-    filename = re.sub(r'[_\s]+', '_', filename)
+    filename = re.sub(r"[_\s]+", "_", filename)
 
     # Remove leading/trailing whitespace and underscores
-    filename = filename.strip(' _')
+    filename = filename.strip(" _")
 
     # Truncate if too long (leave room for extension)
     if len(filename) > max_length:
@@ -41,10 +41,7 @@ def sanitize_filename(filename: str, max_length: int = 200) -> str:
 
 
 def create_pdf_filename(
-    index: int,
-    openalex_id: str,
-    title: Optional[str],
-    max_length: int = 200
+    index: int, openalex_id: str, title: Optional[str], max_length: int = 200
 ) -> str:
     """
     Create a standardized PDF filename.
@@ -183,11 +180,7 @@ def extract_openalex_id(openalex_url: str) -> str:
     return openalex_url.split("/")[-1] if openalex_url else ""
 
 
-def calculate_progress_eta(
-    current: int,
-    total: int,
-    elapsed_seconds: float
-) -> tuple[float, float]:
+def calculate_progress_eta(current: int, total: int, elapsed_seconds: float) -> tuple[float, float]:
     """
     Calculate progress percentage and estimated time remaining.
 

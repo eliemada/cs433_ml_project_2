@@ -6,7 +6,6 @@ import boto3
 import json
 from typing import List, Dict, Optional, Tuple
 from pathlib import Path
-import io
 
 
 class S3MarkdownLoader:
@@ -22,7 +21,7 @@ class S3MarkdownLoader:
         """
         self.bucket_name = bucket_name
         self.prefix = prefix
-        self.s3_client = boto3.client('s3')
+        self.s3_client = boto3.client("s3")
 
     def list_paper_ids(self) -> List[str]:
         """
@@ -32,14 +31,12 @@ class S3MarkdownLoader:
             List of paper IDs (folder names like "00002_W2122361802")
         """
         response = self.s3_client.list_objects_v2(
-            Bucket=self.bucket_name,
-            Prefix=self.prefix,
-            Delimiter='/'
+            Bucket=self.bucket_name, Prefix=self.prefix, Delimiter="/"
         )
 
         paper_ids = []
-        for prefix in response.get('CommonPrefixes', []):
-            folder_name = prefix['Prefix'].rstrip('/').split('/')[-1]
+        for prefix in response.get("CommonPrefixes", []):
+            folder_name = prefix["Prefix"].rstrip("/").split("/")[-1]
             paper_ids.append(folder_name)
 
         return sorted(paper_ids)
@@ -57,11 +54,8 @@ class S3MarkdownLoader:
         key = f"{self.prefix}{paper_id}/document.md"
 
         try:
-            response = self.s3_client.get_object(
-                Bucket=self.bucket_name,
-                Key=key
-            )
-            markdown_text = response['Body'].read().decode('utf-8')
+            response = self.s3_client.get_object(Bucket=self.bucket_name, Key=key)
+            markdown_text = response["Body"].read().decode("utf-8")
             return markdown_text
         except self.s3_client.exceptions.NoSuchKey:
             print(f"Document not found: {key}")
@@ -83,11 +77,8 @@ class S3MarkdownLoader:
         key = f"{self.prefix}{paper_id}/metadata.json"
 
         try:
-            response = self.s3_client.get_object(
-                Bucket=self.bucket_name,
-                Key=key
-            )
-            metadata = json.loads(response['Body'].read().decode('utf-8'))
+            response = self.s3_client.get_object(Bucket=self.bucket_name, Key=key)
+            metadata = json.loads(response["Body"].read().decode("utf-8"))
             return metadata
         except self.s3_client.exceptions.NoSuchKey:
             print(f"Metadata not found: {key}")
@@ -125,27 +116,25 @@ class S3MarkdownLoader:
             Paper title or "Unknown Title"
         """
         # Try to find title in page elements
-        if 'pages' in metadata and len(metadata['pages']) > 0:
-            first_page = metadata['pages'][0]
-            if 'elements' in first_page:
-                for element in first_page['elements']:
+        if "pages" in metadata and len(metadata["pages"]) > 0:
+            first_page = metadata["pages"][0]
+            if "elements" in first_page:
+                for element in first_page["elements"]:
                     # Look for title-like elements
-                    if element.get('label', '').startswith('sec_0') or \
-                       element.get('label', '') == 'title':
-                        return element.get('text', 'Unknown Title').strip()
+                    if (
+                        element.get("label", "").startswith("sec_0")
+                        or element.get("label", "") == "title"
+                    ):
+                        return element.get("text", "Unknown Title").strip()
 
         # Fallback: use source filename
-        if 'source_file' in metadata:
-            return Path(metadata['source_file']).stem
+        if "source_file" in metadata:
+            return Path(metadata["source_file"]).stem
 
         return "Unknown Title"
 
     def save_chunks_to_s3(
-        self,
-        chunks: List[Dict],
-        paper_id: str,
-        chunk_type: str,
-        output_prefix: str = "chunks/"
+        self, chunks: List[Dict], paper_id: str, chunk_type: str, output_prefix: str = "chunks/"
     ):
         """
         Save chunks to S3 as JSON.
@@ -163,17 +152,15 @@ class S3MarkdownLoader:
             self.s3_client.put_object(
                 Bucket=self.bucket_name,
                 Key=key,
-                Body=json_data.encode('utf-8'),
-                ContentType='application/json'
+                Body=json_data.encode("utf-8"),
+                ContentType="application/json",
             )
             print(f"Saved {len(chunks)} {chunk_type} chunks to s3://{self.bucket_name}/{key}")
         except Exception as e:
             print(f"Error saving chunks to S3: {e}")
 
     def download_sample_papers(
-        self,
-        num_papers: int,
-        output_dir: str = "./sample_papers"
+        self, num_papers: int, output_dir: str = "./sample_papers"
     ) -> List[str]:
         """
         Download sample papers for local testing.
@@ -198,14 +185,13 @@ class S3MarkdownLoader:
             # Download document
             markdown_text = self.load_document(paper_id)
             if markdown_text:
-                (paper_dir / "document.md").write_text(markdown_text, encoding='utf-8')
+                (paper_dir / "document.md").write_text(markdown_text, encoding="utf-8")
 
             # Download metadata
             metadata = self.load_metadata(paper_id)
             if metadata:
                 (paper_dir / "metadata.json").write_text(
-                    json.dumps(metadata, indent=2),
-                    encoding='utf-8'
+                    json.dumps(metadata, indent=2), encoding="utf-8"
                 )
 
             print(f"Downloaded {paper_id}")

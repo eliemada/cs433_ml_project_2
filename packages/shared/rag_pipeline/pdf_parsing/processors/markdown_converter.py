@@ -81,7 +81,11 @@ class MarkdownConverter(BaseProcessor[DocumentResult, None]):
                 # Add page separator if not first page
                 if page_idx > 0:
                     all_elements.append(
-                        {"label": "page_separator", "text": "\n\n---\n\n", "reading_order": len(all_elements)}
+                        {
+                            "label": "page_separator",
+                            "text": "\n\n---\n\n",
+                            "reading_order": len(all_elements),
+                        }
                     )
 
                 # Convert ParsedElement to dict for markdown converter

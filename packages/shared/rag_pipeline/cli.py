@@ -23,11 +23,16 @@ console = Console()
 def fetch_metadata(
     filters: Optional[str] = typer.Option(
         "primary_topic.id:t10856,open_access.is_oa:true",
-        "--filter", "-f",
-        help="Comma-separated filters (e.g., 'primary_topic.id:t10856,open_access.is_oa:true')"
+        "--filter",
+        "-f",
+        help="Comma-separated filters (e.g., 'primary_topic.id:t10856,open_access.is_oa:true')",
     ),
-    output_dir: Path = typer.Option("data/openalex", "--output", "-o", help="Output directory for metadata"),
-    email: Optional[str] = typer.Option(None, "--email", "-e", help="Email for polite pool (faster API)"),
+    output_dir: Path = typer.Option(
+        "data/openalex", "--output", "-o", help="Output directory for metadata"
+    ),
+    email: Optional[str] = typer.Option(
+        None, "--email", "-e", help="Email for polite pool (faster API)"
+    ),
     per_page: int = typer.Option(200, "--per-page", help="Results per page (max 200)"),
 ):
     """Fetch metadata from OpenAlex API.
@@ -70,13 +75,16 @@ def fetch_metadata(
         table.add_column("Value", style="green")
 
         table.add_row("Total Works", str(len(df)))
-        table.add_row("With PDFs", str(df['has_any_pdf'].sum() if 'has_any_pdf' in df else 'N/A'))
-        table.add_row("Open Access", str(df['is_oa'].sum() if 'is_oa' in df else 'N/A'))
+        table.add_row("With PDFs", str(df["has_any_pdf"].sum() if "has_any_pdf" in df else "N/A"))
+        table.add_row("Open Access", str(df["is_oa"].sum() if "is_oa" in df else "N/A"))
 
-        if 'oa_status' in df:
-            oa_counts = df['oa_status'].value_counts()
+        if "oa_status" in df:
+            oa_counts = df["oa_status"].value_counts()
             top_3_oa = oa_counts.head(3)
-            table.add_row("Top OA Status", f"{top_3_oa.index[0]}: {top_3_oa.iloc[0]}" if len(top_3_oa) > 0 else 'N/A')
+            table.add_row(
+                "Top OA Status",
+                f"{top_3_oa.index[0]}: {top_3_oa.iloc[0]}" if len(top_3_oa) > 0 else "N/A",
+            )
 
         console.print(table)
 
@@ -92,10 +100,16 @@ def fetch_metadata(
 @app.command()
 def download_pdfs(
     metadata_file: Path = typer.Argument(..., help="Path to metadata parquet file"),
-    output_dir: Path = typer.Option("data/openalex/pdfs", "--output", "-o", help="Output directory for PDFs"),
-    max_pdfs: Optional[int] = typer.Option(None, "--max", "-m", help="Maximum number of PDFs to download"),
+    output_dir: Path = typer.Option(
+        "data/openalex/pdfs", "--output", "-o", help="Output directory for PDFs"
+    ),
+    max_pdfs: Optional[int] = typer.Option(
+        None, "--max", "-m", help="Maximum number of PDFs to download"
+    ),
     workers: int = typer.Option(5, "--workers", "-w", help="Number of concurrent downloads"),
-    only_with_pdfs: bool = typer.Option(True, "--only-with-pdfs/--all", help="Only download works that have PDFs available"),
+    only_with_pdfs: bool = typer.Option(
+        True, "--only-with-pdfs/--all", help="Only download works that have PDFs available"
+    ),
     scihub_fallback: bool = typer.Option(
         False,
         "--scihub-fallback/--no-scihub-fallback",
@@ -116,7 +130,7 @@ def download_pdfs(
         raise typer.Exit(1)
 
     config = OpenAlexConfig(
-        output_dir=output_dir.parent if output_dir.name == 'pdfs' else output_dir,
+        output_dir=output_dir.parent if output_dir.name == "pdfs" else output_dir,
         enable_scihub_fallback=scihub_fallback,
         scihub_base_url=scihub_url,
     )
@@ -128,12 +142,15 @@ def download_pdfs(
         filter_func = None
         if only_with_pdfs:
             console.print("[dim]Filtering for works with PDFs...[/dim]")
+
             def filter_func(df):
-                return df['has_any_pdf']
+                return df["has_any_pdf"]
 
         # Download PDFs with specified number of workers
         # Note: max_pdfs option is not yet implemented
-        stats = downloader.download_from_parquet(str(metadata_file), filter_func=filter_func, workers=workers)
+        stats = downloader.download_from_parquet(
+            metadata_file, filter_func=filter_func, workers=workers
+        )
 
         console.print("\n[bold green]✓ Download complete![/bold green]")
         console.print(f"[dim]Saved to: {config.pdfs_dir}[/dim]")
@@ -159,7 +176,9 @@ def download_pdfs(
 @app.command()
 def parse_pdfs(
     input_dir: Path = typer.Argument(..., help="Directory containing PDFs"),
-    output_dir: Path = typer.Option("data/parsed", "--output", "-o", help="Output directory for parsed markdown"),
+    output_dir: Path = typer.Option(
+        "data/parsed", "--output", "-o", help="Output directory for parsed markdown"
+    ),
     model_path: str = typer.Option("ByteDance/Dolphin", "--model", "-m", help="Dolphin model path"),
     device: str = typer.Option("cuda", "--device", "-d", help="Device to use (cuda, cpu, mps)"),
 ):
@@ -231,10 +250,14 @@ def parse_pdfs(
 @app.command()
 def create_embeddings(
     input_dir: Path = typer.Argument(..., help="Directory containing parsed markdown files"),
-    output_file: Path = typer.Option("data/embeddings/embeddings.parquet", "--output", "-o", help="Output parquet file"),
+    output_file: Path = typer.Option(
+        "data/embeddings/embeddings.parquet", "--output", "-o", help="Output parquet file"
+    ),
     chunk_size: int = typer.Option(1024, "--chunk-size", "-c", help="Chunk size in tokens"),
     chunk_overlap: int = typer.Option(100, "--overlap", help="Overlap between chunks"),
-    model: str = typer.Option("text-embedding-3-large", "--model", "-m", help="OpenAI embedding model"),
+    model: str = typer.Option(
+        "text-embedding-3-large", "--model", "-m", help="OpenAI embedding model"
+    ),
 ):
     """Create embeddings from parsed markdown files."""
     from .rag.chunking import DocumentChunker
@@ -274,8 +297,8 @@ def create_embeddings(
 
             # Add metadata
             for chunk in chunks:
-                chunk['source_file'] = md_file.name
-                chunk['document_id'] = md_file.stem
+                chunk["source_file"] = md_file.name
+                chunk["document_id"] = md_file.stem
 
             all_chunks.extend(chunks)
 
@@ -287,6 +310,7 @@ def create_embeddings(
 
     # Save to parquet
     import pandas as pd
+
     df = pd.DataFrame(embeddings_data)
     df.to_parquet(output_file)
 

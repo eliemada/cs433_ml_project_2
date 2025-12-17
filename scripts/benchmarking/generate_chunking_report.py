@@ -10,20 +10,13 @@ Usage:
 """
 
 import argparse
-import sys
-from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Callable
 import json
 import logging
 from tqdm.auto import tqdm
 import numpy as np
 from dotenv import load_dotenv
 
-# Load environment variables from .env
-load_dotenv()
-
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from rag_pipeline.rag.markdown_chunker import MarkdownChunker
 from scripts.utils.markdown_s3_loader import S3MarkdownLoader
@@ -34,7 +27,6 @@ from rag_pipeline.benchmarking import (
     evaluate_citation_integrity,
     ChunkMetrics,
     create_size_distribution_plot,
-    create_comparison_heatmap,
     create_coherence_boxplot,
     create_boundary_quality_plot,
     create_citation_analysis_plot,
@@ -47,6 +39,8 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+# Load environment variables from .env
+load_dotenv()
 
 
 def get_embedding_function(use_openai: bool = False):
@@ -58,9 +52,7 @@ def get_embedding_function(use_openai: bool = False):
             client = OpenAI()
 
             def embed_fn(texts: List[str]) -> np.ndarray:
-                response = client.embeddings.create(
-                    model="text-embedding-3-small", input=texts
-                )
+                response = client.embeddings.create(model="text-embedding-3-small", input=texts)
                 return np.array([item.embedding for item in response.data])
 
             return embed_fn
@@ -79,7 +71,7 @@ def evaluate_strategy(
     strategy_name: str,
     chunker: MarkdownChunker,
     papers: List[Dict],
-    embedding_fn: callable,
+    embedding_fn: Callable,
     evaluate_coherence: bool = True,
 ) -> Dict:
     """
@@ -121,9 +113,7 @@ def evaluate_strategy(
         sample_size = min(20, len(all_coarse_chunks))
         sample_indices = np.random.choice(len(all_coarse_chunks), sample_size, replace=False)
 
-        for idx in tqdm(
-            sample_indices, desc=f"{strategy_name}: Coherence", leave=False
-        ):
+        for idx in tqdm(sample_indices, desc=f"{strategy_name}: Coherence", leave=False):
             chunk = all_coarse_chunks[idx]
             score = calculate_coherence_score(chunk.text, embedding_fn)
             coherence_scores.append(score)
@@ -164,15 +154,9 @@ def evaluate_strategy(
 
 def main():
     """Main execution function."""
-    parser = argparse.ArgumentParser(
-        description="Generate chunking strategy evaluation report"
-    )
-    parser.add_argument(
-        "--num-papers", type=int, default=10, help="Number of papers to analyze"
-    )
-    parser.add_argument(
-        "--output-dir", default="./reports", help="Output directory for reports"
-    )
+    parser = argparse.ArgumentParser(description="Generate chunking strategy evaluation report")
+    parser.add_argument("--num-papers", type=int, default=10, help="Number of papers to analyze")
+    parser.add_argument("--output-dir", default="./reports", help="Output directory for reports")
     parser.add_argument(
         "--with-embeddings",
         action="store_true",
@@ -183,9 +167,7 @@ def main():
         action="store_true",
         help="Skip coherence/boundary analysis (faster)",
     )
-    parser.add_argument(
-        "--bucket", default="cs433-rag-project2", help="S3 bucket name"
-    )
+    parser.add_argument("--bucket", default="cs433-rag-project2", help="S3 bucket name")
 
     args = parser.parse_args()
 
@@ -208,9 +190,7 @@ def main():
         if result:
             markdown_text, metadata = result
             title = loader.extract_title_from_metadata(metadata)
-            papers.append(
-                {"paper_id": paper_id, "title": title, "markdown": markdown_text}
-            )
+            papers.append({"paper_id": paper_id, "title": title, "markdown": markdown_text})
 
     logger.info(f"✓ Loaded {len(papers)} papers")
 
@@ -255,17 +235,11 @@ def main():
     logger.info("=" * 80)
 
     # Prepare data for visualizations
-    metrics_dict = {
-        name: result["metrics"].to_dict() for name, result in results.items()
-    }
+    metrics_dict = {name: result["metrics"].to_dict() for name, result in results.items()}
     size_data = {name: result["chunk_sizes"] for name, result in results.items()}
-    coherence_data = {
-        name: result["coherence_scores"] for name, result in results.items()
-    }
+    coherence_data = {name: result["coherence_scores"] for name, result in results.items()}
     boundary_data = {name: result["boundary_scores"] for name, result in results.items()}
-    citation_data = {
-        name: result["citation_stats"] for name, result in results.items()
-    }
+    citation_data = {name: result["citation_stats"] for name, result in results.items()}
 
     # Create visualizations
     logger.info("Creating visualizations...")
@@ -310,9 +284,7 @@ def main():
                 "coherence_data": {
                     k: [float(v) for v in vals] for k, vals in coherence_data.items()
                 },
-                "boundary_data": {
-                    k: [float(v) for v in vals] for k, vals in boundary_data.items()
-                },
+                "boundary_data": {k: [float(v) for v in vals] for k, vals in boundary_data.items()},
                 "citation_data": citation_data,
             },
             f,

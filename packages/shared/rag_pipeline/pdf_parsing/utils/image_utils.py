@@ -88,7 +88,10 @@ def prepare_image(image: Image.Image) -> Tuple[np.ndarray, ImageDimensions]:
         padded_h, padded_w = padded_image.shape[:2]
 
         dimensions = ImageDimensions(
-            original_width=original_w, original_height=original_h, padded_width=padded_w, padded_height=padded_h
+            original_width=original_w,
+            original_height=original_h,
+            padded_width=padded_w,
+            padded_height=padded_h,
         )
 
         return padded_image, dimensions
@@ -97,7 +100,9 @@ def prepare_image(image: Image.Image) -> Tuple[np.ndarray, ImageDimensions]:
         print(f"prepare_image error: {str(e)}")
         # Create a minimal valid image and dimensions
         h, w = image.height, image.width
-        dimensions = ImageDimensions(original_width=w, original_height=h, padded_width=w, padded_height=h)
+        dimensions = ImageDimensions(
+            original_width=w, original_height=h, padded_width=w, padded_height=h
+        )
         return np.zeros((h, w, 3), dtype=np.uint8), dimensions
 
 
@@ -123,7 +128,9 @@ def crop_image_region(image: np.ndarray, x1: int, y1: int, x2: int, y2: int) -> 
         raise Exception(f"Error cropping image region: {str(e)}")
 
 
-def save_image(image: Image.Image, output_path: Path, format: str = "PNG", quality: int = 95) -> None:
+def save_image(
+    image: Image.Image, output_path: Path, format: str = "PNG", quality: int = 95
+) -> None:
     """
     Save a PIL image to disk.
 

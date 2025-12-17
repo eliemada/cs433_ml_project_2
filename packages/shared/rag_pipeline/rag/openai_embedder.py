@@ -3,7 +3,7 @@ OpenAI embeddings generation module
 """
 
 from openai import OpenAI
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 import logging
 import time
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -22,7 +22,7 @@ class OpenAIEmbedder:
         model: str = "text-embedding-3-large",
         dimensions: Optional[int] = None,
         batch_size: int = 100,
-        max_retries: int = 3
+        max_retries: int = 3,
     ):
         """
         Initialize OpenAI embedder
@@ -42,10 +42,7 @@ class OpenAIEmbedder:
 
         logger.info(f"Initialized OpenAI embedder with model: {model}")
 
-    @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=4, max=10)
-    )
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     def generate_embedding(self, text: str) -> List[float]:
         """
         Generate embedding for a single text
@@ -58,10 +55,7 @@ class OpenAIEmbedder:
         """
         try:
             # Prepare request parameters
-            params = {
-                "model": self.model,
-                "input": text
-            }
+            params = {"model": self.model, "input": text}
 
             # Add dimensions if specified (for text-embedding-3 models)
             if self.dimensions and "text-embedding-3" in self.model:
@@ -77,14 +71,9 @@ class OpenAIEmbedder:
             logger.error(f"Error generating embedding: {e}")
             raise
 
-    @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=4, max=10)
-    )
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     def generate_embeddings_batch(
-        self,
-        texts: List[str],
-        show_progress: bool = False
+        self, texts: List[str], show_progress: bool = False
     ) -> List[List[float]]:
         """
         Generate embeddings for multiple texts
@@ -101,16 +90,15 @@ class OpenAIEmbedder:
 
             # Process in batches
             for i in range(0, len(texts), self.batch_size):
-                batch = texts[i:i + self.batch_size]
+                batch = texts[i : i + self.batch_size]
 
                 if show_progress:
-                    logger.info(f"Processing batch {i//self.batch_size + 1}/{(len(texts)-1)//self.batch_size + 1}")
+                    logger.info(
+                        f"Processing batch {i // self.batch_size + 1}/{(len(texts) - 1) // self.batch_size + 1}"
+                    )
 
                 # Prepare request parameters
-                params = {
-                    "model": self.model,
-                    "input": batch
-                }
+                params = {"model": self.model, "input": batch}
 
                 if self.dimensions and "text-embedding-3" in self.model:
                     params["dimensions"] = self.dimensions
@@ -133,10 +121,8 @@ class OpenAIEmbedder:
             raise
 
     def generate_chunks_with_embeddings(
-        self,
-        chunks: List[Dict[str, any]],
-        text_field: str = "text"
-    ) -> List[Dict[str, any]]:
+        self, chunks: List[Dict[str, Any]], text_field: str = "text"
+    ) -> List[Dict[str, Any]]:
         """
         Generate embeddings for a list of chunks
 
@@ -178,7 +164,7 @@ class OpenAIEmbedder:
         dimensions_map = {
             "text-embedding-3-large": 3072,
             "text-embedding-3-small": 1536,
-            "text-embedding-ada-002": 1536
+            "text-embedding-ada-002": 1536,
         }
 
         return dimensions_map.get(self.model, 1536)
@@ -219,7 +205,7 @@ class OpenAIEmbedder:
         pricing_map = {
             "text-embedding-3-large": 0.13,
             "text-embedding-3-small": 0.02,
-            "text-embedding-ada-002": 0.10
+            "text-embedding-ada-002": 0.10,
         }
 
         price_per_million = pricing_map.get(self.model, 0.10)

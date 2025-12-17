@@ -29,6 +29,7 @@ from rag_pipeline.rag.openai_embedder import OpenAIEmbedder
 @dataclass
 class SearchResult:
     """A single search result with metadata."""
+
     chunk_id: str
     paper_id: str
     paper_title: str
@@ -41,12 +42,7 @@ class SearchResult:
 class FAISSRetriever:
     """FAISS-based vector similarity search."""
 
-    def __init__(
-        self,
-        index: faiss.Index,
-        metadata: Dict[str, Dict],
-        embedder: OpenAIEmbedder
-    ):
+    def __init__(self, index: faiss.Index, metadata: Dict[str, Dict], embedder: OpenAIEmbedder):
         """
         Initialize FAISS retriever.
 
@@ -61,11 +57,7 @@ class FAISSRetriever:
 
     @classmethod
     def from_s3(
-        cls,
-        bucket_name: str,
-        chunk_type: str,
-        openai_api_key: str,
-        index_prefix: str = "indexes/"
+        cls, bucket_name: str, chunk_type: str, openai_api_key: str, index_prefix: str = "indexes/"
     ) -> "FAISSRetriever":
         """
         Load FAISS retriever from S3.
@@ -76,11 +68,11 @@ class FAISSRetriever:
             openai_api_key: OpenAI API key
             index_prefix: S3 prefix for indexes
         """
-        s3_client = boto3.client('s3')
+        s3_client = boto3.client("s3")
 
         # Download index
         index_key = f"{index_prefix}{chunk_type}.faiss"
-        with tempfile.NamedTemporaryFile(suffix='.faiss', delete=False) as f:
+        with tempfile.NamedTemporaryFile(suffix=".faiss", delete=False) as f:
             index_path = f.name
 
         print(f"Downloading index from s3://{bucket_name}/{index_key}...")
@@ -92,13 +84,10 @@ class FAISSRetriever:
         metadata_key = f"{index_prefix}{chunk_type}_metadata.json"
         print(f"Downloading metadata from s3://{bucket_name}/{metadata_key}...")
         response = s3_client.get_object(Bucket=bucket_name, Key=metadata_key)
-        metadata = json.loads(response['Body'].read().decode('utf-8'))
+        metadata = json.loads(response["Body"].read().decode("utf-8"))
 
         # Initialize embedder
-        embedder = OpenAIEmbedder(
-            api_key=openai_api_key,
-            model="text-embedding-3-small"
-        )
+        embedder = OpenAIEmbedder(api_key=openai_api_key, model="text-embedding-3-small")
 
         print(f"Loaded {chunk_type} index with {index.ntotal} vectors")
         return cls(index, metadata, embedder)
@@ -129,15 +118,17 @@ class FAISSRetriever:
                 break
 
             meta = self.metadata[str(idx)]
-            results.append(SearchResult(
-                chunk_id=meta["chunk_id"],
-                paper_id=meta["paper_id"],
-                paper_title=meta["paper_title"],
-                text=meta["text"],
-                section_hierarchy=meta["section_hierarchy"],
-                score=float(score),
-                rank=rank
-            ))
+            results.append(
+                SearchResult(
+                    chunk_id=meta["chunk_id"],
+                    paper_id=meta["paper_id"],
+                    paper_title=meta["paper_title"],
+                    text=meta["text"],
+                    section_hierarchy=meta["section_hierarchy"],
+                    score=float(score),
+                    rank=rank,
+                )
+            )
 
         return results
 
@@ -157,10 +148,7 @@ class ZeroEntropyReranker:
         self.base_url = base_url
 
     def rerank(
-        self,
-        query: str,
-        results: List[SearchResult],
-        top_k: int = 10
+        self, query: str, results: List[SearchResult], top_k: int = 10
     ) -> List[SearchResult]:
         """
         Rerank search results using ZeroEntropy.
@@ -182,17 +170,14 @@ class ZeroEntropyReranker:
         # Call ZeroEntropy API
         response = requests.post(
             f"{self.base_url}/models/rerank",
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
-            },
+            headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
             json={
                 "model": "zerank-1",  # ZeroEntropy reranking model (or "zerank-1-small" for faster)
                 "query": query,
                 "documents": documents,
-                "top_n": min(top_k, len(documents))
+                "top_n": min(top_k, len(documents)),
             },
-            timeout=30
+            timeout=30,
         )
 
         if response.status_code != 200:
@@ -209,15 +194,17 @@ class ZeroEntropyReranker:
             original_idx = item["index"]
             original_result = results[original_idx]
 
-            reranked_results.append(SearchResult(
-                chunk_id=original_result.chunk_id,
-                paper_id=original_result.paper_id,
-                paper_title=original_result.paper_title,
-                text=original_result.text,
-                section_hierarchy=original_result.section_hierarchy,
-                score=item.get("relevance_score", original_result.score),
-                rank=rank
-            ))
+            reranked_results.append(
+                SearchResult(
+                    chunk_id=original_result.chunk_id,
+                    paper_id=original_result.paper_id,
+                    paper_title=original_result.paper_title,
+                    text=original_result.text,
+                    section_hierarchy=original_result.section_hierarchy,
+                    score=item.get("relevance_score", original_result.score),
+                    rank=rank,
+                )
+            )
 
         return reranked_results
 
@@ -235,7 +222,7 @@ class HybridRetriever:
         self,
         faiss_retriever: FAISSRetriever,
         reranker: Optional[ZeroEntropyReranker] = None,
-        faiss_candidates: int = 75
+        faiss_candidates: int = 75,
     ):
         """
         Initialize hybrid retriever.
@@ -256,7 +243,7 @@ class HybridRetriever:
         openai_api_key: str,
         zeroentropy_api_key: Optional[str] = None,
         chunk_type: str = "coarse",
-        faiss_candidates: int = 75
+        faiss_candidates: int = 75,
     ) -> "HybridRetriever":
         """
         Load hybrid retriever from S3.
@@ -269,9 +256,7 @@ class HybridRetriever:
             faiss_candidates: Number of FAISS candidates
         """
         faiss_retriever = FAISSRetriever.from_s3(
-            bucket_name=bucket_name,
-            chunk_type=chunk_type,
-            openai_api_key=openai_api_key
+            bucket_name=bucket_name, chunk_type=chunk_type, openai_api_key=openai_api_key
         )
 
         reranker = None
@@ -280,12 +265,7 @@ class HybridRetriever:
 
         return cls(faiss_retriever, reranker, faiss_candidates)
 
-    def search(
-        self,
-        query: str,
-        top_k: int = 10,
-        use_reranker: bool = True
-    ) -> List[SearchResult]:
+    def search(self, query: str, top_k: int = 10, use_reranker: bool = True) -> List[SearchResult]:
         """
         Search for relevant chunks.
 
@@ -309,10 +289,7 @@ class HybridRetriever:
         return results
 
     def search_with_context(
-        self,
-        query: str,
-        top_k: int = 10,
-        context_window: int = 1
+        self, query: str, top_k: int = 10, context_window: int = 1
     ) -> List[Dict]:
         """
         Search and include surrounding chunks for context.
@@ -337,7 +314,7 @@ class HybridRetriever:
                 "text": r.text,
                 "section_hierarchy": r.section_hierarchy,
                 "score": r.score,
-                "rank": r.rank
+                "rank": r.rank,
             }
             for r in results
         ]
@@ -347,7 +324,7 @@ class HybridRetriever:
 def create_retriever(
     openai_api_key: Optional[str] = None,
     zeroentropy_api_key: Optional[str] = None,
-    bucket_name: str = "cs433-rag-project2"
+    bucket_name: str = "cs433-rag-project2",
 ) -> HybridRetriever:
     """
     Create a hybrid retriever with default settings.
@@ -367,7 +344,5 @@ def create_retriever(
         raise ValueError("OPENAI_API_KEY not provided")
 
     return HybridRetriever.from_s3(
-        bucket_name=bucket_name,
-        openai_api_key=openai_key,
-        zeroentropy_api_key=zeroentropy_key
+        bucket_name=bucket_name, openai_api_key=openai_key, zeroentropy_api_key=zeroentropy_key
     )

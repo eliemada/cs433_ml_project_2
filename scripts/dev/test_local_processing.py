@@ -14,7 +14,9 @@ from rag_pipeline.pdf_parsing import (
 def main():
     """Test PDF parsing locally."""
     # Select a sample PDF
-    pdf_path = Path("/Users/eliebruno/Desktop/code/project-2-rag/data/3 Quant - Optimal Factor Timing.pdf")
+    pdf_path = Path(
+        "/Users/eliebruno/Desktop/code/project-2-rag/data/3 Quant - Optimal Factor Timing.pdf"
+    )
 
     if not pdf_path.exists():
         print(f"Error: PDF file not found: {pdf_path}")
@@ -56,9 +58,9 @@ def main():
         result = pipeline.parse_document(pdf_path)
 
         # Print results summary
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("RESULTS SUMMARY")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         print(f"Document: {result.source_file.name}")
         print(f"Total pages: {result.total_pages}")
         print(f"Total elements: {len(result.get_all_elements())}")
@@ -68,20 +70,21 @@ def main():
         print(f"  - Figures: {output_dir / 'markdown' / 'figures'}")
 
         # Show sample elements
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("SAMPLE ELEMENTS (first 5)")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         for i, elem in enumerate(result.get_all_elements()[:5], 1):
             print(f"\n{i}. [{elem.label}] (reading order: {elem.reading_order})")
             print(f"   Text: {elem.text[:100]}{'...' if len(elem.text) > 100 else ''}")
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("SUCCESS! Local processing test passed.")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
     except Exception as e:
         print(f"\nError during parsing: {e}")
         import traceback
+
         traceback.print_exc()
         return
     finally:

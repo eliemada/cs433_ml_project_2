@@ -7,7 +7,7 @@ citation integrity, and statistical measures.
 """
 
 from dataclasses import dataclass
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Callable, Any
 import re
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -60,7 +60,7 @@ class ChunkMetrics:
 
 
 def calculate_chunk_statistics(
-    chunks: List, tokenizer_encode_fn: Optional[callable] = None
+    chunks: List, tokenizer_encode_fn: Optional[Callable] = None
 ) -> Dict[str, float]:
     """
     Calculate statistical metrics for a list of chunks.
@@ -106,7 +106,7 @@ def calculate_chunk_statistics(
 
 
 def calculate_coherence_score(
-    chunk_text: str, embedding_fn: callable, min_sentences: int = 2
+    chunk_text: str, embedding_fn: Callable, min_sentences: int = 2
 ) -> float:
     """
     Calculate semantic coherence within a chunk using embeddings.
@@ -149,7 +149,7 @@ def calculate_coherence_score(
 
 
 def calculate_boundary_quality(
-    chunks: List, embedding_fn: callable, num_samples: int = 10
+    chunks: List, embedding_fn: Callable, num_samples: int = 10
 ) -> List[float]:
     """
     Evaluate chunk boundary quality by measuring semantic discontinuity.
@@ -232,7 +232,7 @@ def count_citations(text: str) -> int:
     return total
 
 
-def evaluate_citation_integrity(chunks: List) -> Dict[str, any]:
+def evaluate_citation_integrity(chunks: List) -> Dict[str, Any]:
     """
     Evaluate how well citations are preserved within chunks.
 
@@ -264,9 +264,7 @@ def evaluate_citation_integrity(chunks: List) -> Dict[str, any]:
         "total_citations": total_citations,
         "chunks_with_citations": chunks_with_citations,
         "citation_coverage": citation_coverage,
-        "mean_citation_density": float(np.mean(citation_densities))
-        if citation_densities
-        else 0.0,
+        "mean_citation_density": float(np.mean(citation_densities)) if citation_densities else 0.0,
         "total_chunks": len(chunks),
     }
 
@@ -286,9 +284,7 @@ def calculate_overlap_efficiency(chunks: List) -> Dict[str, float]:
     return {"overlap_efficiency": 0.0}
 
 
-def normalize_score(
-    score: float, min_val: float, max_val: float, invert: bool = False
-) -> float:
+def normalize_score(score: float, min_val: float, max_val: float, invert: bool = False) -> float:
     """
     Normalize a score to 0-1 range.
 

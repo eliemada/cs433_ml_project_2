@@ -54,6 +54,7 @@ openai_client: Optional[OpenAI] = None
 # Lifespan (load index on startup)
 # ============================================================================
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load FAISS index on startup."""
@@ -73,9 +74,7 @@ async def lifespan(app: FastAPI):
 
     # Load FAISS retriever
     faiss_retriever = FAISSRetriever.from_s3(
-        bucket_name=BUCKET_NAME,
-        chunk_type=CHUNK_TYPE,
-        openai_api_key=OPENAI_API_KEY
+        bucket_name=BUCKET_NAME, chunk_type=CHUNK_TYPE, openai_api_key=OPENAI_API_KEY
     )
 
     # Setup reranker if available
@@ -87,9 +86,7 @@ async def lifespan(app: FastAPI):
         print("No ZeroEntropy API key - using FAISS-only retrieval")
 
     retriever = HybridRetriever(
-        faiss_retriever=faiss_retriever,
-        reranker=reranker,
-        faiss_candidates=FAISS_CANDIDATES
+        faiss_retriever=faiss_retriever, reranker=reranker, faiss_candidates=FAISS_CANDIDATES
     )
 
     elapsed = time.time() - start
@@ -111,7 +108,7 @@ app = FastAPI(
     title="RAG Search API",
     description="Search academic papers using FAISS + ZeroEntropy reranking",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # CORS - allow frontend to call API
@@ -127,6 +124,7 @@ app.add_middleware(
 # ============================================================================
 # Request/Response Models
 # ============================================================================
+
 
 class SearchRequest(BaseModel):
     query: str
@@ -185,6 +183,7 @@ class ChatResponse(BaseModel):
 # Endpoints
 # ============================================================================
 
+
 @app.get("/health", response_model=HealthResponse)
 def health():
     """Health check endpoint."""
@@ -192,7 +191,7 @@ def health():
         status="ok",
         index_loaded=retriever is not None,
         index_size=retriever.faiss_retriever.index.ntotal if retriever else 0,
-        chunk_type=CHUNK_TYPE
+        chunk_type=CHUNK_TYPE,
     )
 
 
@@ -215,9 +214,7 @@ def search(request: SearchRequest):
 
     # Search
     results = retriever.search(
-        query=request.query,
-        top_k=request.top_k,
-        use_reranker=request.use_reranker
+        query=request.query, top_k=request.top_k, use_reranker=request.use_reranker
     )
 
     elapsed_ms = (time.time() - start) * 1000
@@ -232,23 +229,19 @@ def search(request: SearchRequest):
                 text=r.text,
                 section_hierarchy=r.section_hierarchy,
                 score=r.score,
-                rank=r.rank
+                rank=r.rank,
             )
             for r in results
         ],
         total_results=len(results),
-        elapsed_ms=round(elapsed_ms, 2)
+        elapsed_ms=round(elapsed_ms, 2),
     )
 
 
 @app.get("/")
 def root():
     """API root - redirect to docs."""
-    return {
-        "message": "RAG Search API",
-        "docs": "/docs",
-        "health": "/health"
-    }
+    return {"message": "RAG Search API", "docs": "/docs", "health": "/health"}
 
 
 @app.get("/models")
@@ -266,11 +259,11 @@ def get_available_models():
                 "provider": info["provider"],
                 "tier": info["tier"],
                 "context": info["context"],
-                "description": info["description"]
+                "description": info["description"],
             }
             for model_id, info in AVAILABLE_MODELS.items()
         ],
-        "default": DEFAULT_MODEL
+        "default": DEFAULT_MODEL,
     }
 
 
@@ -286,7 +279,7 @@ def get_pdf_url(paper_id: str):
     import boto3
     from botocore.exceptions import ClientError
 
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client("s3")
 
     # Try to find the PDF in raw_pdfs/
     # The filename pattern is: {index}_{work_id}_*.pdf
@@ -295,32 +288,26 @@ def get_pdf_url(paper_id: str):
     try:
         # List objects with the paper_id prefix
         response = s3_client.list_objects_v2(
-            Bucket=BUCKET_NAME,
-            Prefix=f"raw_pdfs/{paper_id}",
-            MaxKeys=1
+            Bucket=BUCKET_NAME, Prefix=f"raw_pdfs/{paper_id}", MaxKeys=1
         )
 
-        if 'Contents' not in response or len(response['Contents']) == 0:
+        if "Contents" not in response or len(response["Contents"]) == 0:
             raise HTTPException(status_code=404, detail=f"PDF not found for paper {paper_id}")
 
-        pdf_key = response['Contents'][0]['Key']
+        pdf_key = response["Contents"][0]["Key"]
 
         # Generate presigned URL (valid for 1 hour)
         presigned_url = s3_client.generate_presigned_url(
-            'get_object',
+            "get_object",
             Params={
-                'Bucket': BUCKET_NAME,
-                'Key': pdf_key,
-                'ResponseContentType': 'application/pdf'
+                "Bucket": BUCKET_NAME,
+                "Key": pdf_key,
+                "ResponseContentType": "application/pdf",
             },
-            ExpiresIn=3600  # 1 hour
+            ExpiresIn=3600,  # 1 hour
         )
 
-        return {
-            "paper_id": paper_id,
-            "pdf_url": presigned_url,
-            "expires_in": 3600
-        }
+        return {"paper_id": paper_id, "pdf_url": presigned_url, "expires_in": 3600}
 
     except ClientError as e:
         raise HTTPException(status_code=500, detail=f"S3 error: {str(e)}")
@@ -347,15 +334,16 @@ def chat(request: ChatRequest):
 
     # Validate model selection
     if request.model not in AVAILABLE_MODELS:
-        raise HTTPException(status_code=400, detail=f"Invalid model: {request.model}. Use /models endpoint to see available models.")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid model: {request.model}. Use /models endpoint to see available models.",
+        )
 
     start = time.time()
 
     # Step 1: Retrieve relevant sources
     search_results = retriever.search(
-        query=request.message,
-        top_k=request.top_k,
-        use_reranker=request.use_reranker
+        query=request.message, top_k=request.top_k, use_reranker=request.use_reranker
     )
 
     if not search_results:
@@ -364,17 +352,14 @@ def chat(request: ChatRequest):
             answer="I couldn't find any relevant sources to answer your question. Please try rephrasing or ask a different question.",
             sources_used=0,
             citations=[],
-            elapsed_ms=round((time.time() - start) * 1000, 2)
+            elapsed_ms=round((time.time() - start) * 1000, 2),
         )
 
     # Step 2: Format sources for the prompt
     sources_text = format_sources_for_prompt(search_results)
 
     # Step 3: Generate answer using LLM
-    user_prompt = RAG_PROMPT_TEMPLATE.format(
-        sources=sources_text,
-        question=request.message
-    )
+    user_prompt = RAG_PROMPT_TEMPLATE.format(sources=sources_text, question=request.message)
 
     # GPT-5 models require temperature=1, others can use 0.3
     temperature = 1.0 if "gpt-5" in request.model else 0.3
@@ -384,11 +369,11 @@ def chat(request: ChatRequest):
             model=request.model,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt}
+                {"role": "user", "content": user_prompt},
             ],
             api_key=OPENROUTER_API_KEY,
             temperature=temperature,
-            max_tokens=2000
+            max_tokens=2000,
         )
 
         answer = completion_response.choices[0].message.content
@@ -405,11 +390,11 @@ def chat(request: ChatRequest):
                     model=DEFAULT_MODEL,
                     messages=[
                         {"role": "system", "content": SYSTEM_PROMPT},
-                        {"role": "user", "content": user_prompt}
+                        {"role": "user", "content": user_prompt},
                     ],
                     api_key=OPENROUTER_API_KEY,
                     temperature=fallback_temperature,
-                    max_tokens=2000
+                    max_tokens=2000,
                 )
                 answer = f"[Using fallback model {DEFAULT_MODEL}]\n\n{completion_response.choices[0].message.content}"
             except Exception as fallback_error:
@@ -424,13 +409,15 @@ def chat(request: ChatRequest):
     for result in search_results:
         if result.paper_id not in seen_papers:
             seen_papers.add(result.paper_id)
-            citations.append(Citation(
-                id=result.paper_id,
-                title=result.paper_title.split('\n')[0][:100],
-                authors=result.paper_id,  # Could be enhanced with actual metadata
-                year="",
-                snippet=result.text[:150] + "..."
-            ))
+            citations.append(
+                Citation(
+                    id=result.paper_id,
+                    title=result.paper_title.split("\n")[0][:100],
+                    authors=result.paper_id,  # Could be enhanced with actual metadata
+                    year="",
+                    snippet=result.text[:150] + "...",
+                )
+            )
 
     elapsed_ms = (time.time() - start) * 1000
 
@@ -439,5 +426,5 @@ def chat(request: ChatRequest):
         answer=answer,
         sources_used=len(search_results),
         citations=citations,
-        elapsed_ms=round(elapsed_ms, 2)
+        elapsed_ms=round(elapsed_ms, 2),
     )

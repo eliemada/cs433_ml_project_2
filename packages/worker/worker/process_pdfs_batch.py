@@ -5,13 +5,11 @@ import json
 import os
 import queue
 import sys
-import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 import boto3
-from botocore.exceptions import ClientError
 from loguru import logger
 
 from rag_pipeline.pdf_parsing import (
@@ -180,7 +178,7 @@ def main():
             doc_id, local_pdf = item
             try:
                 logger.info(f"Processing: {doc_id}")
-                result = pipeline.parse_document(local_pdf)
+                pipeline.parse_document(local_pdf)
                 process_queue.put((doc_id, None))
                 processed_count += 1
                 logger.success(f"Parsed: {doc_id} ({processed_count}/{len(unprocessed)})")

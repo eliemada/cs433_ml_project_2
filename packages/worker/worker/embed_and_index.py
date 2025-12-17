@@ -17,7 +17,6 @@ from pathlib import Path
 from typing import List, Dict, Tuple
 from tqdm import tqdm
 import boto3
-from botocore.exceptions import ClientError
 import faiss
 
 # Add project root to path
@@ -45,13 +44,13 @@ def load_all_chunks(s3_client, chunk_type: str) -> Tuple[List[Dict], List[str]]:
     print(f"\nLoading {chunk_type} chunks from S3...")
 
     # List all chunk files
-    paginator = s3_client.get_paginator('list_objects_v2')
+    paginator = s3_client.get_paginator("list_objects_v2")
     pages = paginator.paginate(Bucket=BUCKET_NAME, Prefix=CHUNKS_PREFIX)
 
     chunk_files = []
     for page in pages:
-        for obj in page.get('Contents', []):
-            key = obj['Key']
+        for obj in page.get("Contents", []):
+            key = obj["Key"]
             if f"_{chunk_type}.json" in key:
                 chunk_files.append(key)
 
@@ -64,20 +63,22 @@ def load_all_chunks(s3_client, chunk_type: str) -> Tuple[List[Dict], List[str]]:
     for key in tqdm(chunk_files, desc=f"Loading {chunk_type} chunks"):
         try:
             response = s3_client.get_object(Bucket=BUCKET_NAME, Key=key)
-            data = json.loads(response['Body'].read().decode('utf-8'))
+            data = json.loads(response["Body"].read().decode("utf-8"))
 
-            for chunk in data.get('chunks', []):
+            for chunk in data.get("chunks", []):
                 # Store full chunk metadata
-                all_chunks.append({
-                    "chunk_id": chunk["chunk_id"],
-                    "paper_id": chunk["paper_id"],
-                    "paper_title": chunk["paper_title"],
-                    "text": chunk["text"],
-                    "section_hierarchy": chunk["section_hierarchy"],
-                    "chunk_index": chunk["chunk_index"],
-                    "char_start": chunk["char_start"],
-                    "char_end": chunk["char_end"]
-                })
+                all_chunks.append(
+                    {
+                        "chunk_id": chunk["chunk_id"],
+                        "paper_id": chunk["paper_id"],
+                        "paper_title": chunk["paper_title"],
+                        "text": chunk["text"],
+                        "section_hierarchy": chunk["section_hierarchy"],
+                        "chunk_index": chunk["chunk_index"],
+                        "char_start": chunk["char_start"],
+                        "char_end": chunk["char_end"],
+                    }
+                )
                 all_texts.append(chunk["text"])
 
         except Exception as e:
@@ -88,9 +89,11 @@ def load_all_chunks(s3_client, chunk_type: str) -> Tuple[List[Dict], List[str]]:
     return all_chunks, all_texts
 
 
-def estimate_cost(texts: List[str], embedder: OpenAIEmbedder) -> float:
+def estimate_cost(texts: List[str], embedder: OpenAIEmbedder) -> Tuple[float, int]:
     """Estimate embedding cost."""
-    total_tokens = sum(embedder.calculate_tokens(text) for text in tqdm(texts[:100], desc="Estimating tokens"))
+    total_tokens = sum(
+        embedder.calculate_tokens(text) for text in tqdm(texts[:100], desc="Estimating tokens")
+    )
     avg_tokens = total_tokens / min(len(texts), 100)
     total_estimated_tokens = int(avg_tokens * len(texts))
     cost = embedder.calculate_cost(total_estimated_tokens)
@@ -98,9 +101,7 @@ def estimate_cost(texts: List[str], embedder: OpenAIEmbedder) -> float:
 
 
 def generate_embeddings(
-    texts: List[str],
-    embedder: OpenAIEmbedder,
-    batch_size: int = 100
+    texts: List[str], embedder: OpenAIEmbedder, batch_size: int = 100
 ) -> np.ndarray:
     """Generate embeddings for all texts with progress bar."""
     print(f"\nGenerating embeddings for {len(texts)} texts...")
@@ -108,7 +109,7 @@ def generate_embeddings(
     all_embeddings = []
 
     for i in tqdm(range(0, len(texts), batch_size), desc="Embedding batches"):
-        batch = texts[i:i + batch_size]
+        batch = texts[i : i + batch_size]
 
         # Generate embeddings for batch
         batch_embeddings = embedder.generate_embeddings_batch(batch)
@@ -124,7 +125,7 @@ def generate_embeddings(
 
 def build_faiss_index(embeddings: np.ndarray) -> faiss.Index:
     """Build FAISS index from embeddings."""
-    print(f"\nBuilding FAISS index...")
+    print("\nBuilding FAISS index...")
 
     # Use IndexFlatIP for cosine similarity (with normalized vectors)
     dimension = embeddings.shape[1]
@@ -137,17 +138,12 @@ def build_faiss_index(embeddings: np.ndarray) -> faiss.Index:
     return index
 
 
-def save_to_s3(
-    s3_client,
-    index: faiss.Index,
-    metadata: List[Dict],
-    chunk_type: str
-):
+def save_to_s3(s3_client, index: faiss.Index, metadata: List[Dict], chunk_type: str):
     """Save FAISS index and metadata to S3."""
     import tempfile
 
     # Save index to temp file then upload
-    with tempfile.NamedTemporaryFile(suffix='.faiss', delete=False) as f:
+    with tempfile.NamedTemporaryFile(suffix=".faiss", delete=False) as f:
         index_path = f.name
 
     faiss.write_index(index, index_path)
@@ -166,8 +162,8 @@ def save_to_s3(
     s3_client.put_object(
         Bucket=BUCKET_NAME,
         Key=metadata_key,
-        Body=json.dumps(metadata_dict, indent=2).encode('utf-8'),
-        ContentType='application/json'
+        Body=json.dumps(metadata_dict, indent=2).encode("utf-8"),
+        ContentType="application/json",
     )
 
     print(f"Saved index ({index.ntotal} vectors) and metadata to S3")
@@ -175,10 +171,13 @@ def save_to_s3(
 
 def main():
     parser = argparse.ArgumentParser(description="Embed chunks and build FAISS index")
-    parser.add_argument("--chunk-type", choices=["coarse", "fine", "both"], default="both",
-                        help="Which chunk type to process")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Estimate costs without processing")
+    parser.add_argument(
+        "--chunk-type",
+        choices=["coarse", "fine", "both"],
+        default="both",
+        help="Which chunk type to process",
+    )
+    parser.add_argument("--dry-run", action="store_true", help="Estimate costs without processing")
     args = parser.parse_args()
 
     # Check for API key
@@ -194,12 +193,8 @@ def main():
     print(f"Dimensions: {EMBEDDING_DIM}")
 
     # Initialize clients
-    s3_client = boto3.client('s3')
-    embedder = OpenAIEmbedder(
-        api_key=api_key,
-        model=EMBEDDING_MODEL,
-        batch_size=BATCH_SIZE
-    )
+    s3_client = boto3.client("s3")
+    embedder = OpenAIEmbedder(api_key=api_key, model=EMBEDDING_MODEL, batch_size=BATCH_SIZE)
 
     chunk_types = ["coarse", "fine"] if args.chunk_type == "both" else [args.chunk_type]
 
@@ -225,7 +220,7 @@ def main():
 
         # Confirm before proceeding
         response = input(f"\nProceed with embedding {len(texts)} {chunk_type} chunks? [y/N]: ")
-        if response.lower() != 'y':
+        if response.lower() != "y":
             print("Skipping...")
             continue
 

@@ -42,10 +42,10 @@ def extract_pdf_id(pdf_path: str) -> str:
     filename = Path(pdf_path).name
 
     # Remove .pdf extension
-    name_without_ext = filename.replace('.pdf', '')
+    name_without_ext = filename.replace(".pdf", "")
 
     # Split by underscore and take first two parts
-    parts = name_without_ext.split('_')
+    parts = name_without_ext.split("_")
     if len(parts) >= 2:
         return f"{parts[0]}_{parts[1]}"
 

@@ -41,12 +41,7 @@ def check_chunks_exist(s3_client, bucket: str, paper_id: str) -> bool:
 
 
 def save_chunks(
-    s3_client,
-    bucket: str,
-    paper_id: str,
-    paper_title: str,
-    chunks: List[Chunk],
-    chunk_type: str
+    s3_client, bucket: str, paper_id: str, paper_title: str, chunks: List[Chunk], chunk_type: str
 ) -> None:
     """Save chunks to S3 as JSON."""
     key = f"{OUTPUT_PREFIX}{paper_id}_{chunk_type}.json"
@@ -56,22 +51,19 @@ def save_chunks(
         "paper_title": paper_title,
         "chunk_type": chunk_type,
         "total_chunks": len(chunks),
-        "chunks": [chunk.to_dict() for chunk in chunks]
+        "chunks": [chunk.to_dict() for chunk in chunks],
     }
 
     s3_client.put_object(
         Bucket=bucket,
         Key=key,
-        Body=json.dumps(data, indent=2).encode('utf-8'),
-        ContentType='application/json'
+        Body=json.dumps(data, indent=2).encode("utf-8"),
+        ContentType="application/json",
     )
 
 
 def process_paper(
-    loader: S3MarkdownLoader,
-    chunker: MarkdownChunker,
-    s3_client,
-    paper_id: str
+    loader: S3MarkdownLoader, chunker: MarkdownChunker, s3_client, paper_id: str
 ) -> Optional[Dict]:
     """Process a single paper and return stats."""
     try:
@@ -90,11 +82,11 @@ def process_paper(
             markdown_text=markdown_text,
             paper_id=paper_id,
             paper_title=paper_title,
-            create_both_types=True
+            create_both_types=True,
         )
 
-        coarse_chunks = chunks['coarse']
-        fine_chunks = chunks['fine']
+        coarse_chunks = chunks["coarse"]
+        fine_chunks = chunks["fine"]
 
         # Save to S3
         save_chunks(s3_client, BUCKET_NAME, paper_id, paper_title, coarse_chunks, "coarse")
@@ -104,7 +96,7 @@ def process_paper(
             "paper_id": paper_id,
             "coarse_count": len(coarse_chunks),
             "fine_count": len(fine_chunks),
-            "doc_length": len(markdown_text)
+            "doc_length": len(markdown_text),
         }
 
     except Exception as e:
@@ -115,7 +107,9 @@ def process_paper(
 def main():
     parser = argparse.ArgumentParser(description="Chunk all documents from S3")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of papers to process")
-    parser.add_argument("--force", action="store_true", help="Re-chunk papers that already have chunks")
+    parser.add_argument(
+        "--force", action="store_true", help="Re-chunk papers that already have chunks"
+    )
     args = parser.parse_args()
 
     print("=" * 60)
@@ -123,7 +117,7 @@ def main():
     print("=" * 60)
 
     # Initialize clients
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client("s3")
     loader = S3MarkdownLoader(bucket_name=BUCKET_NAME, prefix=INPUT_PREFIX)
     chunker = MarkdownChunker()
 
@@ -134,7 +128,7 @@ def main():
 
     # Apply limit if specified
     if args.limit:
-        paper_ids = paper_ids[:args.limit]
+        paper_ids = paper_ids[: args.limit]
         print(f"Processing limited to {args.limit} papers")
 
     # Filter out already processed papers
@@ -158,13 +152,7 @@ def main():
     print("-" * 60)
 
     # Process papers
-    stats = {
-        "processed": 0,
-        "failed": 0,
-        "total_coarse": 0,
-        "total_fine": 0,
-        "failed_papers": []
-    }
+    stats = {"processed": 0, "failed": 0, "total_coarse": 0, "total_fine": 0, "failed_papers": []}
 
     for paper_id in tqdm(paper_ids, desc="Chunking papers"):
         result = process_paper(loader, chunker, s3_client, paper_id)

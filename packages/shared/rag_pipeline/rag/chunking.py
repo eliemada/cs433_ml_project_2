@@ -2,7 +2,7 @@
 Text chunking strategies for document processing
 """
 
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 import re
 import logging
 
@@ -19,7 +19,7 @@ class DocumentChunker:
         chunk_size: int = 1024,
         chunk_overlap: int = 100,
         min_chunk_size: int = 100,
-        separators: Optional[List[str]] = None
+        separators: Optional[List[str]] = None,
     ):
         """
         Initialize document chunker
@@ -35,11 +35,7 @@ class DocumentChunker:
         self.min_chunk_size = min_chunk_size
         self.separators = separators or ["\n\n", "\n", ". ", " "]
 
-    def semantic_chunking(
-        self,
-        text: str,
-        metadata: Optional[Dict] = None
-    ) -> List[Dict[str, any]]:
+    def semantic_chunking(self, text: str, metadata: Optional[Dict] = None) -> List[Dict[str, Any]]:
         """
         Split text into semantic chunks (preserve paragraph/section boundaries)
 
@@ -54,7 +50,7 @@ class DocumentChunker:
             chunks = []
 
             # Split by paragraphs first
-            paragraphs = text.split('\n\n')
+            paragraphs = text.split("\n\n")
 
             current_chunk = ""
             current_size = 0
@@ -71,11 +67,9 @@ class DocumentChunker:
                 if para_size > self.chunk_size * 1.5:
                     # Save current chunk if exists
                     if current_chunk:
-                        chunks.append(self._create_chunk(
-                            current_chunk.strip(),
-                            chunk_index,
-                            metadata
-                        ))
+                        chunks.append(
+                            self._create_chunk(current_chunk.strip(), chunk_index, metadata)
+                        )
                         chunk_index += 1
                         current_chunk = ""
                         current_size = 0
@@ -83,21 +77,15 @@ class DocumentChunker:
                     # Split long paragraph
                     sub_chunks = self._split_long_text(paragraph)
                     for sub_chunk in sub_chunks:
-                        chunks.append(self._create_chunk(
-                            sub_chunk,
-                            chunk_index,
-                            metadata
-                        ))
+                        chunks.append(self._create_chunk(sub_chunk, chunk_index, metadata))
                         chunk_index += 1
 
                 # If adding paragraph exceeds chunk size, save current chunk
                 elif current_size + para_size > self.chunk_size:
                     if current_chunk:
-                        chunks.append(self._create_chunk(
-                            current_chunk.strip(),
-                            chunk_index,
-                            metadata
-                        ))
+                        chunks.append(
+                            self._create_chunk(current_chunk.strip(), chunk_index, metadata)
+                        )
                         chunk_index += 1
 
                     # Start new chunk with overlap
@@ -118,11 +106,7 @@ class DocumentChunker:
 
             # Add final chunk
             if current_chunk and len(current_chunk) >= self.min_chunk_size:
-                chunks.append(self._create_chunk(
-                    current_chunk.strip(),
-                    chunk_index,
-                    metadata
-                ))
+                chunks.append(self._create_chunk(current_chunk.strip(), chunk_index, metadata))
 
             logger.info(f"Created {len(chunks)} chunks from text")
             return chunks
@@ -132,10 +116,8 @@ class DocumentChunker:
             raise
 
     def fixed_size_chunking(
-        self,
-        text: str,
-        metadata: Optional[Dict] = None
-    ) -> List[Dict[str, any]]:
+        self, text: str, metadata: Optional[Dict] = None
+    ) -> List[Dict[str, Any]]:
         """
         Split text into fixed-size chunks
 
@@ -152,14 +134,10 @@ class DocumentChunker:
             chunk_index = 0
 
             for i in range(0, text_length, self.chunk_size - self.chunk_overlap):
-                chunk_text = text[i:i + self.chunk_size]
+                chunk_text = text[i : i + self.chunk_size]
 
                 if len(chunk_text) >= self.min_chunk_size:
-                    chunks.append(self._create_chunk(
-                        chunk_text,
-                        chunk_index,
-                        metadata
-                    ))
+                    chunks.append(self._create_chunk(chunk_text, chunk_index, metadata))
                     chunk_index += 1
 
             logger.info(f"Created {len(chunks)} fixed-size chunks")
@@ -170,10 +148,8 @@ class DocumentChunker:
             raise
 
     def recursive_chunking(
-        self,
-        text: str,
-        metadata: Optional[Dict] = None
-    ) -> List[Dict[str, any]]:
+        self, text: str, metadata: Optional[Dict] = None
+    ) -> List[Dict[str, Any]]:
         """
         Recursively split text using different separators
 
@@ -194,11 +170,9 @@ class DocumentChunker:
             for split in splits:
                 if len(current_chunk) + len(split) > self.chunk_size:
                     if current_chunk:
-                        chunks.append(self._create_chunk(
-                            current_chunk.strip(),
-                            chunk_index,
-                            metadata
-                        ))
+                        chunks.append(
+                            self._create_chunk(current_chunk.strip(), chunk_index, metadata)
+                        )
                         chunk_index += 1
 
                     current_chunk = split
@@ -207,11 +181,7 @@ class DocumentChunker:
 
             # Add final chunk
             if current_chunk and len(current_chunk) >= self.min_chunk_size:
-                chunks.append(self._create_chunk(
-                    current_chunk.strip(),
-                    chunk_index,
-                    metadata
-                ))
+                chunks.append(self._create_chunk(current_chunk.strip(), chunk_index, metadata))
 
             logger.info(f"Created {len(chunks)} recursive chunks")
             return chunks
@@ -247,7 +217,7 @@ class DocumentChunker:
         chunks = []
 
         # Try to split by sentences
-        sentences = re.split(r'(?<=[.!?])\s+', text)
+        sentences = re.split(r"(?<=[.!?])\s+", text)
 
         current_chunk = ""
         for sentence in sentences:
@@ -270,25 +240,22 @@ class DocumentChunker:
 
         # Try to find sentence boundary
         overlap_text = text[-overlap_size:]
-        sentence_start = overlap_text.find('. ')
+        sentence_start = overlap_text.find(". ")
 
         if sentence_start != -1:
-            return overlap_text[sentence_start + 2:]
+            return overlap_text[sentence_start + 2 :]
 
         return overlap_text
 
     def _create_chunk(
-        self,
-        text: str,
-        index: int,
-        metadata: Optional[Dict] = None
-    ) -> Dict[str, any]:
+        self, text: str, index: int, metadata: Optional[Dict] = None
+    ) -> Dict[str, Any]:
         """Create chunk dictionary with metadata"""
         chunk = {
             "text": text,
             "chunk_index": index,
             "length": len(text),
-            "word_count": len(text.split())
+            "word_count": len(text.split()),
         }
 
         if metadata:
@@ -297,11 +264,8 @@ class DocumentChunker:
         return chunk
 
     def chunk_with_citations(
-        self,
-        text: str,
-        citations: List[str],
-        metadata: Optional[Dict] = None
-    ) -> List[Dict[str, any]]:
+        self, text: str, citations: List[str], metadata: Optional[Dict] = None
+    ) -> List[Dict[str, Any]]:
         """
         Chunk text and associate citations with chunks
 

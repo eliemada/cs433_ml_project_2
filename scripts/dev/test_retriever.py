@@ -56,14 +56,12 @@ def main():
                 bucket_name=BUCKET_NAME,
                 openai_api_key=openai_key,
                 zeroentropy_api_key=zeroentropy_key,
-                chunk_type="coarse"
+                chunk_type="coarse",
             )
         else:
             print("Using FAISS-only retrieval (no reranking)")
             faiss_retriever = FAISSRetriever.from_s3(
-                bucket_name=BUCKET_NAME,
-                chunk_type="coarse",
-                openai_api_key=openai_key
+                bucket_name=BUCKET_NAME, chunk_type="coarse", openai_api_key=openai_key
             )
             retriever = HybridRetriever(faiss_retriever, reranker=None)
     except Exception as e:

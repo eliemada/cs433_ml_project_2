@@ -21,25 +21,22 @@ def list_pdfs_from_s3(s3_client, bucket: str, prefix: str) -> List[str]:
 
     while True:
         # Build list_objects_v2 parameters
-        params = {
-            'Bucket': bucket,
-            'Prefix': prefix
-        }
+        params = {"Bucket": bucket, "Prefix": prefix}
 
         if continuation_token:
-            params['ContinuationToken'] = continuation_token
+            params["ContinuationToken"] = continuation_token
 
         # List objects
         response = s3_client.list_objects_v2(**params)
 
         # Extract keys
-        if 'Contents' in response:
-            for obj in response['Contents']:
-                pdf_keys.append(obj['Key'])
+        if "Contents" in response:
+            for obj in response["Contents"]:
+                pdf_keys.append(obj["Key"])
 
         # Check for pagination
-        if response.get('IsTruncated', False):
-            continuation_token = response.get('NextContinuationToken')
+        if response.get("IsTruncated", False):
+            continuation_token = response.get("NextContinuationToken")
         else:
             break
 
@@ -74,11 +71,7 @@ def upload_to_s3(s3_client, bucket: str, key: str, content: str) -> None:
         key: S3 object key
         content: String content to upload
     """
-    s3_client.put_object(
-        Bucket=bucket,
-        Key=key,
-        Body=content.encode('utf-8')
-    )
+    s3_client.put_object(Bucket=bucket, Key=key, Body=content.encode("utf-8"))
 
 
 def s3_object_exists(s3_client, bucket: str, key: str) -> bool:
@@ -97,6 +90,6 @@ def s3_object_exists(s3_client, bucket: str, key: str) -> bool:
         s3_client.head_object(Bucket=bucket, Key=key)
         return True
     except ClientError as e:
-        if e.response['Error']['Code'] == '404':
+        if e.response["Error"]["Code"] == "404":
             return False
         raise

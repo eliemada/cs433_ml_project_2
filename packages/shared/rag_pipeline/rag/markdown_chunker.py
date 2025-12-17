@@ -17,6 +17,7 @@ import tiktoken
 @dataclass
 class Chunk:
     """Represents a text chunk with metadata"""
+
     text: str
     chunk_id: str
     chunk_type: str  # "coarse" or "fine"
@@ -45,7 +46,7 @@ class MarkdownChunker:
         fine_max_size: int = 450,
         coarse_overlap_pct: float = 0.10,
         fine_overlap_pct: float = 0.20,
-        model_name: str = "text-embedding-3-small"
+        model_name: str = "text-embedding-3-small",
     ):
         """
         Initialize the chunker with size parameters.
@@ -80,12 +81,12 @@ class MarkdownChunker:
         Returns:
             List of (heading_text, level, full_line) tuples
         """
-        lines = markdown_text.split('\n')
+        lines = markdown_text.split("\n")
         headings = []
 
         for i, line in enumerate(lines):
             # Match markdown headings (##, ###, etc.)
-            match = re.match(r'^(#{1,6})\s+(.+)$', line)
+            match = re.match(r"^(#{1,6})\s+(.+)$", line)
             if match:
                 level = len(match.group(1))
                 heading_text = match.group(2).strip()
@@ -100,18 +101,20 @@ class MarkdownChunker:
         Returns:
             List of section dicts with {heading_hierarchy, text, char_start, char_end}
         """
-        lines = markdown_text.split('\n')
+        lines = markdown_text.split("\n")
         headings = self.extract_hierarchy(markdown_text)
         sections = []
 
         if not headings:
             # No headings, treat whole document as one section
-            return [{
-                'heading_hierarchy': ['Document'],
-                'text': markdown_text,
-                'char_start': 0,
-                'char_end': len(markdown_text)
-            }]
+            return [
+                {
+                    "heading_hierarchy": ["Document"],
+                    "text": markdown_text,
+                    "char_start": 0,
+                    "char_end": len(markdown_text),
+                }
+            ]
 
         # Build section hierarchy
         hierarchy_stack = []
@@ -125,18 +128,20 @@ class MarkdownChunker:
             start_line = line_num
             end_line = headings[i + 1][2] if i + 1 < len(headings) else len(lines)
 
-            section_text = '\n'.join(lines[start_line:end_line])
+            section_text = "\n".join(lines[start_line:end_line])
 
             # Calculate character positions
             char_start = sum(len(line) + 1 for line in lines[:start_line])
             char_end = char_start + len(section_text)
 
-            sections.append({
-                'heading_hierarchy': [h[0] for h in hierarchy_stack],
-                'text': section_text,
-                'char_start': char_start,
-                'char_end': char_end
-            })
+            sections.append(
+                {
+                    "heading_hierarchy": [h[0] for h in hierarchy_stack],
+                    "text": section_text,
+                    "char_start": char_start,
+                    "char_end": char_end,
+                }
+            )
 
         return sections
 
@@ -155,7 +160,7 @@ class MarkdownChunker:
             return [text]
 
         # Split by double newlines (paragraph boundaries)
-        paragraphs = re.split(r'\n\n+', text)
+        paragraphs = re.split(r"\n\n+", text)
 
         chunks = []
         current_chunk = ""
@@ -215,10 +220,7 @@ class MarkdownChunker:
         return overlapped
 
     def create_coarse_chunks(
-        self,
-        markdown_text: str,
-        paper_id: str,
-        paper_title: str
+        self, markdown_text: str, paper_id: str, paper_title: str
     ) -> List[Chunk]:
         """
         Create coarse chunks (~2000 chars) for broad context retrieval.
@@ -232,8 +234,8 @@ class MarkdownChunker:
             List of Chunk objects
         """
         # Clean markdown (remove page breaks, excessive whitespace)
-        cleaned_text = re.sub(r'\n---+\n', '\n\n', markdown_text)
-        cleaned_text = re.sub(r'\n{3,}', '\n\n', cleaned_text)
+        cleaned_text = re.sub(r"\n---+\n", "\n\n", markdown_text)
+        cleaned_text = re.sub(r"\n{3,}", "\n\n", cleaned_text)
 
         # Split into sections by headings
         sections = self.split_into_sections(cleaned_text)
@@ -241,20 +243,19 @@ class MarkdownChunker:
         # Process each section
         raw_chunks = []
         for section in sections:
-            section_chunks = self.split_at_paragraph_boundary(
-                section['text'],
-                self.coarse_max_size
-            )
+            section_chunks = self.split_at_paragraph_boundary(section["text"], self.coarse_max_size)
 
             for chunk_text in section_chunks:
-                raw_chunks.append({
-                    'text': chunk_text,
-                    'hierarchy': section['heading_hierarchy'],
-                    'char_start': section['char_start']
-                })
+                raw_chunks.append(
+                    {
+                        "text": chunk_text,
+                        "hierarchy": section["heading_hierarchy"],
+                        "char_start": section["char_start"],
+                    }
+                )
 
         # Add overlap
-        chunk_texts = [c['text'] for c in raw_chunks]
+        chunk_texts = [c["text"] for c in raw_chunks]
         overlapped_texts = self.add_overlap(chunk_texts, self.coarse_overlap_pct)
 
         # Create Chunk objects
@@ -266,21 +267,18 @@ class MarkdownChunker:
                 chunk_type="coarse",
                 paper_id=paper_id,
                 paper_title=paper_title,
-                section_hierarchy=raw_chunk['hierarchy'],
-                char_start=raw_chunk['char_start'],
-                char_end=raw_chunk['char_start'] + len(chunk_text),
+                section_hierarchy=raw_chunk["hierarchy"],
+                char_start=raw_chunk["char_start"],
+                char_end=raw_chunk["char_start"] + len(chunk_text),
                 chunk_index=i,
                 total_chunks=len(overlapped_texts),
-                overlap_with_previous=(i > 0)
+                overlap_with_previous=(i > 0),
             )
             chunks.append(chunk)
 
         return chunks
 
-    def create_fine_chunks(
-        self,
-        coarse_chunks: List[Chunk]
-    ) -> List[Chunk]:
+    def create_fine_chunks(self, coarse_chunks: List[Chunk]) -> List[Chunk]:
         """
         Create fine chunks (~200-400 chars) from coarse chunks.
 
@@ -295,7 +293,7 @@ class MarkdownChunker:
 
         for coarse_chunk in coarse_chunks:
             # Split coarse chunk into paragraphs
-            paragraphs = re.split(r'\n\n+', coarse_chunk.text)
+            paragraphs = re.split(r"\n\n+", coarse_chunk.text)
 
             # Group paragraphs to reach target size
             chunk_texts = []
@@ -336,7 +334,7 @@ class MarkdownChunker:
                     char_end=coarse_chunk.char_start + len(chunk_text),
                     chunk_index=global_index,
                     total_chunks=0,  # Will update later
-                    overlap_with_previous=(i > 0)
+                    overlap_with_previous=(i > 0),
                 )
                 fine_chunks.append(fine_chunk)
                 global_index += 1
@@ -349,11 +347,7 @@ class MarkdownChunker:
         return fine_chunks
 
     def chunk_document(
-        self,
-        markdown_text: str,
-        paper_id: str,
-        paper_title: str,
-        create_both_types: bool = True
+        self, markdown_text: str, paper_id: str, paper_title: str, create_both_types: bool = True
     ) -> Dict[str, List[Chunk]]:
         """
         Main entry point: chunk a markdown document.
@@ -374,10 +368,7 @@ class MarkdownChunker:
         else:
             fine_chunks = []
 
-        return {
-            'coarse': coarse_chunks,
-            'fine': fine_chunks
-        }
+        return {"coarse": coarse_chunks, "fine": fine_chunks}
 
     def get_chunk_stats(self, chunks: List[Chunk]) -> Dict:
         """
@@ -393,13 +384,13 @@ class MarkdownChunker:
         token_counts = [len(self.tokenizer.encode(chunk.text)) for chunk in chunks]
 
         return {
-            'count': len(chunks),
-            'mean_chars': sum(lengths) / len(lengths),
-            'median_chars': sorted(lengths)[len(lengths) // 2],
-            'min_chars': min(lengths),
-            'max_chars': max(lengths),
-            'mean_tokens': sum(token_counts) / len(token_counts),
-            'median_tokens': sorted(token_counts)[len(token_counts) // 2],
-            'min_tokens': min(token_counts),
-            'max_tokens': max(token_counts),
+            "count": len(chunks),
+            "mean_chars": sum(lengths) / len(lengths),
+            "median_chars": sorted(lengths)[len(lengths) // 2],
+            "min_chars": min(lengths),
+            "max_chars": max(lengths),
+            "mean_tokens": sum(token_counts) / len(token_counts),
+            "median_tokens": sorted(token_counts)[len(token_counts) // 2],
+            "min_tokens": min(token_counts),
+            "max_tokens": max(token_counts),
         }

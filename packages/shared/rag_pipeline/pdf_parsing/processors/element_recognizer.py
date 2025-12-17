@@ -16,7 +16,9 @@ from rag_pipeline.pdf_parsing.utils.coordinate_utils import process_coordinates
 from rag_pipeline.pdf_parsing.utils.image_utils import crop_image_region, prepare_image, save_image
 
 
-class ElementRecognizer(BaseProcessor[Tuple[Image.Image, List[LayoutElement]], List[ParsedElement]]):
+class ElementRecognizer(
+    BaseProcessor[Tuple[Image.Image, List[LayoutElement]], List[ParsedElement]]
+):
     """
     Processor that recognizes content of layout elements.
 
@@ -108,8 +110,8 @@ class ElementRecognizer(BaseProcessor[Tuple[Image.Image, List[LayoutElement]], L
                 coords = [element.bbox.x1, element.bbox.y1, element.bbox.x2, element.bbox.y2]
 
                 # Process coordinates
-                x1, y1, x2, y2, orig_x1, orig_y1, orig_x2, orig_y2, previous_box = process_coordinates(
-                    coords, padded_image, dims, previous_box
+                x1, y1, x2, y2, orig_x1, orig_y1, orig_x2, orig_y2, previous_box = (
+                    process_coordinates(coords, padded_image, dims, previous_box)
                 )
 
                 # Crop element from padded image
@@ -138,7 +140,7 @@ class ElementRecognizer(BaseProcessor[Tuple[Image.Image, List[LayoutElement]], L
         """Process a batch of elements of the same type."""
         results = []
         # Get batch size from model config, default to 16
-        batch_size = getattr(self.model.config, 'max_batch_size', 16)
+        batch_size = getattr(self.model.config, "max_batch_size", 16)
 
         # Process in batches
         for i in range(0, len(elements), batch_size):

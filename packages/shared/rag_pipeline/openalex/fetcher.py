@@ -26,9 +26,9 @@ class MetadataFetcher:
         """
         self.config = config
         self.session = requests.Session()
-        self.session.headers.update({
-            "User-Agent": f"OpenAlexFetcher/1.0 ({config.email or 'no-email-provided'})"
-        })
+        self.session.headers.update(
+            {"User-Agent": f"OpenAlexFetcher/1.0 ({config.email or 'no-email-provided'})"}
+        )
 
     def fetch_page(self, cursor: str = "*") -> tuple[List[dict], Optional[str]]:
         """
@@ -48,9 +48,7 @@ class MetadataFetcher:
         logger.debug(f"Fetching page with cursor: {cursor[:20]}...")
 
         response = self.session.get(
-            self.config.api_base_url,
-            params=params,
-            timeout=self.config.request_timeout
+            self.config.api_base_url, params=params, timeout=self.config.request_timeout
         )
         response.raise_for_status()
 
@@ -94,9 +92,7 @@ class MetadataFetcher:
                         work = OpenAlexWork(**result)
                         page_works.append(work)
                     except ValidationError as e:
-                        logger.warning(
-                            f"Failed to parse work on page {page}, item {i}: {e}"
-                        )
+                        logger.warning(f"Failed to parse work on page {page}, item {i}: {e}")
                         logger.debug(f"Problematic data: {result.get('id', 'unknown')}")
 
                 all_works.extend(page_works)
@@ -133,17 +129,13 @@ class MetadataFetcher:
                 break
 
         total_time = (datetime.now() - start_time).total_seconds()
-        logger.success(
-            f"✅ Fetched {len(all_works)} works in {format_duration(total_time)}"
-        )
-        logger.info(f"   Average: {len(all_works)/total_time:.1f} works/sec")
+        logger.success(f"✅ Fetched {len(all_works)} works in {format_duration(total_time)}")
+        logger.info(f"   Average: {len(all_works) / total_time:.1f} works/sec")
 
         return all_works
 
     def works_to_dataframe(
-        self,
-        works: List[OpenAlexWork],
-        include_full_json: bool = True
+        self, works: List[OpenAlexWork], include_full_json: bool = True
     ) -> pd.DataFrame:
         """
         Convert list of works to pandas DataFrame.
@@ -184,18 +176,27 @@ class MetadataFetcher:
 
         # Convert numeric columns
         numeric_cols = [
-            "publication_year", "cited_by_count", "num_locations",
-            "num_pdf_urls", "num_oa_locations", "num_authors",
-            "concept_1_score", "concept_2_score", "concept_3_score"
+            "publication_year",
+            "cited_by_count",
+            "num_locations",
+            "num_pdf_urls",
+            "num_oa_locations",
+            "num_authors",
+            "concept_1_score",
+            "concept_2_score",
+            "concept_3_score",
         ]
         for col in numeric_cols:
             if col in df.columns:
-                df[col] = pd.to_numeric(df[col], errors='coerce')
+                df[col] = pd.to_numeric(df[col], errors="coerce")
 
         # Convert boolean columns
         bool_cols = [
-            "is_retracted", "is_paratext", "is_oa",
-            "any_repository_has_fulltext", "has_any_pdf"
+            "is_retracted",
+            "is_paratext",
+            "is_oa",
+            "any_repository_has_fulltext",
+            "has_any_pdf",
         ]
         for col in bool_cols:
             if col in df.columns:
@@ -203,12 +204,17 @@ class MetadataFetcher:
 
         # Convert categorical columns (saves memory)
         categorical_cols = [
-            "oa_status", "type", "language", "best_oa_source_type",
-            "primary_source_type", "topic_domain", "topic_field"
+            "oa_status",
+            "type",
+            "language",
+            "best_oa_source_type",
+            "primary_source_type",
+            "topic_domain",
+            "topic_field",
         ]
         for col in categorical_cols:
             if col in df.columns and df[col].notna().any():
-                df[col] = df[col].astype('category')
+                df[col] = df[col].astype("category")
 
         logger.success("✅ DataFrame optimization complete")
 
@@ -228,9 +234,7 @@ class MetadataFetcher:
 
         # Save to parquet
         df.to_parquet(
-            self.config.parquet_path,
-            index=False,
-            compression=self.config.parquet_compression
+            self.config.parquet_path, index=False, compression=self.config.parquet_compression
         )
 
         # Log file info
@@ -263,7 +267,9 @@ class MetadataFetcher:
         # PDF availability
         stats["pdf_availability"] = {
             "works_with_pdf": int(df["has_any_pdf"].sum()) if "has_any_pdf" in df.columns else 0,
-            "works_without_pdf": int((~df["has_any_pdf"]).sum()) if "has_any_pdf" in df.columns else 0,
+            "works_without_pdf": int((~df["has_any_pdf"]).sum())
+            if "has_any_pdf" in df.columns
+            else 0,
             "works_with_best_oa_pdf": int(df["best_oa_pdf_url"].notna().sum()),
             "works_with_primary_pdf": int(df["primary_pdf_url"].notna().sum()),
         }
@@ -278,9 +284,15 @@ class MetadataFetcher:
         # Publication years
         if "publication_year" in df.columns:
             stats["publication_years"] = {
-                "min": int(df["publication_year"].min()) if df["publication_year"].notna().any() else None,
-                "max": int(df["publication_year"].max()) if df["publication_year"].notna().any() else None,
-                "mean": float(df["publication_year"].mean()) if df["publication_year"].notna().any() else None,
+                "min": int(df["publication_year"].min())
+                if df["publication_year"].notna().any()
+                else None,
+                "max": int(df["publication_year"].max())
+                if df["publication_year"].notna().any()
+                else None,
+                "mean": float(df["publication_year"].mean())
+                if df["publication_year"].notna().any()
+                else None,
             }
 
         # Citations
@@ -336,16 +348,26 @@ class MetadataFetcher:
             if "pdf_availability" in stats:
                 pdf = stats["pdf_availability"]
                 f.write("PDF Availability:\n")
-                f.write(f"  Works with PDF URLs:      {pdf['works_with_pdf']:6,} ({pdf['works_with_pdf']/stats['total_works']*100:5.1f}%)\n")
-                f.write(f"  Works without PDF URLs:   {pdf['works_without_pdf']:6,} ({pdf['works_without_pdf']/stats['total_works']*100:5.1f}%)\n")
-                f.write(f"  Works with best_oa PDF:   {pdf['works_with_best_oa_pdf']:6,} ({pdf['works_with_best_oa_pdf']/stats['total_works']*100:5.1f}%)\n")
-                f.write(f"  Works with primary PDF:   {pdf['works_with_primary_pdf']:6,} ({pdf['works_with_primary_pdf']/stats['total_works']*100:5.1f}%)\n\n")
+                f.write(
+                    f"  Works with PDF URLs:      {pdf['works_with_pdf']:6,} ({pdf['works_with_pdf'] / stats['total_works'] * 100:5.1f}%)\n"
+                )
+                f.write(
+                    f"  Works without PDF URLs:   {pdf['works_without_pdf']:6,} ({pdf['works_without_pdf'] / stats['total_works'] * 100:5.1f}%)\n"
+                )
+                f.write(
+                    f"  Works with best_oa PDF:   {pdf['works_with_best_oa_pdf']:6,} ({pdf['works_with_best_oa_pdf'] / stats['total_works'] * 100:5.1f}%)\n"
+                )
+                f.write(
+                    f"  Works with primary PDF:   {pdf['works_with_primary_pdf']:6,} ({pdf['works_with_primary_pdf'] / stats['total_works'] * 100:5.1f}%)\n\n"
+                )
 
             # OA Status
             if "oa_status_counts" in stats:
                 f.write("Open Access Status:\n")
                 for status, count in stats["oa_status_counts"].items():
-                    f.write(f"  {status:15s}: {count:6,} ({count/stats['total_works']*100:5.1f}%)\n")
+                    f.write(
+                        f"  {status:15s}: {count:6,} ({count / stats['total_works'] * 100:5.1f}%)\n"
+                    )
                 f.write("\n")
 
             # Citations
@@ -390,8 +412,7 @@ class MetadataFetcher:
 
         # Convert to DataFrame
         df = self.works_to_dataframe(
-            works,
-            include_full_json=self.config.include_full_json_in_parquet
+            works, include_full_json=self.config.include_full_json_in_parquet
         )
 
         # Save to parquet

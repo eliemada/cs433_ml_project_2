@@ -27,7 +27,7 @@ def test_local_chunking():
         return False
 
     # Load markdown
-    with open(local_md_path, 'r', encoding='utf-8') as f:
+    with open(local_md_path, "r", encoding="utf-8") as f:
         markdown_text = f.read()
 
     print(f"✓ Loaded markdown: {len(markdown_text)} characters")
@@ -39,7 +39,7 @@ def test_local_chunking():
         fine_target_size=300,
         fine_max_size=450,
         coarse_overlap_pct=0.10,
-        fine_overlap_pct=0.20
+        fine_overlap_pct=0.20,
     )
     print("✓ Initialized chunker")
 
@@ -49,8 +49,8 @@ def test_local_chunking():
 
     results = chunker.chunk_document(markdown_text, paper_id, paper_title, create_both_types=True)
 
-    coarse_chunks = results['coarse']
-    fine_chunks = results['fine']
+    coarse_chunks = results["coarse"]
+    fine_chunks = results["fine"]
 
     print(f"✓ Created {len(coarse_chunks)} coarse chunks")
     print(f"✓ Created {len(fine_chunks)} fine chunks")
@@ -60,11 +60,15 @@ def test_local_chunking():
     fine_stats = chunker.get_chunk_stats(fine_chunks)
 
     print("\nCoarse Chunk Statistics:")
-    print(f"  Mean size: {coarse_stats['mean_chars']:.0f} chars ({coarse_stats['mean_tokens']:.0f} tokens)")
+    print(
+        f"  Mean size: {coarse_stats['mean_chars']:.0f} chars ({coarse_stats['mean_tokens']:.0f} tokens)"
+    )
     print(f"  Range: {coarse_stats['min_chars']} - {coarse_stats['max_chars']} chars")
 
     print("\nFine Chunk Statistics:")
-    print(f"  Mean size: {fine_stats['mean_chars']:.0f} chars ({fine_stats['mean_tokens']:.0f} tokens)")
+    print(
+        f"  Mean size: {fine_stats['mean_chars']:.0f} chars ({fine_stats['mean_tokens']:.0f} tokens)"
+    )
     print(f"  Range: {fine_stats['min_chars']} - {fine_stats['max_chars']} chars")
 
     # Show sample chunks
@@ -130,6 +134,7 @@ def test_s3_loading():
     except Exception as e:
         print(f"❌ Test 2 FAILED: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -164,21 +169,20 @@ def test_s3_chunking_integration():
         # Chunk it
         chunker = MarkdownChunker()
         chunks_result = chunker.chunk_document(
-            markdown_text,
-            test_paper_id,
-            title,
-            create_both_types=True
+            markdown_text, test_paper_id, title, create_both_types=True
         )
 
-        print(f"✓ Chunked into {len(chunks_result['coarse'])} coarse + {len(chunks_result['fine'])} fine chunks")
+        print(
+            f"✓ Chunked into {len(chunks_result['coarse'])} coarse + {len(chunks_result['fine'])} fine chunks"
+        )
 
         # Verify chunk metadata
-        sample_chunk = chunks_result['coarse'][0]
+        sample_chunk = chunks_result["coarse"][0]
         assert sample_chunk.paper_id == test_paper_id
         assert sample_chunk.paper_title == title
         assert len(sample_chunk.section_hierarchy) > 0
 
-        print(f"✓ Chunk metadata verified")
+        print("✓ Chunk metadata verified")
         print(f"  Paper ID: {sample_chunk.paper_id}")
         print(f"  Title: {sample_chunk.paper_title}")
         print(f"  Section: {' > '.join(sample_chunk.section_hierarchy)}")
@@ -189,6 +193,7 @@ def test_s3_chunking_integration():
     except Exception as e:
         print(f"❌ Test 3 FAILED: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -213,6 +218,7 @@ def main():
         except Exception as e:
             print(f"❌ {test_name} CRASHED: {e}")
             import traceback
+
             traceback.print_exc()
             results.append((test_name, False))
 

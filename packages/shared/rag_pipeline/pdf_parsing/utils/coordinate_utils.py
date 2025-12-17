@@ -103,8 +103,11 @@ def process_coordinates(
     except Exception as e:
         print(f"process_coordinates error: {str(e)}")
         # Return safe values
-        orig_x1, orig_y1, orig_x2, orig_y2 = 0, 0, min(100, dims.original_width), min(
-            100, dims.original_height
+        orig_x1, orig_y1, orig_x2, orig_y2 = (
+            0,
+            0,
+            min(100, dims.original_width),
+            min(100, dims.original_height),
         )
         return 0, 0, 100, 100, orig_x1, orig_y1, orig_x2, orig_y2, [0, 0, 100, 100]
 

@@ -5,10 +5,9 @@ This module creates comprehensive, publication-quality HTML reports with
 embedded interactive visualizations and detailed analysis.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from pathlib import Path
 from datetime import datetime
-import json
 from jinja2 import Template
 import plotly.graph_objects as go
 
@@ -474,21 +473,21 @@ class ReportGenerator:
 
         rows = []
         for strategy_name, metrics in strategies_data.items():
-            coherence = metrics.get('coherence_score')
+            coherence = metrics.get("coherence_score")
             coherence_str = f"{coherence:.3f}" if coherence is not None else "N/A"
 
-            boundary = metrics.get('boundary_quality')
+            boundary = metrics.get("boundary_quality")
             boundary_str = f"{boundary:.3f}" if boundary is not None else "N/A"
 
             row = f"""
             <tr>
                 <td><strong>{strategy_name.capitalize()}</strong></td>
-                <td>{metrics.get('total_chunks', 'N/A')}</td>
-                <td>{metrics.get('mean_size_chars', 0):.0f} chars</td>
-                <td>{metrics.get('std_size_chars', 0):.0f}</td>
+                <td>{metrics.get("total_chunks", "N/A")}</td>
+                <td>{metrics.get("mean_size_chars", 0):.0f} chars</td>
+                <td>{metrics.get("std_size_chars", 0):.0f}</td>
                 <td>{coherence_str}</td>
                 <td>{boundary_str}</td>
-                <td>{(metrics.get('citation_coverage', 0) * 100):.1f}%</td>
+                <td>{(metrics.get("citation_coverage", 0) * 100):.1f}%</td>
             </tr>
             """
             rows.append(row)
@@ -497,11 +496,11 @@ class ReportGenerator:
         <table>
             <thead>
                 <tr>
-                    {''.join(f'<th>{h}</th>' for h in headers)}
+                    {"".join(f"<th>{h}</th>" for h in headers)}
                 </tr>
             </thead>
             <tbody>
-                {''.join(rows)}
+                {"".join(rows)}
             </tbody>
         </table>
         """
@@ -555,24 +554,24 @@ class ReportGenerator:
 
             scores[name] = score
 
-        best_strategy = max(scores, key=scores.get)
+        best_strategy = max(scores, key=lambda x: scores[x])
 
         # Generate reasons
         metrics = strategies_data[best_strategy]
         reasons = []
 
-        coherence = metrics.get('coherence_score')
+        coherence = metrics.get("coherence_score")
         if coherence is not None:
             reasons.append(f"Best balance of semantic coherence ({coherence:.3f})")
 
-        boundary = metrics.get('boundary_quality')
+        boundary = metrics.get("boundary_quality")
         if boundary is not None:
             reasons.append(f"Superior boundary quality ({boundary:.3f})")
 
-        coverage = metrics.get('citation_coverage', 0)
+        coverage = metrics.get("citation_coverage", 0)
         reasons.append(f"Excellent citation preservation ({(coverage * 100):.1f}%)")
 
-        std = metrics.get('std_size_chars', 0)
+        std = metrics.get("std_size_chars", 0)
         reasons.append(f"Consistent chunk sizes (std: {std:.0f})")
 
         return best_strategy.capitalize(), reasons

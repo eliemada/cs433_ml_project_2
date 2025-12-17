@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from threading import Lock
-from typing import List, Optional
+from typing import List, Optional, Callable
 
 import pandas as pd
 import requests
@@ -19,7 +19,7 @@ from .utils import (
     validate_pdf_content,
     format_duration,
     calculate_progress_eta,
-    format_bytes
+    format_bytes,
 )
 from .test import PdfNotFoundError, download_from_scihub
 
@@ -38,28 +38,25 @@ class PDFDownloader:
         self.session = requests.Session()
 
         # Use realistic browser headers to avoid 403 Forbidden errors
-        self.session.headers.update({
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
-            "Upgrade-Insecure-Requests": "1",
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "none",
-            "Sec-Fetch-User": "?1",
-            "Cache-Control": "max-age=0",
-        })
+        self.session.headers.update(
+            {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive",
+                "Upgrade-Insecure-Requests": "1",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "none",
+                "Sec-Fetch-User": "?1",
+                "Cache-Control": "max-age=0",
+            }
+        )
         self.stats = DownloadStats()
         self.stats_lock = Lock()  # Thread-safe stats updates
 
-    def download_pdf(
-        self,
-        url: str,
-        filepath: Path,
-        work_id: str
-    ) -> bool:
+    def download_pdf(self, url: str, filepath: Path, work_id: str) -> bool:
         """
         Download a single PDF from URL.
 
@@ -76,6 +73,7 @@ class PDFDownloader:
 
             # Add referer for the specific request to look more like a browser
             from urllib.parse import urlparse
+
             parsed_url = urlparse(url)
             referer = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 
@@ -86,7 +84,7 @@ class PDFDownloader:
                 allow_redirects=True,
                 headers={
                     "Referer": referer,
-                }
+                },
             )
             response.raise_for_status()
 
@@ -94,9 +92,7 @@ class PDFDownloader:
             content_type = response.headers.get("content-type", "")
             if self.config.validate_pdf_content_type:
                 if not validate_pdf_content(content_type, url):
-                    logger.warning(
-                        f"Invalid content type: {content_type} for {work_id}"
-                    )
+                    logger.warning(f"Invalid content type: {content_type} for {work_id}")
                     return False
 
             # Save PDF
@@ -131,11 +127,7 @@ class PDFDownloader:
             logger.error(f"File write error for {work_id}: {e}")
             return False
 
-    def save_metadata(
-        self,
-        work: OpenAlexWork,
-        metadata_file: Path
-    ) -> None:
+    def save_metadata(self, work: OpenAlexWork, metadata_file: Path) -> None:
         """
         Save work metadata as JSON.
 
@@ -149,12 +141,7 @@ class PDFDownloader:
         except Exception as e:
             logger.warning(f"Failed to save metadata for {work.openalex_id}: {e}")
 
-    def download_work(
-        self,
-        work: OpenAlexWork,
-        index: int,
-        skip_delay: bool = False
-    ) -> bool:
+    def download_work(self, work: OpenAlexWork, index: int, skip_delay: bool = False) -> bool:
         """
         Download PDF for a single work.
 
@@ -178,7 +165,7 @@ class PDFDownloader:
             index=index,
             openalex_id=work.openalex_id,
             title=work.title or work.display_name,
-            max_length=self.config.max_filename_length
+            max_length=self.config.max_filename_length,
         )
         filepath = self.config.pdfs_dir / filename
 
@@ -200,7 +187,9 @@ class PDFDownloader:
                 self._record_success(work, index, skip_delay)
                 return True
 
-            logger.debug(f"[{index:5d}] Direct download failed, trying fallback if enabled: {work.openalex_id}")
+            logger.debug(
+                f"[{index:5d}] Direct download failed, trying fallback if enabled: {work.openalex_id}"
+            )
         else:
             logger.debug(f"[{index:5d}] No direct PDF URL, checking fallback: {work.openalex_id}")
 
@@ -237,7 +226,7 @@ class PDFDownloader:
         filepath: Path,
         index: int,
         filename: str,
-        skip_delay: bool = False
+        skip_delay: bool = False,
     ) -> bool:
         """Attempt to fetch the PDF via Sci-Hub fallback."""
         if not work.doi:
@@ -262,7 +251,9 @@ class PDFDownloader:
 
         return False
 
-    def download_from_works_list(self, works: List[OpenAlexWork], workers: int = 1) -> DownloadStats:
+    def download_from_works_list(
+        self, works: List[OpenAlexWork], workers: int = 1
+    ) -> DownloadStats:
         """
         Download PDFs from a list of OpenAlexWork objects.
 
@@ -273,7 +264,13 @@ class PDFDownloader:
         Returns:
             Download statistics
         """
-        from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeRemainingColumn
+        from rich.progress import (
+            Progress,
+            SpinnerColumn,
+            BarColumn,
+            TextColumn,
+            TimeRemainingColumn,
+        )
 
         logger.info("=" * 80)
         logger.info("Starting PDF Downloads")
@@ -321,10 +318,8 @@ class PDFDownloader:
                 TextColumn("({task.completed}/{task.total})"),
                 TimeRemainingColumn(),
             ) as progress:
-
                 task = progress.add_task(
-                    f"[cyan]Downloading with {workers} workers...",
-                    total=len(works)
+                    f"[cyan]Downloading with {workers} workers...", total=len(works)
                 )
 
                 with ThreadPoolExecutor(max_workers=workers) as executor:
@@ -350,8 +345,8 @@ class PDFDownloader:
                             progress.update(
                                 task,
                                 description=f"[cyan]Downloaded: {self.stats.pdfs_downloaded} | "
-                                          f"Failed: {self.stats.pdfs_failed} | "
-                                          f"Skipped: {self.stats.pdfs_skipped}"
+                                f"Failed: {self.stats.pdfs_failed} | "
+                                f"Skipped: {self.stats.pdfs_skipped}",
                             )
 
                     except KeyboardInterrupt:
@@ -363,10 +358,7 @@ class PDFDownloader:
         return self.stats
 
     def download_from_parquet(
-        self,
-        parquet_file: Path,
-        filter_func: Optional[callable] = None,
-        workers: int = 1
+        self, parquet_file: Path, filter_func: Optional[Callable] = None, workers: int = 1
     ) -> DownloadStats:
         """
         Download PDFs from a parquet file.
@@ -438,9 +430,10 @@ class PDFDownloader:
                 version=row.get("best_oa_version"),
                 license=row.get("best_oa_license"),
                 source=Source(
-                    display_name=row.get("best_oa_source"),
-                    type=row.get("best_oa_source_type")
-                ) if pd.notna(row.get("best_oa_source")) else None
+                    display_name=row.get("best_oa_source"), type=row.get("best_oa_source_type")
+                )
+                if pd.notna(row.get("best_oa_source"))
+                else None,
             )
 
         # Build primary location
@@ -453,9 +446,10 @@ class PDFDownloader:
                 version=row.get("primary_version"),
                 license=row.get("primary_license"),
                 source=Source(
-                    display_name=row.get("primary_source"),
-                    type=row.get("primary_source_type")
-                ) if pd.notna(row.get("primary_source")) else None
+                    display_name=row.get("primary_source"), type=row.get("primary_source_type")
+                )
+                if pd.notna(row.get("primary_source"))
+                else None,
             )
 
         # Build work
@@ -463,14 +457,18 @@ class PDFDownloader:
             id=row.get("id", row.get("openalex_url", "")),
             doi=row.get("doi") if pd.notna(row.get("doi")) else None,
             title=row.get("title"),
-            publication_year=int(row.get("publication_year")) if pd.notna(row.get("publication_year")) else None,
-            publication_date=row.get("publication_date") if pd.notna(row.get("publication_date")) else None,
+            publication_year=int(row.get("publication_year"))
+            if pd.notna(row.get("publication_year"))
+            else None,
+            publication_date=row.get("publication_date")
+            if pd.notna(row.get("publication_date"))
+            else None,
             type=row.get("type"),
             open_access=OpenAccess(
                 is_oa=row.get("is_oa", False),
                 oa_status=row.get("oa_status"),
                 oa_url=row.get("oa_url") if pd.notna(row.get("oa_url")) else None,
-                any_repository_has_fulltext=row.get("any_repository_has_fulltext", False)
+                any_repository_has_fulltext=row.get("any_repository_has_fulltext", False),
             ),
             best_oa_location=best_oa_location,
             primary_location=primary_location,
@@ -499,10 +497,12 @@ class PDFDownloader:
         """Save download statistics to JSON."""
         stats_file = self.config.output_dir / "download_stats.json"
         with open(stats_file, "w") as f:
-            json.dump(self.stats.model_dump(mode='json'), f, indent=2, default=str)
+            json.dump(self.stats.model_dump(mode="json"), f, indent=2, default=str)
         logger.success(f"✅ Statistics saved to {stats_file}")
 
-    def run(self, parquet_file: Optional[Path] = None, filter_func: Optional[callable] = None) -> DownloadStats:
+    def run(
+        self, parquet_file: Optional[Path] = None, filter_func: Optional[Callable] = None
+    ) -> DownloadStats:
         """
         Run the complete PDF download pipeline.
 

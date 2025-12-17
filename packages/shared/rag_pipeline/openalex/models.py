@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class OAStatus(str, Enum):
     """Open Access status types."""
+
     DIAMOND = "diamond"
     GOLD = "gold"
     GREEN = "green"
@@ -19,6 +20,7 @@ class OAStatus(str, Enum):
 
 class SourceType(str, Enum):
     """Source types for publications."""
+
     JOURNAL = "journal"
     REPOSITORY = "repository"
     PUBLISHER = "publisher"
@@ -28,6 +30,7 @@ class SourceType(str, Enum):
 
 class Source(BaseModel):
     """Publication source information."""
+
     id: Optional[str] = None
     display_name: Optional[str] = None
     issn_l: Optional[str] = None
@@ -41,6 +44,7 @@ class Source(BaseModel):
 
 class Location(BaseModel):
     """Location where the work is available."""
+
     is_oa: bool = False
     landing_page_url: Optional[str] = None
     pdf_url: Optional[str] = None
@@ -50,15 +54,15 @@ class Location(BaseModel):
     is_accepted: bool = False
     is_published: bool = False
 
-    @field_validator('pdf_url', 'landing_page_url', mode='before')
+    @field_validator("pdf_url", "landing_page_url", mode="before")
     @classmethod
     def validate_url(cls, v):
         """Ensure URLs are valid or None."""
-        if v and not v.startswith(('http://', 'https://')):
+        if v and not v.startswith(("http://", "https://")):
             return None
         return v
 
-    @field_validator('is_oa', 'is_accepted', 'is_published', mode='before')
+    @field_validator("is_oa", "is_accepted", "is_published", mode="before")
     @classmethod
     def validate_bool(cls, v):
         """Convert None to False for boolean fields."""
@@ -69,12 +73,13 @@ class Location(BaseModel):
 
 class OpenAccess(BaseModel):
     """Open access information for a work."""
+
     is_oa: bool = False
     oa_status: Optional[OAStatus] = None
     oa_url: Optional[str] = None
     any_repository_has_fulltext: bool = False
 
-    @field_validator('is_oa', 'any_repository_has_fulltext', mode='before')
+    @field_validator("is_oa", "any_repository_has_fulltext", mode="before")
     @classmethod
     def validate_bool(cls, v):
         """Convert None to False for boolean fields."""
@@ -85,6 +90,7 @@ class OpenAccess(BaseModel):
 
 class Author(BaseModel):
     """Author information."""
+
     id: Optional[str] = None
     display_name: Optional[str] = None
     orcid: Optional[str] = None
@@ -92,6 +98,7 @@ class Author(BaseModel):
 
 class Authorship(BaseModel):
     """Authorship with author and institutional info."""
+
     author_position: Optional[str] = None
     author: Optional[Author] = None
     institutions: Optional[List[Dict[str, Any]]] = None
@@ -100,6 +107,7 @@ class Authorship(BaseModel):
 
 class Concept(BaseModel):
     """Concept/topic tag."""
+
     id: Optional[str] = None
     wikidata: Optional[str] = None
     display_name: Optional[str] = None
@@ -109,6 +117,7 @@ class Concept(BaseModel):
 
 class Topic(BaseModel):
     """Primary topic information."""
+
     id: Optional[str] = None
     display_name: Optional[str] = None
     subfield: Optional[Dict[str, Any]] = None
@@ -118,6 +127,7 @@ class Topic(BaseModel):
 
 class OpenAlexWork(BaseModel):
     """Complete OpenAlex work object."""
+
     id: str
     doi: Optional[str] = None
     title: Optional[str] = None
@@ -168,7 +178,7 @@ class OpenAlexWork(BaseModel):
     class Config:
         use_enum_values = True
 
-    @field_validator('is_retracted', 'is_paratext', mode='before')
+    @field_validator("is_retracted", "is_paratext", mode="before")
     @classmethod
     def validate_bool(cls, v):
         """Convert None to False for boolean fields."""
@@ -234,6 +244,7 @@ class OpenAlexWork(BaseModel):
 
 class FlatWork(BaseModel):
     """Flattened work for DataFrame storage."""
+
     # IDs
     id: str
     openalex_id: str
@@ -312,7 +323,14 @@ class FlatWork(BaseModel):
     # Original JSON (optional)
     full_json: Optional[str] = None
 
-    @field_validator('is_oa', 'any_repository_has_fulltext', 'has_any_pdf', 'is_retracted', 'is_paratext', mode='before')
+    @field_validator(
+        "is_oa",
+        "any_repository_has_fulltext",
+        "has_any_pdf",
+        "is_retracted",
+        "is_paratext",
+        mode="before",
+    )
     @classmethod
     def validate_bool(cls, v):
         """Convert None to False for boolean fields."""
@@ -352,7 +370,9 @@ class FlatWork(BaseModel):
         topic_data = {
             "topic_id": topic.id.split("/")[-1] if topic and topic.id else None,
             "topic_name": topic.display_name if topic else None,
-            "topic_subfield": topic.subfield.get("display_name") if topic and topic.subfield else None,
+            "topic_subfield": topic.subfield.get("display_name")
+            if topic and topic.subfield
+            else None,
             "topic_field": topic.field.get("display_name") if topic and topic.field else None,
             "topic_domain": topic.domain.get("display_name") if topic and topic.domain else None,
         }
@@ -364,9 +384,10 @@ class FlatWork(BaseModel):
             concepts_data[f"concept_{i}_score"] = concept.score
 
         # Keywords
-        keywords_str = "|".join(
-            k.get("display_name", "") for k in work.keywords if k.get("display_name")
-        ) or None
+        keywords_str = (
+            "|".join(k.get("display_name", "") for k in work.keywords if k.get("display_name"))
+            or None
+        )
 
         # PDF URLs
         all_pdf_urls = work.all_pdf_urls
@@ -376,56 +397,44 @@ class FlatWork(BaseModel):
             id=work.id,
             openalex_id=work.openalex_id,
             doi=work.doi,
-
             # Basic info
             title=work.title or work.display_name,
             publication_year=work.publication_year,
             publication_date=work.publication_date,
             type=work.type,
             language=work.language,
-
             # Open Access
             is_oa=work.open_access.is_oa,
             oa_status=work.open_access.oa_status,
             oa_url=work.open_access.oa_url,
             any_repository_has_fulltext=work.open_access.any_repository_has_fulltext,
-
             # Locations
             **best_oa_data,
             **primary_data,
-
             # PDF info
             num_locations=len(work.locations),
             num_pdf_urls=len(all_pdf_urls),
             num_oa_locations=sum(1 for loc in work.locations if loc.is_oa),
             all_pdf_urls="|".join(all_pdf_urls) if all_pdf_urls else None,
             has_any_pdf=work.has_pdf_url,
-
             # Topic
             **topic_data,
-
             # Authors
             num_authors=len(work.authorships),
             first_author=work.first_author,
             author_names="|".join(work.author_names) if work.author_names else None,
-
             # Concepts
             **concepts_data,
-
             # Keywords
             keywords=keywords_str,
-
             # Metrics
             cited_by_count=work.cited_by_count,
-
             # Flags
             is_retracted=work.is_retracted,
             is_paratext=work.is_paratext,
-
             # URLs
             openalex_url=work.id,
             cited_by_api_url=work.cited_by_api_url,
-
             # Full JSON
             full_json=json.dumps(work.model_dump()) if include_full_json else None,
         )
@@ -433,6 +442,7 @@ class FlatWork(BaseModel):
 
 class DownloadStats(BaseModel):
     """Statistics for download operations."""
+
     total_works: int = 0
     pdfs_found: int = 0
     pdfs_downloaded: int = 0
