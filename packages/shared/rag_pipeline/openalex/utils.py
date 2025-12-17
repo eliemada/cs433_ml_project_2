@@ -77,11 +77,12 @@ def format_bytes(bytes_size: int) -> str:
     Returns:
         Formatted string (e.g., "1.23 MB")
     """
+    size = float(bytes_size)
     for unit in ["B", "KB", "MB", "GB", "TB"]:
-        if bytes_size < 1024.0:
-            return f"{bytes_size:.2f} {unit}"
-        bytes_size /= 1024.0
-    return f"{bytes_size:.2f} PB"
+        if size < 1024.0:
+            return f"{size:.2f} {unit}"
+        size /= 1024.0
+    return f"{size:.2f} PB"
 
 
 def format_duration(seconds: float) -> str:
