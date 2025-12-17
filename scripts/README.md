@@ -1,8 +1,18 @@
-# Distributed PDF Processing Scripts
+# Scripts Directory
 
 ## Overview
 
-This directory contains scripts for distributed parallel processing of PDFs using AWS EC2 Spot instances.
+This directory contains scripts for distributed parallel processing of PDFs using AWS EC2 Spot instances, benchmarking tools, and development utilities.
+
+## Directory Structure
+
+```
+scripts/
+├── operations/        # Production/deployment scripts
+├── benchmarking/      # Evaluation and reporting scripts
+├── dev/              # Development and testing scripts
+└── utils/            # Shared utility modules
+```
 
 ## Your S3 Structure
 
@@ -24,11 +34,31 @@ s3://cs433-rag-project2/
     └── ...
 ```
 
-## Files
+## Key Files
 
-- **`distributed_worker.py`** - Main worker script that runs on each EC2 instance
+### Operations
+- **`operations/distributed_worker.py`** - Main worker script that runs on each EC2 instance
+- **`operations/process_pdfs_batch.py`** - Batch PDF processing
+- **`operations/batch_chunk_markdown.py`** - Batch markdown chunking
+- **`operations/chunk_all_documents.py`** - Document chunking operations
+- **`operations/embed_and_index.py`** - Embedding and indexing operations
+- **`operations/check_worker_status.py`** - Worker monitoring
+
+### Benchmarking
+- **`benchmarking/generate_chunking_report.py`** - Generate evaluation reports
+- **`benchmarking/regenerate_plots.py`** - Regenerate visualization plots
+
+### Development
+- **`dev/test_local_processing.py`** - Test local PDF processing
+- **`dev/test_markdown_chunking.py`** - Test chunking functionality
+- **`dev/test_retriever.py`** - Test retrieval functionality
+
+### Utilities
 - **`utils/s3_utils.py`** - S3 helper functions (list, download, upload, exists)
 - **`utils/worker_distribution.py`** - Work partitioning logic
+- **`utils/markdown_s3_loader.py`** - S3 markdown loading utilities
+
+### Configuration
 - **`.env.example`** - Example configuration file
 
 ## Quick Start
@@ -66,7 +96,7 @@ export S3_OUTPUT_BUCKET=cs433-rag-project2
 export S3_OUTPUT_PREFIX=processed/
 
 # Run worker
-python distributed_worker.py
+python operations/distributed_worker.py
 ```
 
 This will process ALL PDFs since TOTAL_WORKERS=1. For testing, you might want to manually filter in the code first.

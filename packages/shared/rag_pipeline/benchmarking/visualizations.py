@@ -60,23 +60,30 @@ def create_size_distribution_plot(
             "text": title,
             "x": 0.5,
             "xanchor": "center",
-            "font": {"size": 20, "family": "Arial, sans-serif"},
+            "font": {"size": 36, "family": "Arial, sans-serif"},
         },
         xaxis_title="Chunk Size (characters)",
         yaxis_title="Frequency",
+        xaxis_title_font={"size": 28},
+        yaxis_title_font={"size": 28},
         barmode="overlay",
         template="plotly_white",
         hovermode="x unified",
-        font={"family": "Arial, sans-serif", "size": 12},
+        font={"family": "Arial, sans-serif", "size": 20},
         legend={
             "orientation": "h",
             "yanchor": "bottom",
             "y": 1.02,
             "xanchor": "right",
             "x": 1,
+            "font": {"size": 28},
         },
-        height=500,
+        height=700,
     )
+
+    # Increase tick font sizes
+    fig.update_xaxes(tickfont={"size": 22})
+    fig.update_yaxes(tickfont={"size": 22})
 
     return fig
 
@@ -127,7 +134,7 @@ def create_comparison_heatmap(
             colorscale="RdYlGn",
             text=values,
             texttemplate="%{text:.2f}",
-            textfont={"size": 10},
+            textfont={"size": 16},
             hovertemplate="<b>%{y}</b><br>%{x}: %{z:.3f}<extra></extra>",
             colorbar=dict(title="Score<br>(Normalized)"),
         )
@@ -138,14 +145,20 @@ def create_comparison_heatmap(
             "text": title,
             "x": 0.5,
             "xanchor": "center",
-            "font": {"size": 20, "family": "Arial, sans-serif"},
+            "font": {"size": 36, "family": "Arial, sans-serif"},
         },
         xaxis_title="Metrics",
         yaxis_title="Strategy",
+        xaxis_title_font={"size": 28},
+        yaxis_title_font={"size": 28},
         template="plotly_white",
-        font={"family": "Arial, sans-serif", "size": 12},
-        height=400,
+        font={"family": "Arial, sans-serif", "size": 20},
+        height=1200,
     )
+
+    # Increase tick font sizes
+    fig.update_xaxes(tickfont={"size": 22})
+    fig.update_yaxes(tickfont={"size": 22})
 
     return fig
 
@@ -184,15 +197,21 @@ def create_coherence_boxplot(
             "text": title,
             "x": 0.5,
             "xanchor": "center",
-            "font": {"size": 20, "family": "Arial, sans-serif"},
+            "font": {"size": 36, "family": "Arial, sans-serif"},
         },
         yaxis_title="Coherence Score (Cosine Similarity)",
         xaxis_title="Strategy",
+        xaxis_title_font={"size": 28},
+        yaxis_title_font={"size": 28},
         template="plotly_white",
-        font={"family": "Arial, sans-serif", "size": 12},
+        font={"family": "Arial, sans-serif", "size": 20},
         showlegend=False,
-        height=500,
+        height=700,
     )
+
+    # Increase tick font sizes
+    fig.update_xaxes(tickfont={"size": 22})
+    fig.update_yaxes(tickfont={"size": 22})
 
     # Add reference line at median
     fig.add_hline(
@@ -242,15 +261,21 @@ def create_boundary_quality_plot(
             "text": title,
             "x": 0.5,
             "xanchor": "center",
-            "font": {"size": 20, "family": "Arial, sans-serif"},
+            "font": {"size": 36, "family": "Arial, sans-serif"},
         },
         yaxis_title="Boundary Similarity (Lower = Better Splits)",
         xaxis_title="Strategy",
+        xaxis_title_font={"size": 28},
+        yaxis_title_font={"size": 28},
         template="plotly_white",
-        font={"family": "Arial, sans-serif", "size": 12},
+        font={"family": "Arial, sans-serif", "size": 20},
         showlegend=False,
-        height=500,
+        height=700,
     )
+
+    # Increase tick font sizes
+    fig.update_xaxes(tickfont={"size": 22})
+    fig.update_yaxes(tickfont={"size": 22})
 
     return fig
 
@@ -307,22 +332,26 @@ def create_citation_analysis_plot(
         col=2,
     )
 
-    fig.update_xaxes(title_text="Strategy", row=1, col=1)
-    fig.update_xaxes(title_text="Strategy", row=1, col=2)
-    fig.update_yaxes(title_text="Count", row=1, col=1)
-    fig.update_yaxes(title_text="Percentage", row=1, col=2)
+    fig.update_xaxes(title_text="Strategy", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1)
+    fig.update_xaxes(title_text="Strategy", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2)
+    fig.update_yaxes(title_text="Count", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1)
+    fig.update_yaxes(title_text="Percentage", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2)
+
+    # Update subplot title font sizes
+    for annotation in fig.layout.annotations:
+        annotation.font.size = 28
 
     fig.update_layout(
         title={
             "text": title,
             "x": 0.5,
             "xanchor": "center",
-            "font": {"size": 20, "family": "Arial, sans-serif"},
+            "font": {"size": 36, "family": "Arial, sans-serif"},
         },
         template="plotly_white",
-        font={"family": "Arial, sans-serif", "size": 12},
+        font={"family": "Arial, sans-serif", "size": 20},
         showlegend=False,
-        height=500,
+        height=700,
     )
 
     return fig
@@ -414,22 +443,31 @@ def create_comprehensive_dashboard(
     )
 
     # Update axes
-    fig.update_yaxes(title_text="Characters", row=1, col=1)
-    fig.update_yaxes(title_text="Characters", row=1, col=2)
-    fig.update_yaxes(title_text="Score", row=2, col=1)
-    fig.update_yaxes(title_text="Percentage", row=2, col=2)
+    fig.update_xaxes(tickfont={"size": 22}, row=1, col=1)
+    fig.update_xaxes(tickfont={"size": 22}, row=1, col=2)
+    fig.update_xaxes(tickfont={"size": 22}, row=2, col=1)
+    fig.update_xaxes(tickfont={"size": 22}, row=2, col=2)
+
+    fig.update_yaxes(title_text="Characters", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=1)
+    fig.update_yaxes(title_text="Characters", title_font={"size": 28}, tickfont={"size": 22}, row=1, col=2)
+    fig.update_yaxes(title_text="Score", title_font={"size": 28}, tickfont={"size": 22}, row=2, col=1)
+    fig.update_yaxes(title_text="Percentage", title_font={"size": 28}, tickfont={"size": 22}, row=2, col=2)
+
+    # Update subplot title font sizes
+    for annotation in fig.layout.annotations:
+        annotation.font.size = 28
 
     fig.update_layout(
         title={
             "text": "Chunking Strategy Performance Dashboard",
             "x": 0.5,
             "xanchor": "center",
-            "font": {"size": 22, "family": "Arial, sans-serif", "weight": "bold"},
+            "font": {"size": 40, "family": "Arial, sans-serif", "weight": "bold"},
         },
         template="plotly_white",
-        font={"family": "Arial, sans-serif", "size": 12},
+        font={"family": "Arial, sans-serif", "size": 20},
         showlegend=False,
-        height=800,
+        height=1200,
     )
 
     return fig
@@ -481,16 +519,26 @@ def create_radar_chart(metrics_df: pd.DataFrame, title: str = "Strategy Comparis
         )
 
     fig.update_layout(
-        polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 1],
+                tickfont={"size": 22}
+            ),
+            angularaxis=dict(
+                tickfont={"size": 22}
+            )
+        ),
         title={
             "text": title,
             "x": 0.5,
             "xanchor": "center",
-            "font": {"size": 20, "family": "Arial, sans-serif"},
+            "font": {"size": 36, "family": "Arial, sans-serif"},
         },
         template="plotly_white",
-        font={"family": "Arial, sans-serif", "size": 12},
-        height=600,
+        font={"family": "Arial, sans-serif", "size": 20},
+        legend=dict(font={"size": 28}),
+        height=1200,
     )
 
     return fig

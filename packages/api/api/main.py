@@ -18,10 +18,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 # Import retriever
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from rag_pipeline.rag.retriever import HybridRetriever, FAISSRetriever, ZeroEntropyReranker
 from openai import OpenAI
 from litellm import completion

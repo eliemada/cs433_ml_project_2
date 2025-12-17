@@ -39,7 +39,13 @@
       "Bash(git cherry-pick:*)",
       "WebSearch",
       "Bash(npm install:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(git rm:*)",
+      "Bash(git mv:*)",
+      "Bash(grep:*)",
+      "Bash(uv sync:*)"
     ],
     "deny": [],
     "ask": []

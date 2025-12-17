@@ -1,67 +1,87 @@
 version: '3.8'
 
 services:
-  # RAG Search API
+  # ==============================================================================
+  # RAG API - Lightweight FastAPI service (NO GPU)
+  # ==============================================================================
   rag-api:
     build:
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: packages/api/Dockerfile
     container_name: rag-api
     ports:
       - "8000:8000"
     environment:
+      # LLM API Keys
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ZEROENTROPY_API_KEY=${ZEROENTROPY_API_KEY}
+
+      # AWS S3 Configuration
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
       - S3_BUCKET=${S3_BUCKET:-cs433-rag-project2}
+
+      # RAG Configuration
       - CHUNK_TYPE=${CHUNK_TYPE:-coarse}
       - FAISS_CANDIDATES=${FAISS_CANDIDATES:-75}
+      - RERANK_TOP_K=${RERANK_TOP_K:-10}
+
     restart: unless-stopped
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 90s
+
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
 
-  # PDF Parser (GPU)
-  pdf-parser:
-    image: ravinala/pdf-parser:latest
-    container_name: pdf-parser
+  # ==============================================================================
+  # PDF Worker - GPU-accelerated document processing
+  # ==============================================================================
+  pdf-worker:
+    build:
+      context: .
+      dockerfile: packages/worker/Dockerfile
+    container_name: pdf-worker
 
     # GPU support (requires nvidia-docker2)
     runtime: nvidia
 
     environment:
-      # AWS S3 credentials
+      # AWS S3 Configuration
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-north-1}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
       - S3_BUCKET=${S3_BUCKET:-cs433-rag-project2}
+      - S3_INPUT_PREFIX=${S3_INPUT_PREFIX:-raw_pdfs/}
+      - S3_OUTPUT_PREFIX=${S3_OUTPUT_PREFIX:-processed/}
 
-      # GPU configuration
+      # Worker Configuration
+      - WORKER_ID=${WORKER_ID:-0}
+      - TOTAL_WORKERS=${TOTAL_WORKERS:-1}
+      - CONCURRENT_PDFS=${CONCURRENT_PDFS:-3}
+      - MAX_RETRIES=${MAX_RETRIES:-2}
+
+      # GPU Configuration
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
-    # Optional: Mount local directories for debugging/caching
+    # Optional: Mount local directories
     volumes:
-      # Persistent model cache (optional - model is already in image)
-      # - ./models:/app/models
+      # Persistent model cache (optional - model is in image)
+      # - ./models:/app/packages/shared/rag_pipeline/pdf_parsing/models
 
-      # Local output for debugging (optional)
-      # - ./output:/tmp/output
+      # Log file access
+      - ./logs:/tmp/logs
 
-      # Log file access (optional)
-      - ./logs:/tmp
-
-    # Resource limits (adjust based on your GPU)
+    # Resource limits
     deploy:
       resources:
         reservations:
@@ -70,8 +90,8 @@ services:
               count: 1
               capabilities: [gpu]
 
-    # Restart policy
-    restart: "no"  # Don't auto-restart (batch job should exit when done)
+    # Don't auto-restart (batch job exits when done)
+    restart: "no"
 
     # Logging
     logging:
@@ -79,3 +99,10 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+# ==============================================================================
+# Networks (optional - for service isolation)
+# ==============================================================================
+networks:
+  default:
+    name: rag-pipeline-network

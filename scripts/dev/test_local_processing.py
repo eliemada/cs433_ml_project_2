@@ -14,7 +14,7 @@ from rag_pipeline.pdf_parsing import (
 def main():
     """Test PDF parsing locally."""
     # Select a sample PDF
-    pdf_path = Path("data/openalex/pdfs/00347_W3004748802_Small_firms_and_patenting_revisited.pdf")
+    pdf_path = Path("/Users/eliebruno/Desktop/code/project-2-rag/data/3 Quant - Optimal Factor Timing.pdf")
 
     if not pdf_path.exists():
         print(f"Error: PDF file not found: {pdf_path}")

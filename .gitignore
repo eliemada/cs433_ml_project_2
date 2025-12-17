@@ -16,6 +16,7 @@ ENV/
 # IDE
 .idea/
 .vscode/
+.claude/
 *.swp
 *.swo
 *~
@@ -77,3 +78,10 @@ temp/
 
 # Archive (old code - optional, remove this line if you want to track archive)
 archive/.worktrees/
+
+# Generated reports and visualizations
+reports/*.html
+reports/*.json
+reports/*.png
+reports/*.pdf
+reports/plots/

@@ -1,0 +1,23 @@
+[project]
+name = "worker"
+version = "0.1.0"
+description = "Distributed PDF processing workers - GPU-accelerated document processing"
+readme = "../../README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Elie Bruno" },
+    { name = "Andrea Trugenberger" },
+    { name = "Youssef Chelaifa" }
+]
+
+dependencies = [
+    # Workspace dependency - rag_pipeline library with ALL capabilities (pdf, vector, cloud)
+    "rag_pipeline[pdf,vector,cloud,cli]",
+]
+
+[tool.uv.sources]
+rag_pipeline = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

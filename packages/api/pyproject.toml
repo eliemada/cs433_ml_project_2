@@ -1,0 +1,29 @@
+[project]
+name = "api"
+version = "0.1.0"
+description = "FastAPI backend for RAG pipeline - Lightweight API service"
+readme = "../../README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Elie Bruno" },
+    { name = "Andrea Trugenberger" },
+    { name = "Youssef Chelaifa" }
+]
+
+dependencies = [
+    # Workspace dependency - rag_pipeline library with vector and cloud capabilities
+    "rag_pipeline[vector,cloud]",
+    # API framework
+    "fastapi>=0.104.1",
+    "uvicorn[standard]>=0.24.0",
+    "python-multipart>=0.0.6",
+    # LLM infrastructure
+    "litellm>=1.80.7",
+]
+
+[tool.uv.sources]
+rag_pipeline = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
