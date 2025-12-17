@@ -12,7 +12,7 @@ import sys
 import json
 import argparse
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from tqdm import tqdm
 import boto3
 from botocore.exceptions import ClientError
@@ -152,7 +152,7 @@ def main():
     print("-" * 60)
 
     # Process papers
-    stats = {"processed": 0, "failed": 0, "total_coarse": 0, "total_fine": 0, "failed_papers": []}
+    stats: Dict[str, Any] = {"processed": 0, "failed": 0, "total_coarse": 0, "total_fine": 0, "failed_papers": []}
 
     for paper_id in tqdm(paper_ids, desc="Chunking papers"):
         result = process_paper(loader, chunker, s3_client, paper_id)

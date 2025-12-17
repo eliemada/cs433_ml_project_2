@@ -2,7 +2,7 @@
 Dolphin model wrapper for document understanding.
 """
 
-from typing import List, Union
+from typing import List, Union, cast
 
 import torch
 from PIL import Image
@@ -209,7 +209,12 @@ class DolphinModel(ModelWrapper):
         is_batch = isinstance(image, list)
 
         if not is_batch:
-            return self.infer(prompt, image)
+            # Type narrowing: image is Image.Image, prompt is str
+            single_image = cast(Image.Image, image)
+            single_prompt = cast(str, prompt)
+            return self.infer(single_prompt, single_image)
         else:
-            prompts = prompt if isinstance(prompt, list) else [prompt] * len(image)
-            return self.infer_batch(prompts, image)
+            # Type narrowing: image is List[Image.Image]
+            image_list = cast(List[Image.Image], image)
+            prompts = prompt if isinstance(prompt, list) else [prompt] * len(image_list)
+            return self.infer_batch(prompts, image_list)

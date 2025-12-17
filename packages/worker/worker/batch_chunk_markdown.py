@@ -10,7 +10,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict, Any, List
 from tqdm.auto import tqdm
 import time
 
@@ -69,7 +69,7 @@ def chunk_all_papers(
         print(f"Saving chunks to: {output_path}")
 
     # Process papers
-    stats = {
+    stats: Dict[str, Any] = {
         "processed": 0,
         "failed": 0,
         "total_coarse_chunks": 0,
