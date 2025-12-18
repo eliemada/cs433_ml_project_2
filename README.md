@@ -1,597 +1,307 @@
 # Evidence-Based Policy Support Through RAG
 
-A production-scale Retrieval-Augmented Generation (RAG) system for patent policy research that synthesizes 4,920+ peer-reviewed academic papers to support evidence-based intellectual property policymaking.
+A monorepo that powers an end-to-end Retrieval-Augmented Generation system for intellectual property and innovation policy research. The stack ingests OpenAlex metadata, parses PDFs with a multimodal VLM, builds hybrid coarse/fine chunk indexes, and serves bilingual answers with traceable citations through a FastAPI backend and a Next.js 16 frontend.
 
 ## Table of Contents
 
-- [What is This Project?](#what-is-this-project)
-- [The Problem We're Solving](#the-problem-were-solving)
-- [System Architecture](#system-architecture)
-- [Key Innovations](#key-innovations)
-- [How It Works: The Four-Stage RAG Pipeline](#how-it-works-the-four-stage-rag-pipeline)
-- [Corpus and Bias Analysis](#corpus-and-bias-analysis)
-- [Quick Start](#quick-start)
-- [Project Structure](#project-structure)
-- [Technology Stack](#technology-stack)
-- [Performance Metrics](#performance-metrics)
-- [Documentation](#documentation)
+- [Overview](#overview)
+- [Architecture at a Glance](#architecture-at-a-glance)
+- [Repository Layout](#repository-layout)
+- [Data & Processing Pipeline](#data--processing-pipeline)
+- [Retrieval & LLM Serving](#retrieval--llm-serving)
+- [Frontend Experience](#frontend-experience)
+- [Running the Stack Locally](#running-the-stack-locally)
+- [Environment Variables](#environment-variables)
+- [Tooling & Automation](#tooling--automation)
+- [Documentation, Notebooks & Reports](#documentation-notebooks--reports)
+- [Testing & Quality](#testing--quality)
+- [Current Status & Roadmap](#current-status--roadmap)
+- [Contributors](#contributors)
+- [License](#license)
+- [Citation](#citation)
 
-## What is This Project?
+## Overview
 
-This is a **complete end-to-end RAG system** designed to help policymakers, researchers, and analysts navigate the vast landscape of patent policy research. With 4,920+ peer-reviewed papers spanning economics, law, and innovation studies, finding relevant evidence for policy decisions is prohibitively time-consuming using traditional methods.
+- 4,920 OpenAlex works targeted (economics, innovation, IP). 999 PDFs have been parsed into rich markdown with layout-aware metadata and figures that live under `s3://cs433-rag-project2/processed/`.
+- Distributed GPU workers run the Dolphin 1.5 model end-to-end (PDF → layout → markdown → figures) and upload failures/debug logs back to S3.
+- Chunking uses a hybrid semantic strategy (≈50k coarse + 200k fine chunks today) with benchmarking reports justifying the configuration (`docs/markdown_chunking.md`, `reports/*.html`).
+- Retrieval combines FAISS indexes (OpenAI `text-embedding-3-small`, 1,536-dim) with optional ZeroEntropy reranking before prompting OpenRouter-hosted models through LiteLLM.
+- A bilingual (EN/FR) Next.js interface (`frontend/`) exposes structured answers with executive summaries, detailed analysis, policy implications, and inline citations.
 
-Our system enables **natural language queries** like:
-- "What is the effect of R&D tax credits on innovation?"
-- "Does patent litigation reduce startup formation?"
-- "How do different countries measure patent quality?"
-- "What if we strengthen patent protection in the pharmaceutical sector?"
-
-And returns **evidence-based answers** with:
-- ✅ Structured synthesis of relevant research
-- ✅ Direct citations to source papers
-- ✅ Quantitative details from studies
-- ✅ Transparent acknowledgment of evidence limitations
-- ✅ Geographic and methodological context
-
-## The Problem We're Solving
-
-### Challenge: Information Overload in Policy Research
-
-Evidence-based IP policymaking requires synthesizing vast academic literature across multiple disciplines. Traditional approaches fall short:
-
-- **Manual literature review**: 20-30 minutes per query, selection bias, limited coverage
-- **Google Scholar**: No domain-specific ranking, no synthesis, overwhelming results
-- **Generic LLMs** (e.g., ChatGPT): Fast but fabricates citations, lacks domain knowledge, can't trace evidence
-
-### Our Solution: Domain-Specific RAG System
-
-We built a specialized RAG system that:
-1. **Processes 4,920 academic papers** with vision-language understanding (preserving equations, tables, figures)
-2. **Maintains source traceability** with citation preservation and metadata
-3. **Provides multi-model LLM infrastructure** with vendor-agnostic inference
-4. **Analyzes and acknowledges corpus biases** across 6 dimensions (geography, language, methodology, institutions, venues, temporality)
-
-## System Architecture
+## Architecture at a Glance
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           USER INTERACTION LAYER                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │   Next.js Frontend (React, TypeScript, i18n)                         │   │
-│  │   - Natural language query input                                     │   │
-│  │   - Multi-model LLM selection (10 models)                            │   │
-│  │   - Structured response display (4 sections)                         │   │
-│  │   - Direct PDF access via citations                                  │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            API SERVICE LAYER                                 │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │   FastAPI Backend                                                    │   │
-│  │   - /search: Query processing and retrieval                          │   │
-│  │   - /chat: Conversational interface                                  │   │
-│  │   - /models: LLM model management                                    │   │
-│  │   - /health: System status monitoring                                │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         RAG PIPELINE (4 STAGES)                              │
-│                                                                              │
-│  Stage 1: DISTRIBUTED PDF PROCESSING                                        │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  3 GPU Workers (EC2 g5.xlarge, NVIDIA A10G, 24GB VRAM)            │    │
-│  │  - Dolphin VLM: Vision-language PDF extraction                     │    │
-│  │  - Preserves: equations, tables, figures, citations, structure     │    │
-│  │  - Output: Structured Markdown + metadata                          │    │
-│  │  - Performance: 200-250 papers/day/worker, 87% GPU utilization     │    │
-│  └────────────────────────────────────────────────────────────────────┘    │
-│                                     ▼                                        │
-│  Stage 2: KNOWLEDGE REPRESENTATION                                          │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  Hybrid Structure-Aware Chunking                                   │    │
-│  │  - Splits at section boundaries (markdown headers)                 │    │
-│  │  - Preserves citation context (±1 sentence)                        │    │
-│  │  - Target: ~420 tokens/chunk (SD=180)                              │    │
-│  │  - Citation preservation: 55.2%                                     │    │
-│  │                                                                     │    │
-│  │  OpenAI text-embedding-3-small (1536D)                             │    │
-│  │  - Embeds: title ⊕ section ⊕ chunk_text                           │    │
-│  │  - 28,000 vectors total                                            │    │
-│  └────────────────────────────────────────────────────────────────────┘    │
-│                                     ▼                                        │
-│  Stage 3: HYBRID RETRIEVAL                                                  │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  Two-Stage Pipeline:                                               │    │
-│  │  1. FAISS (HNSW): Retrieve top-75 candidates (<50ms)              │    │
-│  │  2. ZeroEntropy cross-encoder: Rerank to top-10                   │    │
-│  │     - Captures fine-grained query-document relevance              │    │
-│  │     - Graceful degradation to FAISS-only on failure               │    │
-│  └────────────────────────────────────────────────────────────────────┘    │
-│                                     ▼                                        │
-│  Stage 4: MULTI-MODEL LLM GENERATION                                        │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  LiteLLM + OpenRouter (10 models across 3 tiers)                  │    │
-│  │  - Fast: gpt-5-mini, gemini-3-pro ($0.12/query)                   │    │
-│  │  - Balanced: claude-3.5-sonnet, deepseek-chat                     │    │
-│  │  - Premium: claude-sonnet-4.5, deepseek-r1                        │    │
-│  │                                                                     │    │
-│  │  Structured Prompts Enforce:                                       │    │
-│  │  - 4-section response (Summary, Analysis, Policy, References)     │    │
-│  │  - Evidence quality labels                                         │    │
-│  │  - Quantitative details                                            │    │
-│  │  - Explicit limitation acknowledgment                              │    │
-│  │  - Bilingual support (English/French)                             │    │
-│  └────────────────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         DATA STORAGE & INFRASTRUCTURE                        │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │   AWS S3 (cs433-rag-project2)                                       │   │
-│  │   - raw_pdfs/: 4,920 academic papers                                │   │
-│  │   - processed/: 999 structured markdown documents (20.3%)           │   │
-│  │   - raw_metadata/: OpenAlex metadata (authors, venues, citations)   │   │
-│  │   - failures/: Processing error reports                             │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │   FAISS Vector Database                                             │   │
-│  │   - 28,000 chunk embeddings (1536D)                                 │   │
-│  │   - HNSW index for sub-50ms retrieval                               │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
+        ┌───────────────┐      ┌────────────────────┐      ┌────────────────────┐
+        │ OpenAlex APIs │─────▶│ Metadata + PDF S3   │─────▶│ GPU PDF Workers    │
+        │ (filters, MFA)│      │ (raw_pdfs/, raw_meta│      │ Dolphin 1.5 parsing│
+        └───────────────┘      └────────┬────────────┘      └─────────┬──────────┘
+                                         │                           │
+                                         ▼                           ▼
+                                 ┌──────────────┐            ┌────────────────┐
+                                 │ Markdown +   │            │ Markdown Chunker│
+                                 │ figures/JSON │            │ Hybrid coarse/fine
+                                 └────────┬─────┘            │ (S3 chunks/)
+                                          │                  └─────────┬───────┘
+                                          ▼                            │
+                                   ┌──────────────┐                ┌──────────────┐
+                                   │ Embeddings   │──────────────▶│ FAISS indexes │
+                                   │ OpenAI API   │ (text-embedding-3-small)     │
+                                   └──────────────┘                └────────┬─────┘
+                                                                            ▼
+                                                                   ┌─────────────────┐
+                                                                   │ FastAPI backend │
+                                                                   │ Hybrid retrieval│
+                                                                   │ + ZeroEntropy   │
+                                                                   └────────┬────────┘
+                                                                            ▼
+                                                                   ┌─────────────────┐
+                                                                   │ Next.js frontend│
+                                                                   │ OpenRouter LLMs │
+                                                                   └─────────────────┘
 ```
 
-## Key Innovations
+## Repository Layout
 
-### 1. Vision-Language PDF Processing with Equation Preservation
+```
+project-2-rag/
+├── packages/
+│   ├── shared/rag_pipeline/   # Shared library (ingestion, pdf parsing, chunking, retrieval, benchmarking)
+│   ├── api/                   # FastAPI service (LiteLLM/OpenRouter chat + search API)
+│   └── worker/                # Distributed GPU worker + embedding/indexing scripts
+├── frontend/                  # Next.js 16 bilingual chat UI
+├── scripts/                   # Ops utilities (S3 helpers, tests, benchmarking)
+├── data/                      # Local OpenAlex snapshots / IP policy PDFs
+├── docs/                      # Designs, setup guides, benchmarking docs
+├── notebooks/                 # Chunking benchmark notebook + artifacts
+├── reports/                   # Generated HTML/plot reports
+├── docker-compose.yml         # API + worker runtime definitions
+├── Makefile                   # Worker Docker build/push helpers
+└── CI.md / RELEASING.md       # Automation and release checklists
+```
 
-**Why it matters**: Patent policy papers contain critical information in equations (economic models, innovation metrics), tables (empirical results), and figures (causal diagrams) that text-only extractors completely miss.
+### Monorepo packages
 
-**Our approach**:
-- **Dolphin VLM** (8B-parameter vision-language model) processes PDF pages as images
-- Extracts and renders **LaTeX equations** (e.g., `$\pi = pq - C(q)$`, `$R\&D_{it}/Sales_{it}$`)
-- Preserves **citations** (23.4 avg/paper vs 12.3-18.7 for text-only tools)
-- Maintains **document structure** (sections, subsections, paragraphs)
-- **Distributed processing**: 3 GPU workers with deterministic hashing and S3 checkpointing
+- `packages/shared/rag_pipeline/` – Core Python library used by both API and workers:
+  - `openalex/` metadata/PDF downloader (filters, polite rate limiting, Sci-Hub fallback).
+  - `pdf_parsing/` Dolphin pipeline (image extraction, layout parsing, element recognition, markdown/JSON output).
+  - `rag/` chunking, embeddings, FAISS + ZeroEntropy retriever, CLI helpers.
+  - `benchmarking/` metrics + Plotly report builder for chunking experiments.
+- `packages/api/api/` – FastAPI app (`main.py`) with `/search`, `/chat`, `/models`, `/pdf/{paper_id}` plus policy-focused prompts and model catalog (`config.py`, `prompts.py`). Uses LiteLLM to talk to OpenRouter for GPT-5 / Claude / Gemini / DeepSeek models.
+- `packages/worker/worker/` – GPU-friendly scripts (`distributed_worker.py`, `process_pdfs_batch.py`, `chunk_all_documents.py`, `embed_and_index.py`, `batch_chunk_markdown.py`, `check_worker_status.py`) that run on EC2 Spot or Vast.ai machines. Dockerfile bundles PyTorch, Transformers, OpenCV, and the Dolphin weights.
 
-**Result**: 200-250 papers/day/worker at 87% GPU utilization with full semantic preservation.
+## Data & Processing Pipeline
 
-### 2. Hybrid Structure-Aware Chunking for Citation Preservation
+### 1. OpenAlex harvesting (`rag_pipeline/openalex/`)
 
-**Why it matters**: Evidence-based policymaking requires tracing claims back to original sources. When a system says "R&D tax credits increase innovation by 15%", policymakers must verify methodology and context.
+- `config.py` defines filters (default: `primary_topic.id=t10856`, `open_access.is_oa=true`), polite delays, and output paths.
+- `fetcher.py` + `downloader.py` orchestrate cursor-based pagination, metadata parquet exports, and optional Sci-Hub fallback for missing PDFs.
+- Outputs land in `data/openalex/` when run locally and `raw_pdfs/`, `raw_metadata/` once synced to S3.
 
-**Our approach**:
-- **Hybrid Semantic Chunking**: Splits at section boundaries, subdivides large sections at subsection/paragraph boundaries
-- **Citation context preservation**: ±1 sentence around each citation
-- **Controlled variance**: ~420 tokens/chunk (SD=180) for consistent embeddings
-- **Benchmarked**: 55.2% citation preservation vs 44.6% for fixed-size chunking
+### 2. GPU PDF parsing (`rag_pipeline/pdf_parsing/`, `packages/worker/worker/distributed_worker.py`)
 
-**Result**: Optimal balance between semantic coherence and source traceability.
+- Dolphin 1.5 VLM runs entirely inside the worker Docker image (CUDA 11.8) and emits:
+  - Markdown with preserved section hierarchy, tables, equations, citation markers.
+  - Page-level JSON metadata and extracted figure PNGs.
+- Workers shard PDFs deterministically via modulo partitioning, process 3 PDFs in parallel, upload successes to `processed/{paper_id}/` and failure logs to `failures/worker-*.json`.
 
-### 3. Multi-Model LLM Infrastructure with Automatic Failover
+### 3. Hybrid markdown chunking (`rag_pipeline/rag/markdown_chunker.py`, `docs/markdown_chunking.md`)
 
-**Why it matters**: Avoid vendor lock-in, optimize cost/quality trade-offs, ensure uptime during API transitions.
+- Produces both coarse chunks (~2k chars, 10% overlap) and fine chunks (~300 chars, 20% overlap).
+- Section-aware splitting keeps semantic boundaries and preserves heading hierarchies for later UI rendering.
+- `scripts/dev/test_markdown_chunking.py` validates S3 loading (`scripts/utils/markdown_s3_loader.py`) and chunk quality.
 
-**Our approach**:
-- **LiteLLM**: Unified API abstraction across OpenAI, Anthropic, Google, DeepSeek
-- **OpenRouter**: Model aggregation with 10 models across 3 performance tiers
-- **Automatic failover**: Transparent provider switching during outages
-- **Cost optimization**: $0.12/query average (Fast tier) to $0.50+ (Premium tier)
+### 4. Embedding + indexing (`packages/worker/worker/embed_and_index.py`)
 
-**Result**: Zero-downtime deployment with flexible model selection for different query types.
+- Uses OpenAI `text-embedding-3-small` (1,536 dim) with batching and token-cost estimation utilities.
+- Normalizes vectors for cosine similarity and builds FAISS `IndexFlatIP`.
+- Uploads indexes + metadata maps to `s3://cs433-rag-project2/indexes/{coarse,fine}*.faiss`.
 
-### 4. Systematic Corpus Bias Analysis
+### 5. Storage layout
 
-**Why it matters**: RAG systems risk reinforcing existing knowledge gaps. If the corpus over-represents certain geographies or methodologies, policy recommendations will systematically exclude alternative perspectives.
+```
+cs433-rag-project2/
+├── raw_pdfs/                  # Input PDFs from OpenAlex
+├── processed/<paper_id>/      # Markdown, metadata.json, figures/
+├── chunks/                    # Chunk JSON dumps (coarse & fine)
+├── indexes/                   # FAISS indexes + metadata
+└── failures/worker-*.json     # Worker crash/trace data
+```
 
-**Our approach**: Six-dimensional demographic analysis:
-1. **Geography**: 78% concentration in 5 countries (US 27.5%, UK 8.4%, China 7.1%, Brazil 5.9%, France 4.2%)
-2. **Language**: 96% English dominance (4,399/4,897 papers)
-3. **Methodology**: 64% quantitative, 18% theory, 11% qualitative (N=100 sample)
-4. **Institutions**: 72.4% academic (may underweight practitioner knowledge)
-5. **Venues**: 1,624 unique sources (69% journals, 25.2% preprints)
-6. **Temporality**: 48.6% post-2015, 34.6% 2005-2015, 16.9% pre-2005
+## Retrieval & LLM Serving
 
-**Result**: Transparent acknowledgment of corpus limitations in system responses. Users are warned when evidence is geographically/methodologically constrained.
+- `rag_pipeline/rag/retriever.py` loads FAISS indexes from S3, embeds queries via OpenAI, and optionally reranks with ZeroEntropy (`zerank-1`).
+- FastAPI service (`packages/api/api/main.py`) exposes:
+  - `/health`, `/` – readiness and metadata.
+  - `/search` – vector search, returning chunk text + section hierarchy with latency metrics.
+  - `/chat` – retrieves top chunks then formats a policy prompt (`api/prompts.py`) before calling LiteLLM → OpenRouter. Supports 9 models across fast/balanced/premium tiers; fallback logic retries with the default `openrouter/openai/gpt-5-mini`.
+  - `/models` – surfaces runtime-available LLMs to the frontend.
+  - `/pdf/{paper_id}` – S3 presigned URL for the underlying PDF.
+- Responses are normalized into `SearchResponse` and `ChatResponse` dataclasses to keep the frontend contract stable.
 
-## How It Works: The Four-Stage RAG Pipeline
+## Frontend Experience
 
-### Stage 1: Distributed PDF Processing
+- Located in `frontend/` (Next.js 16 + React 19 + Tailwind 4 beta). Key pieces:
+  - `src/app/[lang]/page.tsx` – language-aware entrypoint using `getDictionary`.
+  - `src/components/ChatInterface.tsx` – orchestrates sidebar, model selector, streaming states, and structured results parsing (Executive Summary, Detailed Analysis, Key References).
+  - `src/lib/api.ts` – fetch helpers for `/health`, `/search`, `/chat`, `/models`, `/pdf`.
+  - `src/dictionaries/` + `src/i18n-config.ts` – English/French translations for UI chrome.
+- Features:
+  - Model switcher with tiers, persisted default from `/models`.
+  - Structured response rendering (bullets, collapsible sections, citations list).
+  - Presigned PDF download buttons (coming from `/pdf`).
+  - Responsive sidebar for saved chats (placeholder) and onboarding text.
 
-**Input**: 4,920 academic PDFs from OpenAlex API (1990-2024, peer-reviewed only)
+## Running the Stack Locally
 
-**Processing**:
-1. **Work distribution**: 3 EC2 g5.xlarge instances with deterministic hashing (`hash(pdf_id) mod 3`)
-2. **Dolphin VLM inference**: Batched processing (3 concurrent PDFs/worker)
-3. **Post-processing**: Hyphenation merging, citation normalization
-4. **S3 synchronization**: Idempotent uploads with checkpointing
+### Requirements
 
-**Output**: Structured Markdown documents with:
-- Document hierarchy (sections, subsections)
-- Inline citations `[@Aghion2015]`
-- LaTeX equations
-- Extracted figures
-- Processing metadata (timestamps, status, errors)
+- Python 3.11+ and [uv](https://github.com/astral-sh/uv) for workspace management.
+- Node.js 20+ (or latest LTS) + npm for the frontend.
+- Docker + NVIDIA Container Toolkit for GPU worker images (optional but required for Dolphin).
+- AWS credentials with access to `cs433-rag-project2` (or your own bucket).
+- API keys: `OPENAI_API_KEY`, `OPENROUTER_API_KEY`, optional `ZEROENTROPY_API_KEY`.
 
-**Performance**: 200-250 papers/day/worker, ~$0.08/paper processing cost
-
-### Stage 2: Knowledge Representation
-
-**Input**: Structured Markdown documents from Stage 1
-
-**Chunking Strategy**:
-1. Split at section boundaries (markdown `##` headers)
-2. Recursively subdivide sections >800 tokens at subsection/paragraph boundaries
-3. Preserve ±1 sentence around citations for context
-4. Attach metadata (title, section, document ID)
-
-**Embedding**:
-- **Model**: OpenAI `text-embedding-3-small` (1536 dimensions)
-- **Input format**: `title ⊕ section_name ⊕ chunk_text`
-- **Corpus size**: 28,000 chunks across 999 processed papers
-
-**Storage**: FAISS HNSW index (optimized for static corpus, batch processing)
-
-### Stage 3: Hybrid Retrieval
-
-**Input**: User query (natural language)
-
-**Two-stage pipeline**:
-
-**Step 1 - Dense Retrieval (FAISS)**:
-- Embed query: `v_q = Embed(query)`
-- Retrieve top-75 candidates via cosine similarity
-- Latency: <50ms
-
-**Step 2 - Cross-Encoder Reranking**:
-- **Model**: ZeroEntropy `zerank-1`
-- Jointly encode query-document pairs for fine-grained relevance
-- Rerank to top-10 chunks
-- Graceful degradation to FAISS-only on API failure
-
-**Output**: Top-10 chunks with metadata (title, section, citations, document ID)
-
-### Stage 4: Multi-Model LLM Generation
-
-**Input**: Top-10 retrieved chunks + user query
-
-**LLM Selection** (user-configurable):
-- **Fast tier**: `gpt-5-mini`, `gemini-3-pro` ($0.12/query)
-- **Balanced tier**: `claude-3.5-sonnet`, `deepseek-chat` ($0.25/query)
-- **Premium tier**: `claude-sonnet-4.5`, `deepseek-r1` ($0.50+/query)
-
-**Structured Prompt Enforces**:
-1. **Executive Summary**: 2-3 sentence synthesis
-2. **Detailed Analysis**: Evidence breakdown with quantitative details
-3. **Policy Implications**: Actionable insights for policymakers
-4. **Key References**: Direct citations with paper metadata
-
-**Quality Controls**:
-- Mandate "use ONLY provided sources" to reduce hallucinations
-- Require evidence quality labels (strong/moderate/limited/mixed)
-- Explicit limitation acknowledgment for geographic/methodological gaps
-
-**Output**: Structured response with direct PDF access via citations
-
-## Corpus and Bias Analysis
-
-### Dataset Composition
-
-- **Total papers**: 4,920 peer-reviewed (1990-2024)
-- **Processed**: 999 papers (20.3%) - processing ongoing
-- **Source**: OpenAlex API with keywords: "patent", "IP", "R&D tax incentives", "patent litigation", etc.
-- **Metadata**: Authors, affiliations, venues, years, citation networks
-
-### Identified Biases
-
-| Dimension | Finding | Policy Implication |
-|-----------|---------|-------------------|
-| **Geography** | 78% from 5 countries (US 27.5%, UK 8.4%, China 7.1%) | Risk of US-centric policy transfer |
-| **Language** | 96% English (4,399/4,897 papers) | Excludes non-Anglophone research traditions |
-| **Methodology** | 64% quantitative, 11% qualitative | May underweight case studies, legal analyses |
-| **Institutions** | 72.4% academic (vs practitioner) | May miss patent office, industry perspectives |
-| **Temporality** | 48.6% post-2015, 16.9% pre-2005 | Good historical coverage, limited 2023-2024 |
-| **Venues** | 1,624 unique sources (69% journals) | Reflects interdisciplinary fragmentation |
-
-### Bias Propagation Mechanisms
-
-1. **Geographic gap**: Queries about Vietnam vs US expected to retrieve 0-2 vs 3-5 papers (rating 2.0-3.0 vs 4.0-4.5)
-2. **Methodological amplification**: Term-matching in retrieval further skews toward quantitative studies
-3. **Temporal recency bias**: Post-2020 policy topics (AI patentability, open-source licensing) have low coverage
-
-### Mitigation Strategies
-
-- **Transparent disclosure**: System responses explicitly acknowledge when evidence is geographically/methodologically limited
-- **Evidence quality labels**: Strong/moderate/limited/mixed classifications
-- **Expert validation**: Alpha deployment with policymakers providing structured feedback
-- **Future corpus expansion**: Target non-English sources, practitioner reports, recent publications
-
-## Quick Start
-
-### Installation
+### 1. Bootstrap the Python workspace
 
 ```bash
-# Clone repository
-git clone <repository-url>
-cd project-2-rag
-
-# Install uv (fast Python package manager)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install dependencies
-uv sync
-
-# Optional: Install specific dependency groups
-uv sync --extra api      # FastAPI backend
-uv sync --extra worker   # PDF processing workers
-uv sync --extra analysis # Jupyter notebooks, benchmarking
+# From repo root
+cp .env.example .env        # fill in API keys + S3 settings
+uv sync                     # installs shared/api/worker environments
 ```
 
-### Basic Usage
+### 2. Run the FastAPI service
 
-**1. Process a single PDF locally:**
 ```bash
-uv run python scripts/dev/test_local_processing.py --pdf path/to/paper.pdf
+export OPENAI_API_KEY=...
+export OPENROUTER_API_KEY=...
+export AWS_ACCESS_KEY_ID=...   # Needed to pull indexes from S3
+export AWS_SECRET_ACCESS_KEY=...
+uv run --package api uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**2. Run distributed worker (requires AWS credentials):**
+The app loads FAISS indexes from `S3_BUCKET` (default `cs433-rag-project2`) at startup. Check `http://localhost:8000/health`.
+
+### 3. Run a distributed worker locally (single machine test)
+
 ```bash
-# Set environment variables
 export WORKER_ID=0
-export TOTAL_WORKERS=3
+export TOTAL_WORKERS=1
 export S3_INPUT_BUCKET=cs433-rag-project2
 export S3_OUTPUT_BUCKET=cs433-rag-project2
-
-# Run worker
-uv run python scripts/operations/distributed_worker.py
+uv run --package worker python packages/worker/worker/distributed_worker.py
 ```
 
-**3. Check worker status:**
+Workers automatically skip PDFs that were already processed. Use `CONCURRENT_PDFS` to control local GPU load.
+
+### 4. Embed chunks / rebuild FAISS
+
 ```bash
-uv run python scripts/operations/check_worker_status.py
+export OPENAI_API_KEY=...
+uv run --package worker python packages/worker/worker/embed_and_index.py \
+  --chunk-type both          # coarse, fine, or both
 ```
 
-**4. Run the RAG API locally:**
-```bash
-# Start FastAPI backend
-cd api
-uv run uvicorn main:app --reload --port 8000
+Use `--dry-run` to estimate embedding cost before running.
 
-# In another terminal, start Next.js frontend
+### 5. Launch the frontend
+
+```bash
 cd frontend
+cp .env.local.example .env.local   # set NEXT_PUBLIC_API_URL=http://localhost:8000
 npm install
 npm run dev
 ```
 
-**5. Access the web interface:**
-Open `http://localhost:3000` and start querying the knowledge base.
+Visit `http://localhost:3000/en` or `/fr` to access the bilingual UI.
 
-## Project Structure
+### 6. Docker Compose (API + GPU worker)
 
-```
-project-2-rag/
-├── README.md                          # This file
-├── pyproject.toml                     # Python dependencies (uv)
-├── docker-compose.yml                 # Local development setup
-│
-├── docs/                              # Documentation
-│   ├── plans/                         # Design documents
-│   │   ├── distributed-pdf-processing-design.md
-│   │   └── rag-architecture-design.md
-│   ├── checkpoint_2025-11-10.md       # Project checkpoint
-│   └── deployment.md                  # AWS deployment instructions
-│
-├── rag_pipeline/                      # Core Python package
-│   ├── pdf_parsing/                   # PDF processing (Dolphin VLM)
-│   │   ├── core/                      # Core pipeline logic
-│   │   ├── processors/                # Document processors
-│   │   ├── model_wrapper/             # Dolphin model interface
-│   │   └── utils/                     # PDF utilities
-│   ├── rag/                           # RAG components
-│   │   ├── chunking/                  # Structure-aware chunking
-│   │   ├── embeddings/                # OpenAI embedding generation
-│   │   ├── retrieval/                 # FAISS + cross-encoder
-│   │   └── generation/                # Multi-model LLM inference
-│   ├── benchmarking/                  # Evaluation framework
-│   │   ├── chunking_evaluator.py     # Citation preservation metrics
-│   │   ├── bias_analysis.py          # Corpus demographic analysis
-│   │   └── visualizations.py         # Report generation
-│   └── openalex/                      # OpenAlex API client
-│       ├── client.py                  # Metadata fetching
-│       └── schemas.py                 # Paper metadata models
-│
-├── scripts/                           # Operational scripts
-│   ├── operations/                    # Production/deployment
-│   │   ├── distributed_worker.py     # Main PDF processing worker
-│   │   ├── check_worker_status.py    # Worker monitoring
-│   │   ├── process_pdfs_batch.py     # Batch PDF processing
-│   │   ├── batch_chunk_markdown.py   # Batch chunking
-│   │   ├── chunk_all_documents.py    # Full corpus chunking
-│   │   └── embed_and_index.py        # FAISS index creation
-│   ├── benchmarking/                  # Evaluation scripts
-│   │   ├── generate_chunking_report.py  # Chunking metrics
-│   │   └── regenerate_plots.py       # Visualization updates
-│   ├── dev/                           # Development/testing
-│   │   ├── test_local_processing.py  # Local PDF testing
-│   │   ├── test_markdown_chunking.py # Chunking validation
-│   │   └── test_retriever.py         # Retrieval testing
-│   ├── utils/                         # Shared utilities
-│   │   ├── s3_utils.py               # S3 operations
-│   │   ├── worker_distribution.py    # Work partitioning
-│   │   └── markdown_s3_loader.py     # S3 markdown loading
-│   └── README.md                      # Scripts documentation
-│
-├── api/                               # FastAPI backend service
-│   ├── main.py                        # FastAPI application
-│   ├── routers/                       # API endpoints
-│   │   ├── search.py                 # /search endpoint
-│   │   ├── chat.py                   # /chat endpoint
-│   │   └── models.py                 # /models endpoint
-│   ├── services/                      # Business logic
-│   │   ├── retrieval_service.py      # Hybrid retrieval
-│   │   └── llm_service.py            # Multi-model LLM
-│   ├── models/                        # Pydantic schemas
-│   └── Dockerfile                     # API container
-│
-├── frontend/                          # Next.js web interface
-│   ├── app/                           # Next.js 16 App Router
-│   │   ├── [locale]/                 # i18n routes
-│   │   │   ├── page.tsx              # Main query interface
-│   │   │   └── chat/                 # Chat interface
-│   │   └── api/                      # API routes
-│   ├── components/                    # React components
-│   │   ├── QueryInput.tsx            # Search input
-│   │   ├── ResponseDisplay.tsx       # Structured response
-│   │   ├── ModelSelector.tsx         # LLM selection
-│   │   └── CitationCard.tsx          # Citation display
-│   ├── i18n/                          # Internationalization
-│   │   ├── en.json                   # English translations
-│   │   └── fr.json                   # French translations
-│   └── middleware.ts                  # i18n routing
-│
-├── notebooks/                         # Jupyter notebooks
-│   ├── corpus_analysis.ipynb         # Bias analysis
-│   ├── chunking_evaluation.ipynb     # Chunking benchmarks
-│   └── retrieval_testing.ipynb       # Retrieval experiments
-│
-└── reports/                           # Generated evaluation reports
-    ├── chunking_evaluation_*.html     # Chunking metrics (gitignored)
-    └── plots/                         # Visualizations (gitignored)
+```bash
+# API + worker (worker requires NVIDIA runtime)
+docker compose up rag-api
+docker compose run --rm --gpus all pdf-worker
 ```
 
-## Technology Stack
+The worker image already contains the Dolphin weights and uv-managed environment. Use the `Makefile` to rebuild/push `ravinala/pdf-parser`.
 
-### Core Infrastructure
-- **Python 3.10+**: Core language
-- **uv**: Fast Python package manager
-- **Docker**: Containerization
-- **AWS S3**: Cloud storage
-- **AWS EC2 (g5.xlarge)**: GPU compute (NVIDIA A10G, 24GB VRAM)
+## Environment Variables
 
-### PDF Processing
-- **Dolphin VLM** (8B parameters): Vision-language model for PDF extraction
-- **PyTorch**: Deep learning framework
-- **Pillow**: Image processing
-- **boto3**: AWS SDK for Python
+| Variable | Used by | Description |
+| --- | --- | --- |
+| `OPENAI_API_KEY` | API, worker, embedding script | Required for embeddings + initial FAISS query encoding. |
+| `OPENROUTER_API_KEY` | API | Required for LLM completions through LiteLLM. |
+| `ZEROENTROPY_API_KEY` | API (optional) | Enables reranking via ZeroEntropy (if unset, retrieval falls back to FAISS-only). |
+| `S3_BUCKET` / `S3_INPUT_BUCKET` / `S3_OUTPUT_BUCKET` | API & worker | Buckets holding raw PDFs, processed markdown, chunk JSON, indexes. Defaults to `cs433-rag-project2`. |
+| `CHUNK_TYPE` | API | Chooses which FAISS index (`coarse` or `fine`) to load. |
+| `FAISS_CANDIDATES` | API | Number of vectors pulled from FAISS before reranking (default 75). |
+| `WORKER_ID` / `TOTAL_WORKERS` | worker | Deterministic sharding for distributed PDF processing. |
+| `CONCURRENT_PDFS` | worker | Thread pool size per worker (default 3). |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_DEFAULT_REGION` | API & worker | Required to download/upload data from S3. |
+| `NEXT_PUBLIC_API_URL` | frontend | Points the UI to the FastAPI base URL. |
 
-### RAG Pipeline
-- **OpenAI Embeddings** (`text-embedding-3-small`): 1536D vectors
-- **FAISS** (HNSW): Dense vector retrieval
-- **ZeroEntropy cross-encoder** (`zerank-1`): Reranking
-- **LiteLLM**: Multi-provider LLM abstraction
-- **OpenRouter**: Model aggregation (10+ models)
+`.env.example`, `scripts/.env.example`, and `frontend/.env.local.example` ship with sane defaults for each layer.
 
-### API & Frontend
-- **FastAPI**: Python async web framework
-- **Next.js 16**: React framework with App Router
-- **TypeScript**: Type-safe frontend
-- **Tailwind CSS**: Styling
-- **i18next**: Internationalization (English/French)
+## Tooling & Automation
 
-### Data & Analysis
-- **OpenAlex API**: Academic metadata fetching
-- **Pandas**: Data analysis
-- **Matplotlib/Seaborn**: Visualization
-- **Jupyter**: Interactive notebooks
+- **uv workspace** (`pyproject.toml`, `uv.lock`) keeps shared dependencies pinned and ensures API/worker install only what they need.
+- **Dockerfiles**:
+  - `packages/api/Dockerfile` – slim Python 3.11 image (≈800 MB) without GPU deps, syncs only the API package with rag_pipeline `[vector,cloud]` extra.
+  - `packages/worker/Dockerfile` – CUDA 11.8 runtime with PyTorch, Transformers, OpenCV, Dolphin weights preloaded (~4.5 GB).
+- **docker-compose.yml** wires `rag-api` and `pdf-worker` together, including health checks and GPU reservations.
+- **Makefile** automates worker image build/push/test loops.
+- **CI.md** documents how the UV + PEX based CI/CD pipeline builds deterministic artifacts; `scripts/ci/build_pex.sh` shows how to produce single-file deployables.
 
-## Performance Metrics
+## Documentation, Notebooks & Reports
 
-### PDF Processing
-- **Throughput**: 200-250 papers/day/worker
-- **GPU Utilization**: 87% average
-- **Concurrent PDFs**: 3 per worker
-- **Citation Preservation**: 23.4 avg/paper (vs 12.3-18.7 for text-only)
-- **Processing Cost**: $0.08/paper
+- `docs/plans/*.md` capture design decisions (distributed PDF parsing, chunking & embedding pipeline, LiteLLM/OpenRouter setup).
+- `docs/markdown_chunking.md` describes the chunking system, evaluation metrics, and S3 layout in detail.
+- `docs/benchmarking_system.md` covers the professional-grade chunking benchmarking framework and how to generate Plotly reports via `scripts/benchmarking/generate_chunking_report.py`.
+- `docs/LITELLM_SETUP.md` and `docs/checkpoint_2025-11-10.md` summarize infra bring-up milestones.
+- `notebooks/chunking_benchmark.ipynb` reproduces evaluation figures; results are stored in `notebooks/chunking_benchmark_results.csv` and `reports/chunking_evaluation_*.html`.
+- `scripts/dev/test_retriever.py`, `scripts/dev/test_local_processing.py`, and `scripts/dev/test_markdown_chunking.py` provide lightweight smoke tests for each pipeline stage.
 
-### Chunking
-- **Chunk Size**: ~420 tokens (SD=180)
-- **Citation Preservation**: 55.2%
-- **Semantic Units**: 92% chunks contain complete semantic units
+## Testing & Quality
 
-### Retrieval
-- **FAISS Latency**: <50ms for top-75 retrieval
-- **Total Corpus**: 28,000 chunks across 999 papers
-- **Index Type**: HNSW (Hierarchical Navigable Small World)
+```bash
+# Run Python unit tests (packages/*/tests + repo-level tests/)
+uv run pytest
 
-### Generation
-- **Query Cost**: $0.12 (Fast) to $0.50+ (Premium)
-- **Latency**: 2-3 seconds end-to-end
-- **Response Structure**: 4 sections (Summary, Analysis, Policy, References)
-- **Hallucination Target**: <10% phantom citations, <15% fact fabrication
+# Lint & type-check shared code
+uv run ruff check
+uv run mypy packages/shared/rag_pipeline
 
-### Evaluation (Preliminary, N=20 queries)
-- **Structure Compliance**: 95%
-- **Citation Inclusion**: 100%
-- **Quantitative Detail**: 70%
-- **Completeness Target**: >3.5/5.0 expert rating
+# Frontend lint
+cd frontend
+npm run lint
+```
 
-## Documentation
-
-- **[CI.md](CI.md)**: CI/CD pipeline with uv + pex (fast builds, caching, deployment)
-- **[DOCKER.md](DOCKER.md)**: Docker build and deployment guide
-- **[RELEASING.md](RELEASING.md)**: Release process and versioning guide
-- **[docs/plans/distributed-pdf-processing-design.md](docs/plans/)**: Distributed worker architecture
-- **[docs/plans/rag-architecture-design.md](docs/plans/)**: RAG pipeline design decisions
-- **[scripts/README.md](scripts/README.md)**: Operational scripts documentation
-- **[Research Report](../project-2-rag-report/main.pdf)**: Full academic paper with evaluation framework
+Benchmarking and evaluation scripts live under `scripts/benchmarking/` and produce HTML dashboards for regression tracking.
 
 ## Current Status & Roadmap
 
-### Completed ✅
-- [x] OpenAlex API integration (4,920 papers)
-- [x] Distributed PDF processing with Dolphin VLM
-- [x] Structure-aware chunking with citation preservation
-- [x] Hybrid retrieval (FAISS + cross-encoder)
-- [x] Multi-model LLM infrastructure (10 models)
-- [x] FastAPI backend with structured prompts
-- [x] Next.js frontend with bilingual support
-- [x] Corpus bias analysis (6 dimensions)
-- [x] Chunking evaluation framework
+**What exists today**
+- ✅ 999/4,920 papers parsed into markdown + figures, synced to S3.
+- ✅ Hybrid coarse/fine chunking strategy benchmarked with professional tooling; FAISS indexes for `coarse` and `fine` chunks stored in `indexes/`.
+- ✅ FastAPI backend serving `/search`, `/chat`, `/models`, `/pdf` with OpenRouter + LiteLLM and optional ZeroEntropy reranking.
+- ✅ Next.js bilingual UI with structured response rendering, model selection, and presigned PDF links.
+- ✅ Dockerized GPU workers with deterministic work slicing and built-in failure reporting.
 
-### In Progress 🚧
-- [ ] Full corpus processing (999/4,920 papers, 20.3%)
-- [ ] Systematic evaluation (N=100 test queries)
-- [ ] Hallucination rate measurement
-- [ ] Expert validation (alpha deployment)
-
-### Future Work 📋
-- [ ] Real-time PDF upload and processing
-- [ ] Migration to managed vector database (Pinecone/Weaviate)
-- [ ] Citation graph visualization
-- [ ] Multi-document synthesis
-- [ ] Comparative policy analysis
-- [ ] Non-English corpus expansion
-
-## Cost Analysis
-
-### Processing Costs
-- **GPU Compute**: $0.79/hour (3x g5.xlarge Spot instances)
-- **PDF Processing**: ~33 hours total, ~$26 for full corpus
-- **S3 Storage**: ~$0.023/GB/month (4,920 PDFs + processed outputs)
-
-### Query Costs
-- **Fast tier**: $0.12/query (gpt-5-mini, gemini-3-pro)
-- **Balanced tier**: $0.25/query (claude-3.5-sonnet, deepseek-chat)
-- **Premium tier**: $0.50+/query (claude-sonnet-4.5, deepseek-r1)
-
-### Total Budget
-- **Initial processing**: ~$26 (one-time)
-- **Storage**: ~$5/month
-- **Query costs**: Variable ($0.12-$0.50/query)
-
-Well within typical research project budgets.
+**In progress / next**
+1. Finish embedding/indexing the remaining corpus (4,920 target) and optionally migrate to a managed vector DB (Pinecone or Weaviate) once scale requires.
+2. Expand evaluation to ≥100 policy queries and integrate hallucination tracking in CI (see `docs/benchmarking_system.md` for current KPIs).
+3. Add real-time PDF upload + ad-hoc indexing for user-provided documents.
+4. Tighten metadata enrichment (author/year/citation formatting) and surface it in the frontend citations list.
+5. Deploy monitoring on inference cost + latency and add caching for repeated queries.
 
 ## Contributors
 
-- **Elie Bruno** - École Polytechnique Fédérale de Lausanne (EPFL)
-- **Andrea Trugenberger** - EPFL
-- **Youssef Chelaifa** - EPFL
+- **Elie Bruno** – École Polytechnique Fédérale de Lausanne (EPFL)
+- **Andrea Trugenberger** – EPFL
+- **Youssef Chelaifa** – EPFL
 
 ## License
 
-[MIT License / Your License]
+MIT-style placeholder. Add or update a `LICENSE` file if a different license is required for distribution.
 
 ## Citation
 
@@ -605,7 +315,3 @@ If you use this system in your research, please cite:
   institution={École Polytechnique Fédérale de Lausanne (EPFL)}
 }
 ```
-
----
-
-**Last Updated**: December 17, 2025
