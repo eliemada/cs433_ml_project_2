@@ -9,11 +9,11 @@ function getLocale(request: NextRequest): string | undefined {
     const negotiatorHeaders: Record<string, string> = {};
     request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
 
-    // @ts-ignore locales are readonly
+    // @ts-expect-error locales are readonly
     const locales: string[] = i18n.locales;
 
     // Use negotiator and intl-localematcher to get best locale
-    let languages = new Negotiator({ headers: negotiatorHeaders }).languages(
+    const languages = new Negotiator({ headers: negotiatorHeaders }).languages(
         locales
     );
 

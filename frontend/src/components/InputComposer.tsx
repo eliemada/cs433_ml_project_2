@@ -7,7 +7,11 @@ import { cn } from '@/lib/utils';
 interface InputComposerProps {
     onSend: (message: string) => void;
     isTyping?: boolean;
-    dict: any;
+    dict: {
+        starters: string[];
+        placeholder: string;
+        disclaimer: string;
+    };
 }
 
 export function InputComposer({ onSend, isTyping, dict }: InputComposerProps) {

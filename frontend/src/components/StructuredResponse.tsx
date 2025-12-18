@@ -6,12 +6,15 @@ import { ChevronDown, ChevronUp, BookOpen, FileText, X, ExternalLink, Loader2 } 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { StructuredContent, Citation } from '@/types';
-import { cn } from '@/lib/utils';
 import { getPdfUrl } from '@/lib/api';
 
 interface StructuredResponseProps {
     content: StructuredContent;
-    dict: any;
+    dict: {
+        executiveSummary: string;
+        analystView: string;
+        keyReferences: string;
+    };
 }
 
 function CitationCard({ citation, onClose }: { citation: Citation; onClose: () => void }) {
@@ -27,7 +30,7 @@ function CitationCard({ citation, onClose }: { citation: Citation; onClose: () =
             const response = await getPdfUrl(citation.authors);
             // Open PDF in new tab
             window.open(response.pdf_url, '_blank');
-        } catch (err) {
+        } catch {
             setError('PDF not available for this paper');
         } finally {
             setLoading(false);

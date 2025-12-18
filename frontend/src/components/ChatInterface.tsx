@@ -82,7 +82,17 @@ const parseRAGResponse = (response: ChatResponse): StructuredContent => {
     return { summary, details, citations };
 };
 
-export function ChatInterface({ dict }: { dict: any }) {
+interface ChatInterfaceDict {
+    sidebar: Record<string, unknown>;
+    input: Record<string, unknown>;
+    chat: {
+        headerTitle: string;
+        emptyDescription: string;
+    };
+    response: Record<string, unknown>;
+}
+
+export function ChatInterface({ dict }: { dict: ChatInterfaceDict }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);

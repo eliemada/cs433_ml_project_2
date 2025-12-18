@@ -8,7 +8,10 @@ interface SidebarProps {
     isOpen: boolean;
     onToggle: () => void;
     onNewChat: () => void;
-    dict: any;
+    dict: {
+        appName: string;
+        newChat: string;
+    };
 }
 
 export function Sidebar({ isOpen, onNewChat, dict }: SidebarProps) {
