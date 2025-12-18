@@ -83,13 +83,24 @@ const parseRAGResponse = (response: ChatResponse): StructuredContent => {
 };
 
 interface ChatInterfaceDict {
-    sidebar: Record<string, unknown>;
-    input: Record<string, unknown>;
+    sidebar: {
+        appName: string;
+        newChat: string;
+    };
+    input: {
+        starters: string[];
+        placeholder: string;
+        disclaimer: string;
+    };
     chat: {
         headerTitle: string;
         emptyDescription: string;
     };
-    response: Record<string, unknown>;
+    response: {
+        executiveSummary: string;
+        analystView: string;
+        keyReferences: string;
+    };
 }
 
 export function ChatInterface({ dict }: { dict: ChatInterfaceDict }) {
