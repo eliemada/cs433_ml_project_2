@@ -91,7 +91,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [api, worker]
+        package: [api]  # Skip worker - GPU deps too large for CI disk space
         platform: [x86_64-manylinux_2_28]
 
     steps:
