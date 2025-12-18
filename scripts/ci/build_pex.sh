@@ -82,8 +82,8 @@ uv pip install \
     --quiet \
     --python "${BUILD_DIR}/install.venv" \
     --python-platform="${PLATFORM}" \
-    "${BUILD_DIR}/wheels/rag_pipeline-0.1.0-py3-none-any.whl" \
-    "${BUILD_DIR}/wheels/${PACKAGE}-0.1.0-py3-none-any.whl"
+    "${BUILD_DIR}/wheels/rag_pipeline-1.0.0-py3-none-any.whl" \
+    "${BUILD_DIR}/wheels/${PACKAGE}-1.0.0-py3-none-any.whl"
 
 # Step 4: Generate requirements.txt for pex (excluding local packages)
 echo -e "${YELLOW}[4/5] Generating requirements.txt...${NC}"
@@ -108,8 +108,8 @@ if [[ "$PACKAGE" == "api" ]]; then
         --include-tools \
         --find-links "${BUILD_DIR}/wheels" \
         --requirement "${BUILD_DIR}/requirements.deps.txt" \
-        "${BUILD_DIR}/wheels/rag_pipeline-0.1.0-py3-none-any.whl" \
-        "${BUILD_DIR}/wheels/api-0.1.0-py3-none-any.whl" \
+        "${BUILD_DIR}/wheels/rag_pipeline-1.0.0-py3-none-any.whl" \
+        "${BUILD_DIR}/wheels/api-1.0.0-py3-none-any.whl" \
         --script uvicorn \
         -o "${DIST_DIR}/${PACKAGE}.pex"
 
@@ -122,8 +122,8 @@ elif [[ "$PACKAGE" == "worker" ]]; then
         --include-tools \
         --find-links "${BUILD_DIR}/wheels" \
         --requirement "${BUILD_DIR}/requirements.deps.txt" \
-        "${BUILD_DIR}/wheels/rag_pipeline-0.1.0-py3-none-any.whl" \
-        "${BUILD_DIR}/wheels/worker-0.1.0-py3-none-any.whl" \
+        "${BUILD_DIR}/wheels/rag_pipeline-1.0.0-py3-none-any.whl" \
+        "${BUILD_DIR}/wheels/worker-1.0.0-py3-none-any.whl" \
         --python-shebang '/usr/bin/env python3' \
         -o "${DIST_DIR}/${PACKAGE}.pex"
 
