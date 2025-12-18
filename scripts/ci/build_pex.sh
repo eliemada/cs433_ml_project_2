@@ -85,13 +85,19 @@ uv pip install \
     "${BUILD_DIR}/wheels/rag_pipeline-0.1.0-py3-none-any.whl" \
     "${BUILD_DIR}/wheels/${PACKAGE}-0.1.0-py3-none-any.whl"
 
-# Step 4: Generate requirements.txt for pex
+# Step 4: Generate requirements.txt for pex (excluding local packages)
 echo -e "${YELLOW}[4/5] Generating requirements.txt...${NC}"
 uv pip list \
     --python "${BUILD_DIR}/install.venv" \
     --format freeze \
     --quiet \
     > "${BUILD_DIR}/requirements.all.txt"
+
+# Remove our local packages from requirements (to avoid PyPI conflicts)
+# These will be installed directly as wheels
+grep -v "^rag-pipeline==" "${BUILD_DIR}/requirements.all.txt" | \
+grep -v "^api==" | \
+grep -v "^worker==" > "${BUILD_DIR}/requirements.deps.txt"
 
 # Step 5: Build the pex executable
 echo -e "${YELLOW}[5/5] Building PEX executable...${NC}"
@@ -101,7 +107,9 @@ if [[ "$PACKAGE" == "api" ]]; then
     uvx pex \
         --include-tools \
         --find-links "${BUILD_DIR}/wheels" \
-        --requirement "${BUILD_DIR}/requirements.all.txt" \
+        --requirement "${BUILD_DIR}/requirements.deps.txt" \
+        "${BUILD_DIR}/wheels/rag_pipeline-0.1.0-py3-none-any.whl" \
+        "${BUILD_DIR}/wheels/api-0.1.0-py3-none-any.whl" \
         --script uvicorn \
         -o "${DIST_DIR}/${PACKAGE}.pex"
 
@@ -113,7 +121,9 @@ elif [[ "$PACKAGE" == "worker" ]]; then
     uvx pex \
         --include-tools \
         --find-links "${BUILD_DIR}/wheels" \
-        --requirement "${BUILD_DIR}/requirements.all.txt" \
+        --requirement "${BUILD_DIR}/requirements.deps.txt" \
+        "${BUILD_DIR}/wheels/rag_pipeline-0.1.0-py3-none-any.whl" \
+        "${BUILD_DIR}/wheels/worker-0.1.0-py3-none-any.whl" \
         --python-shebang '/usr/bin/env python3' \
         -o "${DIST_DIR}/${PACKAGE}.pex"
 
