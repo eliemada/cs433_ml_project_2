@@ -100,8 +100,8 @@ if [[ "$PACKAGE" == "api" ]]; then
     # API: FastAPI server executable
     uvx pex \
         --include-tools \
-        --project="${BUILD_DIR}/wheels/api-0.1.0-py3-none-any.whl" \
-        --requirements="${BUILD_DIR}/requirements.all.txt" \
+        --find-links "${BUILD_DIR}/wheels" \
+        --requirement "${BUILD_DIR}/requirements.all.txt" \
         --script uvicorn \
         -o "${DIST_DIR}/${PACKAGE}.pex"
 
@@ -112,8 +112,8 @@ elif [[ "$PACKAGE" == "worker" ]]; then
     # Worker: Distributed PDF processing executable (console script mode)
     uvx pex \
         --include-tools \
-        --project="${BUILD_DIR}/wheels/worker-0.1.0-py3-none-any.whl" \
-        --requirements="${BUILD_DIR}/requirements.all.txt" \
+        --find-links "${BUILD_DIR}/wheels" \
+        --requirement "${BUILD_DIR}/requirements.all.txt" \
         --python-shebang '/usr/bin/env python3' \
         -o "${DIST_DIR}/${PACKAGE}.pex"
 
