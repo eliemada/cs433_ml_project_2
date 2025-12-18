@@ -180,60 +180,159 @@ cp .env.example .env        # fill in API keys + S3 settings
 uv sync                     # installs shared/api/worker environments
 ```
 
-### 2. Run the FastAPI service
+### 2. Running the API Framework
+
+The FastAPI backend serves the retrieval and chat endpoints. To run it:
 
 ```bash
-export OPENAI_API_KEY=...
-export OPENROUTER_API_KEY=...
-export AWS_ACCESS_KEY_ID=...   # Needed to pull indexes from S3
-export AWS_SECRET_ACCESS_KEY=...
+# Set required environment variables
+export OPENAI_API_KEY=your_openai_key
+export OPENROUTER_API_KEY=your_openrouter_key
+export AWS_ACCESS_KEY_ID=your_aws_key
+export AWS_SECRET_ACCESS_KEY=your_aws_secret
+export AWS_DEFAULT_REGION=us-east-1  # or your preferred region
+export S3_BUCKET=cs433-rag-project2  # or your bucket name
+
+# Launch the API server
 uv run --package api uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The app loads FAISS indexes from `S3_BUCKET` (default `cs433-rag-project2`) at startup. Check `http://localhost:8000/health`.
+The API will:
+- Load FAISS indexes from S3 at startup
+- Serve endpoints at `http://localhost:8000`
+- Provide API documentation at `http://localhost:8000/docs`
 
-### 3. Run a distributed worker locally (single machine test)
+Check health status: `curl http://localhost:8000/health`
 
-```bash
-export WORKER_ID=0
-export TOTAL_WORKERS=1
-export S3_INPUT_BUCKET=cs433-rag-project2
-export S3_OUTPUT_BUCKET=cs433-rag-project2
-uv run --package worker python packages/worker/worker/distributed_worker.py
-```
+### 3. Running the Frontend
 
-Workers automatically skip PDFs that were already processed. Use `CONCURRENT_PDFS` to control local GPU load.
-
-### 4. Embed chunks / rebuild FAISS
+The Next.js 16 application provides a bilingual (EN/FR) chat interface:
 
 ```bash
-export OPENAI_API_KEY=...
-uv run --package worker python packages/worker/worker/embed_and_index.py \
-  --chunk-type both          # coarse, fine, or both
-```
-
-Use `--dry-run` to estimate embedding cost before running.
-
-### 5. Launch the frontend
-
-```bash
+# Navigate to frontend directory
 cd frontend
-cp .env.local.example .env.local   # set NEXT_PUBLIC_API_URL=http://localhost:8000
+
+# Copy and configure environment variables
+cp .env.local.example .env.local
+
+# Edit .env.local and set:
+# NEXT_PUBLIC_API_URL=http://localhost:8000
+
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
 ```
 
-Visit `http://localhost:3000/en` or `/fr` to access the bilingual UI.
+The frontend will be available at:
+- English: `http://localhost:3000/en`
+- French: `http://localhost:3000/fr`
 
-### 6. Docker Compose (API + GPU worker)
+For production builds:
+```bash
+npm run build
+npm start
+```
+
+### 4. PDF Processing (GPU Required)
+
+**⚠️ Important:** PDF processing with the Dolphin 1.5 model requires machines with NVIDIA GPUs. This is more complex than running the API or frontend.
+
+#### Requirements:
+- NVIDIA GPU with CUDA support (tested with CUDA 11.8)
+- Docker with NVIDIA Container Toolkit
+- S3 or S3-compatible storage (e.g., AWS S3, Infomaniak kDrive, MinIO)
+
+#### Storage Configuration:
+
+The system supports any S3-compatible API. Configure via environment variables:
 
 ```bash
-# API + worker (worker requires NVIDIA runtime)
-docker compose up rag-api
+# For AWS S3:
+export AWS_ACCESS_KEY_ID=your_access_key
+export AWS_SECRET_ACCESS_KEY=your_secret_key
+export AWS_DEFAULT_REGION=us-east-1
+export S3_INPUT_BUCKET=your-input-bucket
+export S3_OUTPUT_BUCKET=your-output-bucket
+
+# For S3-compatible services (e.g., Infomaniak):
+export AWS_ACCESS_KEY_ID=your_infomaniak_key
+export AWS_SECRET_ACCESS_KEY=your_infomaniak_secret
+export AWS_ENDPOINT_URL=https://s3.infomaniak.com  # or your S3-compatible endpoint
+export S3_INPUT_BUCKET=your-bucket
+export S3_OUTPUT_BUCKET=your-bucket
+```
+
+**Note:** When using S3-compatible services like Infomaniak, ensure your client library supports custom endpoints. The `boto3` library used in this project respects the `AWS_ENDPOINT_URL` environment variable.
+
+#### Running the PDF Worker:
+
+```bash
+# Set worker configuration
+export WORKER_ID=0
+export TOTAL_WORKERS=1
+export CONCURRENT_PDFS=3  # Adjust based on GPU memory
+
+# Run worker locally (requires GPU)
+uv run --package worker python packages/worker/worker/distributed_worker.py
+
+# Or using Docker (recommended for production)
 docker compose run --rm --gpus all pdf-worker
 ```
 
-The worker image already contains the Dolphin weights and uv-managed environment. Use the `Makefile` to rebuild/push `ravinala/pdf-parser`.
+Workers will:
+- Download PDFs from `S3_INPUT_BUCKET/raw_pdfs/`
+- Process them using Dolphin 1.5 VLM
+- Upload results to `S3_OUTPUT_BUCKET/processed/`
+- Upload failure logs to `S3_OUTPUT_BUCKET/failures/`
+
+For distributed processing across multiple GPU machines:
+```bash
+# On machine 1:
+export WORKER_ID=0 TOTAL_WORKERS=3
+docker compose run --rm --gpus all pdf-worker
+
+# On machine 2:
+export WORKER_ID=1 TOTAL_WORKERS=3
+docker compose run --rm --gpus all pdf-worker
+
+# On machine 3:
+export WORKER_ID=2 TOTAL_WORKERS=3
+docker compose run --rm --gpus all pdf-worker
+```
+
+### 5. Embed chunks / rebuild FAISS
+
+After processing PDFs, generate embeddings and build FAISS indexes:
+
+```bash
+export OPENAI_API_KEY=your_key
+
+# Generate embeddings and create indexes
+uv run --package worker python packages/worker/worker/embed_and_index.py \
+  --chunk-type both          # coarse, fine, or both
+
+# Dry run to estimate cost first
+uv run --package worker python packages/worker/worker/embed_and_index.py \
+  --chunk-type both --dry-run
+```
+
+This will create FAISS indexes in `S3_BUCKET/indexes/`.
+
+### 6. Docker Compose (API + GPU worker)
+
+For containerized deployment:
+
+```bash
+# Run API only (no GPU required)
+docker compose up rag-api
+
+# Run PDF worker (requires NVIDIA runtime)
+docker compose run --rm --gpus all pdf-worker
+```
+
+The worker image includes Dolphin weights and all dependencies. See `Makefile` for custom image builds.
 
 ## Environment Variables
 
