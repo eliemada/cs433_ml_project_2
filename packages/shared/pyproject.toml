@@ -38,14 +38,14 @@ pdf = [
     "torch>=2.9.1",
     "torchvision>=0.24.1",
     "transformers>=4.57.3",
-    "accelerate>=0.34.2",
+    "accelerate>=1.12.0",
     "safetensors>=0.4.0",
-    "sentence-transformers>=2.7.0",
+    "sentence-transformers>=5.2.0",
 ]
 
 # Vector operations (for API and workers)
 vector = [
-    "openai>=1.109.1",
+    "openai>=2.13.0",
     "tiktoken>=0.5.1",
     "faiss-cpu==1.13.1",  # Pinned: 1.10.0 has wheels for py3.10-3.13
     "weaviate-client>=3.25.3",
