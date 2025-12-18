@@ -11,8 +11,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    python3.11 \
-    python3.11-dev \
+    python3.14 \
+    python3.14-dev \
     python3-pip \
     git \
     git-lfs \
@@ -27,9 +27,9 @@ RUN apt-get update && apt-get install -y \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Make python3.11 the default
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+# Make python3.14 the default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.14 1 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.14 1
 
 # Install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
