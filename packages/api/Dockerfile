@@ -21,7 +21,7 @@ COPY packages/api/ ./packages/api/
 # Install ONLY API dependencies (no GPU, no PDF processing)
 # This installs: rag_pipeline[vector,cloud] + FastAPI + LiteLLM
 # Does NOT install: torch, transformers, opencv (saves 2GB+)
-RUN uv sync --frozen --no-dev -p packages/api
+RUN uv sync --frozen --no-dev --package api
 
 # ==============================================================================
 # Production stage - Minimal runtime image

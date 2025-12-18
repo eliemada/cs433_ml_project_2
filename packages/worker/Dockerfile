@@ -47,7 +47,7 @@ COPY packages/worker/ ./packages/worker/
 
 # Install worker dependencies (includes GPU packages: torch, transformers, etc.)
 # This installs: rag_pipeline[pdf,vector,cloud,cli] + all GPU dependencies
-RUN uv sync --frozen --no-dev -p packages/worker
+RUN uv sync --frozen --no-dev --package worker
 
 # Download Dolphin model (~2GB) from HuggingFace
 # Note: Model is downloaded to rag_pipeline/pdf_parsing/models/
