@@ -82,6 +82,7 @@ uv pip install \
     --quiet \
     --python "${BUILD_DIR}/install.venv" \
     --python-platform="${PLATFORM}" \
+    --no-index \
     --find-links "${BUILD_DIR}/wheels" \
     "rag_pipeline" "${PACKAGE}"
 
