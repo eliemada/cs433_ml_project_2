@@ -4,6 +4,12 @@
 [![Release](https://github.com/eliemada/cs433_ml_project_2/actions/workflows/release.yml/badge.svg)](https://github.com/eliemada/cs433_ml_project_2/actions/workflows/release.yml)
 [![uv Workspace](https://camo.githubusercontent.com/bec95721f735c7ba951b338419fcb6a4810be2f3c0fc50b2e0b322f7dcd65bc9/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e)](https://github.com/astral-sh/uv)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
+[![ESLint](https://img.shields.io/badge/eslint-3A33D1?style=flat-square&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Ruff](https://img.shields.io/badge/ruff-enabled-informational?logo=ruff&style=flat-square)](https://docs.astral.sh/ruff/)
+
+**Live demo:** https://ml-poc.eliebruno.com/
+
+![Frontend walkthrough](docs/assets/rag-demo.gif)
 
 A monorepo that powers an end-to-end Retrieval-Augmented Generation system for intellectual property and innovation policy research. The stack ingests OpenAlex metadata, parses PDFs with a multimodal VLM, builds hybrid coarse/fine chunk indexes, and serves bilingual answers with traceable citations through a FastAPI backend and a Next.js 16 frontend.
 
