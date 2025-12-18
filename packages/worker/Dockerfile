@@ -39,7 +39,7 @@ ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /app
 
 # Copy workspace configuration
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 
 # Copy workspace packages
 COPY packages/shared/ ./packages/shared/

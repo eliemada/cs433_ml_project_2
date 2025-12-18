@@ -9,6 +9,7 @@ import { ModelSelector } from './ModelSelector';
 import { Message, StructuredContent } from '@/types';
 import { cn } from '@/lib/utils';
 import { chatWithRAG, ChatResponse, ChatCitation, getAvailableModels } from '@/lib/api';
+import { Dictionary } from '@/get-dictionary';
 
 /**
  * Parse LLM-generated markdown answer into structured content
@@ -82,28 +83,7 @@ const parseRAGResponse = (response: ChatResponse): StructuredContent => {
     return { summary, details, citations };
 };
 
-interface ChatInterfaceDict {
-    sidebar: {
-        appName: string;
-        newChat: string;
-    };
-    input: {
-        starters: string[];
-        placeholder: string;
-        disclaimer: string;
-    };
-    chat: {
-        headerTitle: string;
-        emptyDescription: string;
-    };
-    response: {
-        executiveSummary: string;
-        analystView: string;
-        keyReferences: string;
-    };
-}
-
-export function ChatInterface({ dict }: { dict: ChatInterfaceDict }) {
+export function ChatInterface({ dict }: { dict: Dictionary }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);
