@@ -3,7 +3,7 @@ name = "rag-pipeline-monorepo"
 version = "1.0.1"
 description = "RAG pipeline for academic papers - Monorepo workspace"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.14.2"
 authors = [
     { name = "Elie Bruno" },
     { name = "Andrea Trugenberger" },
@@ -23,14 +23,14 @@ members = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
-    "pytest-asyncio>=0.21.1",
-    "pytest-cov>=4.1.0",
-    "ruff>=0.1.0",
-    "mypy>=1.7.1",
-    "ipython>=8.12.0",
-    "jupyter>=1.0.0",
-    "ipykernel>=6.22.0",
-    "ty>=0.0.2",
+    "pytest-asyncio>=0.26.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.13",
+    "mypy>=1.19.1",
+    "ipython>=8.38.0",
+    "jupyter>=1.1.1",
+    "ipykernel>=6.31.0",
+    "ty>=0.0.12",
 ]
 
 [tool.black]
