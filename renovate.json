@@ -5,63 +5,115 @@
     ":maintainLockFilesWeekly"
   ],
   "timezone": "Europe/Zurich",
-  "schedule": ["before 10am on monday"],
-  "labels": ["dependencies"],
-  "assignees": ["@eliebruno"],
-  "reviewers": ["@eliebruno"],
+  "schedule": [
+    "before 10am on monday"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "assignees": [
+    "@eliebruno"
+  ],
+  "reviewers": [
+    "@eliebruno"
+  ],
   "prConcurrentLimit": 3,
   "prHourlyLimit": 2,
   "commitMessagePrefix": "⬆️",
-
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "commitMessagePrefix": "💥",
-      "labels": ["dependencies", "major"]
+      "labels": [
+        "dependencies",
+        "major"
+      ]
     },
     {
-      "matchUpdateTypes": ["minor"],
+      "matchUpdateTypes": [
+        "minor"
+      ],
       "commitMessagePrefix": "✨",
-      "labels": ["dependencies", "minor"]
+      "labels": [
+        "dependencies",
+        "minor"
+      ]
     },
     {
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "commitMessagePrefix": "🐛",
-      "labels": ["dependencies", "patch"]
+      "labels": [
+        "dependencies",
+        "patch"
+      ]
     },
     {
-      "matchUpdateTypes": ["pin", "digest"],
+      "matchUpdateTypes": [
+        "pin",
+        "digest"
+      ],
       "commitMessagePrefix": "📌",
-      "labels": ["dependencies", "pin"]
+      "labels": [
+        "dependencies",
+        "pin"
+      ]
     },
     {
-      "matchUpdateTypes": ["lockFileMaintenance"],
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
       "commitMessagePrefix": "🔒",
-      "labels": ["dependencies", "lockfile"]
+      "labels": [
+        "dependencies",
+        "lockfile"
+      ]
     },
     {
       "description": "GitHub Actions",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "commitMessagePrefix": "👷",
-      "labels": ["dependencies", "ci"],
+      "labels": [
+        "dependencies",
+        "ci"
+      ],
       "groupName": "github-actions"
     },
     {
       "description": "Group minor/patch Python deps",
-      "matchManagers": ["pep621"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "pep621"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "python-deps"
     },
     {
       "description": "Group minor/patch Frontend deps",
-      "matchManagers": ["npm"],
-      "matchPaths": ["frontend/**"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "frontend/**"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "frontend-deps"
     },
     {
       "description": "ML/AI libraries - review carefully",
-      "matchManagers": ["pep621"],
+      "matchManagers": [
+        "pep621"
+      ],
       "matchPackageNames": [
         "torch",
         "torchvision",
@@ -72,24 +124,32 @@
         "litellm",
         "faiss-cpu"
       ],
-      "labels": ["dependencies", "ml"],
+      "labels": [
+        "dependencies",
+        "ml"
+      ],
       "groupName": "ml-deps"
     },
     {
       "description": "Docker base images",
-      "matchDatasources": ["docker"],
+      "matchDatasources": [
+        "docker"
+      ],
       "commitMessagePrefix": "🐳",
-      "labels": ["dependencies", "docker"],
+      "labels": [
+        "dependencies",
+        "docker"
+      ],
       "groupName": "docker"
     }
   ],
-
   "vulnerabilityAlerts": {
     "enabled": true,
-    "labels": ["security"],
+    "labels": [
+      "security"
+    ],
     "prPriority": 30
   },
-
   "ignorePaths": [
     "**/node_modules/**",
     "**/__pycache__/**",
