@@ -14,8 +14,8 @@ dependencies = [
     # Workspace dependency - rag_pipeline library with vector and cloud capabilities
     "rag_pipeline[vector,cloud]",
     # API framework
-    "fastapi>=0.125.0",
-    "uvicorn[standard]>=0.38.0",
+    "fastapi>=0.128.0",
+    "uvicorn[standard]>=0.40.0",
     "python-multipart>=0.0.6",
     # LLM infrastructure
     "litellm>=1.80.10",
