@@ -47,7 +47,7 @@ pdf = [
 vector = [
     "openai>=2.13.0",
     "tiktoken>=0.5.1",
-    "faiss-cpu==1.13.1",  # Pinned: 1.10.0 has wheels for py3.10-3.13
+    "faiss-cpu==1.15.0",  # Pinned: 1.10.0 has wheels for py3.10-3.13
     "weaviate-client>=3.25.3",
 ]
 
