@@ -4,7 +4,7 @@
 # Requires: NVIDIA GPU with CUDA 11.8+
 # ==============================================================================
 
-FROM nvidia/cuda:13.1.0-runtime-ubuntu22.04
+FROM nvidia/cuda:13.5.0-runtime-ubuntu22.04@sha256:a69a11a11011db340c0c4572e7decb923f4bbbcd129f2b3cae878d48eeb4536a
 
 # Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
